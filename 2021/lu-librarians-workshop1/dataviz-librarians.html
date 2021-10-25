@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Datavisualisering</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Johan Larsson" />
+    <script src="libs/header-attrs-2.7/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+    <link href="libs/wordcloud2-0.0.1/wordcloud.css" rel="stylesheet" />
+    <script src="libs/wordcloud2-0.0.1/wordcloud2-all.js"></script>
+    <script src="libs/wordcloud2-0.0.1/hover.js"></script>
+    <script src="libs/wordcloud2-binding-0.2.1/wordcloud2.js"></script>
+    <link rel="stylesheet" href="assets/stae04.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: middle, center, title-slide
+
+# Datavisualisering
+## En introduktion
+### Johan Larsson
+### Statistiska institutionen, Lunds universitet
+
+---
+
+
+
+
+class: section-title
+
+# Datavisualisering
+
+---
+
+## Vem är jag?
+
+- Doktorand på Statistiska institutionen.
+
+--
+
+- Lärare på kursen **STAE04: Visualisering av data**
+
+--
+
+- Utvecklare av mjukvara för bland annat datavisualisering
+
+--
+
+- [larssonjohan.com](https://larssonjohan.com), &lt;johan.larsson@stat.lu.se&gt;
+
+.pull-right60[
+  &lt;img src="images/eulerr.png" width="448" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Varför använda datavisualisering?
+
+- utforska
+- kommunicera
+- berätta en "story"
+
+Med **visualisering** utnyttjar vi vår välutvecklade synförmåga!
+
+&lt;img src="images/ideas-ink-space.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/napoleon.png" alt="Charles Minards visualisering över Napoleons krig i Ryssland 1812." width="1280" height="37%" /&gt;
+&lt;p class="caption"&gt;Charles Minards visualisering över Napoleons krig i Ryssland 1812.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+class: center, middle
+
+.pull-left[
+&lt;table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; region &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; sysselsättning (%) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Stockholms län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 72.7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Hallands län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 72.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Jönköpings län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 70.9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Västra Götalands län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 70.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Kronobergs län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 69.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Uppsala län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 68.4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Gotlands län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 68.2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Östergötlands län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 67.4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Värmlands län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 67.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Jämtlands län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 66.2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Örebro län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 66.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Västmanlands län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 65.7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Gävleborgs län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 65.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Västerbottens län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 64.9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Kalmar län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 64.9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Skåne län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 64.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Dalarnas län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 64.7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Västernorrlands län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 64.6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Blekinge län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 63.9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Norrbottens län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 62.9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Södermanlands län &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 62.8 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+--
+
+class: center, middle
+
+.pull-right[
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-5-1.png" width="360" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+class: middle
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/voters.png" alt="Röstmönster och stöd för vinnaren i valet." width="506" /&gt;
+&lt;p class="caption"&gt;Röstmönster och stöd för vinnaren i valet.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+class: section-title
+
+# Datavisualiseringens anatomi
+
+---
+
+## Data
+
+Vi vill visualisera ett dataset om sömn och hjärnstorlek hos däggdjur.
+
+Variablerna vi har är
+
+- den genomsnittliga mängden sömn (numeriskt),
+- storleken på djurets hjärna (numeriskt), och
+- kosthållning (kategoriskt).
+
+---
+
+## Kanvas
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Rutnät (Grid)
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Geometri (Geoms)
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Hjälpredor (Guides)
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-10-1.png" width="720" style="display: block; margin: auto;" /&gt;
+
+---
+
+## En beskrivning (Caption)
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-11-1.png" alt="Sömnlängd och hjärnstorlek för en uppsättning däggdjur." width="720" /&gt;
+&lt;p class="caption"&gt;Sömnlängd och hjärnstorlek för en uppsättning däggdjur.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+class: section-title
+
+# Principer för effektiva datavisualiseringar
+
+---
+
+## Edward Tuftes principer
+
+* Above all else show the data.
+
+--
+
+* Maximize the data-ink ratio.
+
+--
+
+* Erase non-data ink.
+
+--
+
+* Erase redundant data-ink.
+
+--
+
+* Revise and edit. ([Tufte, 2001](#bib-tufte2001))
+
+.pull-right[
+&lt;img src="images/tufte.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Above all else show the data
+
+* Data är i verkligheten alltid **multivariat**.
+
+--
+
+* Det är ofta **fördelningen** av data som är intressant.
+
+--
+
+* Framförallt vill vi kunna se hur olika variabler **samvarierar**.
+
+--
+
+* **Aggregera** inte data i onödan!
+
+--
+
+.pull-left[
+### Ett okänt datamaterial
+
+Anta att vi har fått ett datamaterial med 142 observationer
+på två variabler (mått) i knät: `x` och `y`
+och ska analysera dessa.
+]
+
+--
+
+.pull-right[
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-13-1.png" width="324" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+class: middle
+
+.pull-left[
+&lt;img src="images/vangogh.jpg" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.pull-right[
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+class: middle
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-16-1.png" width="648" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-17-1.png" alt="The Datasaurus" width="576" /&gt;
+&lt;p class="caption"&gt;The Datasaurus&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-18-1.gif" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle
+
+&lt;img src="images/napoleon.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/playfair-england-usa.jpg" alt="William Playfair, The Commercial and Political Atlas (1786). Public domain." width="80%" /&gt;
+&lt;p class="caption"&gt;William Playfair, The Commercial and Political Atlas (1786). Public domain.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/playfair-nordic-england.jpg" alt="William Playfair, The Commercial and Political Atlas (1786). Public domain." width="80%" /&gt;
+&lt;p class="caption"&gt;William Playfair, The Commercial and Political Atlas (1786). Public domain.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+## Maximize the Data-Ink Ratio and Erase Non-Data Ink
+
+### Data Ink
+
+$$
+`\begin{aligned}
+\text{data-ink ratio}
+&amp;= \frac{\text{data-ink}}{\text{total ink used in visualization}}\\
+&amp;= 1 - \text{proportion of a graphic that can be erased}
+\end{aligned}`
+$$
+
+--
+
+.pull-left[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-22-1.png" alt="hög data-ink ratio" width="288" /&gt;
+&lt;p class="caption"&gt;hög data-ink ratio&lt;/p&gt;
+&lt;/div&gt;
+]
+
+--
+
+.pull-right[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-23-1.png" alt="låg data-ink ratio" width="288" /&gt;
+&lt;p class="caption"&gt;låg data-ink ratio&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+## Erase Redundant Data-Ink
+
+**redundant** data-ink: bläck som används till att visa data som redan
+visas av annat bläck
+
+--
+
+.pull-left[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-24-1.png" alt="mycket onödigt bläck" width="360" /&gt;
+&lt;p class="caption"&gt;mycket onödigt bläck&lt;/p&gt;
+&lt;/div&gt;
+]
+
+--
+
+.pull-right[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-25-1.png" alt="inget onödigt bläck" width="324" /&gt;
+&lt;p class="caption"&gt;inget onödigt bläck&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+## Revise and edit
+
+en process att lyckas med en datavisualisering; sällan det första försöket
+som blir slutprodukten
+
+### GDP per capita och förväntad livslängd
+
+säg att vi har data på
+
+- GDP per capita
+- förväntad livslängd
+- land
+- kontinent
+- tid (år)
+
+---
+
+class: middle
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-26-1.png" width="720" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-27-1.png" width="720" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+class: middle
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-28-1.png" width="720" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-29-1.gif" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: section-title
+
+# Färg
+
+---
+
+## Färg i datavisualiseringar
+
+Nyckeln till att välja rätt färg är att fokusera
+på datan: datanivå och innebörd
+
+--
+
+.pull-left[
+### Sekventiell palett
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-30-1.png" width="360" style="display: block; margin: auto;" /&gt;
+
+värdena kan ordnas
+
+### Kvalitativ palett
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-31-1.png" width="360" style="display: block; margin: auto;" /&gt;
+
+värdena kan **inte** ordnas
+]
+
+.pull-right[
+### Divergerande palett
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-32-1.png" width="360" style="display: block; margin: auto;" /&gt;
+
+värdena har två motpoler och en betydelsefull nollpunkt/mittvärde
+]
+
+---
+
+## Naturliga färgkombinationer
+
+Ibland finns det naturliga färgval att använda sig av
+
+- politiska undersökningar
+- temperatur
+- geografisk data
+
+&lt;img src="images/scb.png" width="433" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+.pull-left-70[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/bathymetric-chart.png" alt="Batymetrisk karta över Japan." width="966" /&gt;
+&lt;p class="caption"&gt;Batymetrisk karta över Japan.&lt;/p&gt;
+&lt;/div&gt;
+]
+
+.pull-right-30[
+&lt;img src="images/bathymetric-chart-legend.png" width="332" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Färgblindhet
+
+.pull-left[
+8% av alla män och 0.5% av alla kvinnor lider av röd-grön färgblindhet&lt;sup&gt;1&lt;/sup&gt;
+
+många olika typer:
+
+- protanotopia
+- deuteranopia
+- protanomali
+- deuteranomali
+- tritanopia
+- tritanomali
+]
+
+.pull-right[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/ishihara.png" alt="Ishiharas färgtest. Vilket nummer ser du? (en.wikipedia.org/wiki/Color_blindness)" width="683" /&gt;
+&lt;p class="caption"&gt;Ishiharas färgtest. Vilket nummer ser du? (en.wikipedia.org/wiki/Color_blindness)&lt;/p&gt;
+&lt;/div&gt;
+
+]
+
+.footnote[
+&lt;sup&gt;1&lt;/sup&gt; Av personer av nord-europeisk härkomst.
+]
+
+---
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-37-1.png" width="792" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Verktyg och resurser
+
+### ColorBrewer
+
+utvecklat för spatial data ([Harrower and Brewer, 2003](https://www.tandfonline.com/doi/abs/10.1179/000870403235002042)), men fungerar bra
+för många olika typer av data
+
+&lt;https://colorbrewer2.org/&gt;
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-38-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+--
+
+### Viridis
+
+**sekventiella** paletter skapade av Stéfan van der Walt och
+Nathaniel Smith
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-39-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Färgblindhetsvänlig palett
+
+
+&lt;img src="images/wong.png" width="623" style="display: block; margin: auto;" /&gt;
+
+.right[([Wong, 2011](https://www.nature.com/articles/nmeth.1618))]
+
+---
+
+class: section-title
+
+# Skalor
+
+---
+
+## Skalor
+
+Valet av skalor är viktigt och bör utgå från vilken data
+man har.
+
+.pull-left[
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-41-1.png" width="360" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.pull-right[
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-42-1.png" width="360" style="display: block; margin: auto;" /&gt;
+]
+
+.center[*Antal rapporterade brott i Sverige (https://www.bra.se).*]
+
+---
+
+## Skalor och gränsvärden
+
+inte alltid en god idé att ta med hela skalan, till exempel när
+
+- gränserna (till exempel 0) inte har någon särskilt innebörd,
+- värdena i praktiken aldrig når ner gränserna, eller
+- när även små skillnader har stor betydelse.
+
+--
+
+.pull-left[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-43-1.png" alt="Förändringar i rapporterade brott mellan 2019 och 2020 i Serige (https://bra.se)." width="324" /&gt;
+&lt;p class="caption"&gt;Förändringar i rapporterade brott mellan 2019 och 2020 i Serige (https://bra.se).&lt;/p&gt;
+&lt;/div&gt;
+]
+
+--
+
+.pull-right[
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-44-1.png" width="324" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+class: middle
+
+&lt;img src="images/revenue.png" width="736" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+class: center, middle
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-46-1.png" alt="Förväntad livslängd i USA." width="792" /&gt;
+&lt;p class="caption"&gt;Förväntad livslängd i USA.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+class: center, middle
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-47-1.png" alt="Förväntad livslängd i USA med alternativa gränsvärden." width="792" /&gt;
+&lt;p class="caption"&gt;Förväntad livslängd i USA med alternativa gränsvärden.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+## Storlek och area
+
+Variabler i datan kan visualiseras med hjälp av storlek och area.
+
+--
+
+Var dock försiktiga: det är **svårt** att avläsa exakt; förvänta dig inte
+mer än att variabeln kan läsas av som en ordinalskalevariabel
+
+
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-49-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/minard-migration.png" alt="Charles Minards karta över migrationsströmmar." width="961" /&gt;
+&lt;p class="caption"&gt;Charles Minards karta över migrationsströmmar.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+## Wordclouds
+
+<div id="htmlwidget-9515a27854e1a8f05d9c" style="width:720px;height:576px;" class="wordcloud2 html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9515a27854e1a8f05d9c">{"x":{"word":["oil","said","prices","opec","mln","the","last","bpd","dlrs","crude","market","reuter","saudi","will","one","barrel","kuwait","new","official","pct","price","barrels","government","production","sheikh","industry","meeting","minister","world","also","billion","futures","month","output","petroleum","quota","sources","accord","analysts","but","group","gulf","january","markets","report","today","december","demand","economic","economy","energy","help","international","may","nazer","nymex","posted","present","they","traders","158","ability","agreement","ali","april","arabia","budget","emergency","exchange","hold","imports","members","recent","riyals","says","sell","years","abdulaziz","agency","arab","ceiling","company","contract","daily","emirates","expected","expenditure","exports","growth","now","opecs","plans","qatar","quoted","research","reserve","reserves","states","study","united","way","week","west","year","150","according","added","among","asked","brings","buyers","can","change","corp","cut","day","development","effective","exploration","fall","february","fell","free","higher","increase","levels","meet","must","never","per","policy","power","problem","producing","protect","pumping","reduced","revenue","revenues","rise","saying","set","since","spa","strategic","texas","this","total","transaction","weak","yesterday","13nation","1985","198586","1986","1987","198788","address","agreed","alkhalifa","alqabas","alsabah","announced","appears","arabian","arabias","around","average","back","bank","bbl","boost","called","commitment","companies","compared","countrys","current","decrease","denied","dollars","domestic","due","efp","estimate","estimates","export","fixed","foreign","four","future","grade","guard","high","hisham","however","inc","indonesia","indonesias","intermediate","kingdoms","kuwaits","local","low","lower","lowered","made","main","march","mckiernan","measures","mizrahi","moves","much","named","next","officials","plant","position","president","pressure","producer","projected","published","real","refinery","reiterated","remain","rule","say","sector","several","sharp","ship","six","slightly","smaller","spokeswoman","state","sweet","texaco","three","trading","two","weeks","york","1518","198687","20s","285000","500","725","750","948000","activity","adhering","agriculture","along","apparently","appeared","approved","architect","areas","aspen","bankers","based","benchmark","benefits","canada","canadian","cash","changed","changes","circumstance","clearly","closed","coast","come","committee","commodity","consumption","countries","country","crossroads","crucial","cubic","currently","customers","deal","decembers","decline","deficit","deposits","deputy","diamond","differentials","difficulties","direction","discounted","dlr","early","ecuador","effect","embargo","embassy","entering","even","falling","feb","first","fiscal","fiscales","forced","fully","gcc","general","given","grades","halt","hit","hope","humanistic","impact","import","increased","increasing","instead","institute","interview","investment","jersey","june","keep","late","light","limit","limits","line","lost","louisiana","lowest","major","marketing","member","mid","million","ministers","mitigate","months","nearing","net","neutral","none","nuclear","organisation","organization","outlook","overseas","pact","pay","petroliferos","planned","port","positive","postings","predicted","press","pricing","private","probably","problems","pronounced","protected","public","put","quotes","raise","rate","reduction","referring","remarks","reports","return","review","risks","riyal","selfimposed","selling","share","shortfall","spot","steady","stick","strongly","studies","support","take","taken","techniques","throughput","trade","trust","trying","uncertainty","union","value","wam","wanted","weakness","winter","yacimientos","yanbu","zero","zone","100000","108","111","115","12217","1232","1381","13member","156","1600","1635","1650","1667","168","1685","1752","180000","200000","200foot","2226","24hour","2766","300","3749598","3750003","4133","534","5472","614","658","6745","678","718","738","able","abroad","accept","across","add","addressed","adherence","advantage","advisers","after","agricultural","aground","allocated","allocations","allow","almost","already","althani","although","alvite","amidst","analysis","analyst","annual","anything","apparent","aramco","argentine","arrangement","asia","asian","assesses","assign","assigned","associates","attract","available","averaging","aware","bahrain","bahrains","balance","baseless","basic","basis","because","beginning","bijan","bin","bit","bodys","briefly","broadened","brothers","buildings","burden","buy","buyer","calendar","cambridge","capacity","capozza","carrying","center","century","cera","certain","cftc","chairman","challenge","characterized","charging","cheap","cheating","chevron","chv","cited","citing","clever","close","closer","closes","coming","commission","communications","companys","completed","complex","condition","conditions","considered","construction","contacts","continuation","continue","continued","continues","contracted","contributed","control","cooperation","coordination","copany","corps","council","counter","coupled","covered","creek","critical","cts","currency","custom","cuts","cutting","cypriot","daniel","david","days","debtburdened","debut","decided","declared","declines","deemed","defence","delaware","delivered","delivering","departments","deregulate","deregulation","determination","devalue","device","differential","difficulty","dillard","director","discuss","discussing","distribution","distributions","divided","doha","dollar","drawbacks","drop","dropped","earlier","earnings","eastern","easy","ecuadors","editor","edmontonswann","education","eight","either","elaborate","elections","electricity","end","engineers","entitlements","environment","equally","estimated","european","exceed","exceeding","excess","excesses","excessive","exerted","exist","expanded","expansion","expartners","expectations","expects","explained","exporting","exxon","face","faced","faces","facilities","facing","failed","fallen","favours","fee","fernando","figure","figures","finance","firmer","floating","followed","for","forces","foremost","fourth","frank","full","fundamentals","gas","generally","geneva","get","globalization","glut","guaranteed","halting","harvard","heads","health","hedge","hedged","helped","hemisphere","highly","hills","hitting","hoped","housing","houston","immediately","implementation","improve","improvement","include","including","independent","indications","initiate","initiative","institutions","interbank","interest","investments","issue","jamaica","jan","juaymah","jubail","jump","just","khalifa","lack","largest","later","latest","launched","lead","leading","learn","least","lending","less","lesson","level","liberalised","lift","liftings","like","lines","liquidity","little","loan","lodged","longterm","ltd","lukman","lull","maintain","make","manager","manipulate","many","marathon","marathons","marker","mcfadden","means","mercantile","metrers","metres","mid1960s","mid1986","mideast","minus","mlotok","mob","mobil","momentum","money","monopolies","monthend","moussavarrahmani","movement","nation","natural","need","needs","negative","negotiate","neither","network","news","newspaper","nigerian","nine","nonoil","northern","notes","offset","onetwelfth","oneweek","open","opens","operations","opposite","optimism","optimistic","option","order","organiaation","our","outlining","outside","overproducing","part","parties","partly","party","past","paths","paul","paulsboro","payments","pegged","performance","period","pertains","pessimistic","philadelphia","physical","placed","plastics","platinum","point","policies","political","population","positions","postponed","pressures","previous","primarily","primary","principal","procedure","produce","produced","producers","product","products","program","projection","projects","prompted","proposed","proved","providing","provision","publish","purposes","quarter","quiet","quietly","quotas","rallied","ran","ranging","ras","rates","rationalise","readdress","reaffirmed","reasonable","recommending","recovering","recurrent","reference","refineries","refining","reflect","refloat","reform","reforms","regain","regard","regarding","region","regional","reiterate","relaxation","relieve","reluctant","remainder","remained","reported","request","resistance","resisting","resources","respectively","responsibilites","restored","restraint","restrictions","result","reuters","revealed","reviews","right","rilwanu","rising","river","rocks","rosemary","rumour","rushing","sales","salomon","santos","satisfied","saw","scheduled","scheme","seapride","season","secretary","security","seeing","seek","september","series","serve","services","session","sets","seven","severely","shamrock","sharply","shoulder","show","showed","shown","signed","signs","situation","sixmonth","slackens","slide","slump","social","sold","soon","sort","sour","south","southeast","spend","spill","spoke","spokesman","spotnext","spriggs","stabilise","stabilize","stable","start","statement","steel","steering","steps","stiff","storage","strong","subsequently","substitution","succeed","suffer","suffering","suhartos","sunday","sundays","supply","supporting","suppose","surrounding","swift","talks","tanker","tanurah","tapers","teach","telephone","terminals","test","there","third","thomas","though","thought","threemonth","tide","together","told","totalled","tower","trader","trades","traditional","traditionally","transacted","transmission","transport","trends","trusts","try","turmoil","twofold","uae","uncertain","unchanged","under","unions","unitholders","universitys","unlikely","unocal","unusually","urged","use","virtual","wants","water","wealth","wednesday","weekend","welcomed","when","whether","wishes","worldwide","xon","yergin","yesterdays"],"freq":[85,73,48,42,31,26,24,23,23,21,20,20,18,18,17,15,14,14,14,14,13,11,11,11,11,10,10,10,10,9,9,9,9,9,9,9,9,8,8,8,8,8,8,8,8,8,7,7,7,7,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":2.11764705882353,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+
+---
+
+## The Lie Factor
+
+.pull-left[
+Ytterligare ett koncept introducerat att Edward Tufte
+
+$$
+\text{lie factor} = \frac{\text{effect in visualization}}{\text{size of effect in data}}
+$$
+]
+
+--
+
+.pull-right[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/liefactor_doctor.jpg" alt="En lie factor om 2.8." width="90%" /&gt;
+&lt;p class="caption"&gt;En lie factor om 2.8.&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+class: middle
+
+&lt;img src="images/fuel-economy.png" width="1003" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: section-title
+
+# Visuell perception
+
+---
+
+## Perspektiv (3D)
+
+.pull-left-40[
+kan verka logiskt att använda den tredje dimensionen när
+man vill visualisera tre variabler
+
+men det är sällan en god idé!
+]
+
+.pull-right-60[
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-54-1.png" alt="Ett 3D-spridningsdiagram över data på bilar." width="504" /&gt;
+&lt;p class="caption"&gt;Ett 3D-spridningsdiagram över data på bilar.&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-55-1.png" alt="Dödstal i Virginia, USA 1940." width="576" /&gt;
+&lt;p class="caption"&gt;Dödstal i Virginia, USA 1940.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/college.png" alt="Antagningstal från högskolor och universitet i USA." width="36%" /&gt;
+&lt;p class="caption"&gt;Antagningstal från högskolor och universitet i USA.&lt;/p&gt;
+&lt;/div&gt;
+
+
+---
+
+### Alla 3D-visualiseringar är inte av ondo!
+
+Det finns situationer när man kan använda sig av 3D-visualiseringar:
+
+1. interaktiva eller animerade visualiseringar
+2. flera figurer från olika perspektiv
+3. bara den övegripande trenden är viktig
+4. datan representerar just de tre dimensionerna i rummet
+
+--
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-57-1.png" alt="Topografin av Maunga Whau-vulkanen." width="720" /&gt;
+&lt;p class="caption"&gt;Topografin av Maunga Whau-vulkanen.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+&lt;img src="images/storm.png" width="848" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Optiska illusioner
+
+Vår synförmåga kan vilseleda oss!
+
+--
+
+&lt;img src="images/cafe-wall.png" width="1045" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle
+
+&lt;img src="images/ebbinghaus.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle
+
+&lt;img src="images/chessboard-animated.gif" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: section-title
+
+# Datavisualisering i praktiken
+
+---
+
+## Från ax till limpa
+
+.pull-left[
+### Steg 1: lär känna din data
+
+- Vad står variablerna för?
+- Hur samlades datan in?
+- Vilka skalnivåer har variablerna?
+- Hur många observationer har du?
+- Vem är mottagaren?
+- Vad vill du kommunicera?
+]
+
+--
+
+.pull-right[
+### Steg 2: utkast och skisser
+
+- Testa olika typer av visualiseringar.
+- Var beredd att kasta många utkast.
+- Använd gärna papper och penna!
+]
+
+--
+
+.pull-left[
+### Steg 3: pilottesta
+
+- Prova visualiseringen på någon i den tänkta
+  mottagargruppen.
+]
+
+--
+
+.pull-right[
+### Steg 4: redigera och revidera
+
+- Redigera och testa om.
+- Behöver du göra några transformationer?
+- Wax on, wax off.
+]
+
+---
+
+## En numerisk variabel
+
+.pull-left[
+### Histogram
+
+standardvalet om man vill visualisera fördelningen av en
+numerisk variabel
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-62-1.png" alt="Histogram över utbrott av geysern Old Faithful." width="324" /&gt;
+&lt;p class="caption"&gt;Histogram över utbrott av geysern Old Faithful.&lt;/p&gt;
+&lt;/div&gt;
+]
+
+--
+
+.pull-right[
+### Boxplots (lådogram)
+
+mer kompakt än histogram, men innebär större förlust av data
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-63-1.png" alt="Boxplot över utbrott av geysern Old Faithful." width="324" /&gt;
+&lt;p class="caption"&gt;Boxplot över utbrott av geysern Old Faithful.&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+## Två numeriska variabler
+
+.pull-left[
+**spridningsdiagram** är så gott som alltid det naturliga valet
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-64-1.png" alt="Spridningsdiagram över fertilitet och utbilding." width="324" /&gt;
+&lt;p class="caption"&gt;Spridningsdiagram över fertilitet och utbilding.&lt;/p&gt;
+&lt;/div&gt;
+]
+
+--
+
+.pull-right[
+se dock upp för överlappning i datamaterialet!
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-65-1.png" alt="Spridningsdiagram över fertilitet och utbilding." width="324" /&gt;
+&lt;p class="caption"&gt;Spridningsdiagram över fertilitet och utbilding.&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+## Visualisering av kategoriska variabler
+
+**stapeldiagram** är ofta det enklaste och mest passande valet för
+data på nominalnivå
+
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-67-1.png" alt="Ett urval av variabler från en bred socialdemografisk undersökning i USA från 1972 till 2006." width="432" /&gt;
+&lt;p class="caption"&gt;Ett urval av variabler från en bred socialdemografisk undersökning i USA från 1972 till 2006.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+### Flera kategoriska variabler
+
+fundera på om du vill visualisera **proportioner** eller **antal**
+
+--
+
+.pull-left[
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-68-1.png" width="396" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.pull-right[
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-69-1.png" width="396" style="display: block; margin: auto;" /&gt;
+]
+
+var dock försiktiga med proportioner när några av grupperna blir väldigt små!
+
+---
+
+### Uppdelade stapeldiagram
+
+utnyttjar mycket av kanvasen men svårt att jämföra mellan kategorier
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-70-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Cirkeldiagram
+
+fungerar enbart okej när det inte är viktigt att jämföra kategorier och när
+det är få kategorier
+
+.pull-left[
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-71-1.png" width="288" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.pull-right[
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-72-1.png" width="324" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Multivariata figurer
+
+finns många alternativ för att hantera multivariat data:
+
+- färg
+- symboler
+- storlek
+- paneler
+- text
+
+---
+
+### Färg
+
+färg är särskilt användbart när variabeln som kopplas till färgen
+är kategorisk (nominell)
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-73-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Symboler
+
+symboler är i regel ett sämre alternativ ­– men bra
+för färgblinda!
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-74-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Färg och symboler?
+
+det bästa av två världar?
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-75-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+### Storlek
+
+fungerar helt okej såvida man accepterar
+att variabeln enbart kan läsas av som en
+ordinalskala
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-76-1.png" width="612" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Paneler
+
+väldigt användbara: visualiserar små multiplar
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-77-1.png" width="684" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Stora datamaterial
+
+stora mängder data kräver ofta mer bearbetning
+
+alternativ: visualisera ett slumpvis urval – hade ni varit bekväma med det?
+
+--
+
+### Diamanter
+
+.pull-left[
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-78-1.png" width="324" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.pull-right[
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-79-1.png" width="360" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+
+## Statistiska visualiseringar
+
+glöm inte bort att visualisera datan!
+
+
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-81-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Statistiska visualiseringar
+
+glöm inte bort att visualisera datan!
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-82-1.png" alt="En linjär regressionmodel som förklarar 67% av variansen." width="504" /&gt;
+&lt;p class="caption"&gt;En linjär regressionmodel som förklarar 67% av variansen.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+### Ancombes kvartett
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-83-1.png" alt="Alla regressionslinjerna är ungefär detsamma och förklarar samma grad av varians." width="648" /&gt;
+&lt;p class="caption"&gt;Alla regressionslinjerna är ungefär detsamma och förklarar samma grad av varians.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+### Osäkerhet i visualiseringar
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-84-1.png" width="648" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Kartor
+
+mycket data har geografiska element
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-85-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Projektioner
+
+alla projektioner innebär en förlust av data
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/mercator-tissot.png" alt="Areadeformation i Mercatorprojektionen." width="50%" /&gt;
+&lt;p class="caption"&gt;Areadeformation i Mercatorprojektionen.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+class: middle
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-87-1.png" alt="Gall-Peters-projektionen." width="720" /&gt;
+&lt;p class="caption"&gt;Gall-Peters-projektionen.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+class: middle
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-88-1.png" alt="Mollweide-projektionen." width="792" /&gt;
+&lt;p class="caption"&gt;Mollweide-projektionen.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+class: middle
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/projection-waterman.png" alt="Waterman Butterfly-projektionen." width="95%" /&gt;
+&lt;p class="caption"&gt;Waterman Butterfly-projektionen.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+class: middle
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-90-1.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-91-1.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class:middle
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-92-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Animerade visualiseringar
+
+väldigt effektivt för framförallt
+presentationer
+
+&lt;img src="dataviz-librarians_files/figure-html/unnamed-chunk-93-1.gif" style="display: block; margin: auto;" /&gt;
+
+--
+
+---
+
+## Interaktiva visualiseringar
+
+perfekta för hemsidor, men lämna inte över
+jobbet helt åt läsaren!
+
+
+
+&lt;iframe src="demo.html" width="80%" height="400" id="igraph" scrolling="no" seamless="seamless" frameBorder="0"&gt;&lt;/iframe&gt;
+
+---
+
+class: section-title
+
+# Learning by (bad) examples
+
+---
+
+### Exempel 1
+
+&lt;img src="images/bad1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+&lt;img src="images/good1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+### Exempel 2
+
+&lt;img src="images/bad2.png" width="687" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+&lt;img src="images/good2.png" width="1115" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+### Exempel 3
+
+&lt;img src="images/bad3.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+&lt;img src="images/good3.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+### Exempel 4
+
+&lt;img src="images/bad4.png" width="928" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+&lt;img src="images/good4.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Övning: designa en visualisering
+
+Låt säga att ni har ett datamaterial över ett antal vetenskapliga rapporter
+där huvudförfattaren är affilierad med ett universitet i Europa.
+Ni har:
+
+- typ av rapport (artikel, konferensbidrag, etc)
+- namn på författarna
+- affiliationer på författarna
+- ID på andra artiklar som har citerat artikeln
+- ID på artiklarna som artikeln har citerat
+- publiceringsdatum
+- tidskrift
+
+### Uppgift
+
+Skapa en visualisering för att titta på hur
+
+
+---
+class: center, middle
+
+# Verktyg, resurser
+
+---
+
+## Verktyg
+
+finns en uppsjö av olika verktyg för visualiseringar
+
+.pull-left[
+#### Programmering
+
+* R (ggplot2)
+* python (seaborne)
+
+#### Grafiska gränssnitt
+
+* Tableau
+* Power BI
+* Matlab
+
+#### Nischade applikationer
+* VOSviewer
+]
+
+.pull-right[
+&lt;img src="images/ggplot2.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+&lt;img src="images/tableau.jpg" width="80%" style="display: block; margin: auto;" /&gt;
+
+&lt;img src="images/vosviewer.png" width="185" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Literatur
+
+.pull-left-60[
+R. Grant, **Data visualization**: Charts, Maps, and Interactive Graphics, 1
+edition. Boca Raton: Chapman and Hall/CRC, 2018. (Gratis via LU)
+]
+
+.pull-right-40[
+&lt;img src="images/grant-book.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.pull-left-40[
+&lt;img src="images/healy-book.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right-60[
+K. Healy, **Data visualization: A Practical Introduction**, 1st edition.
+Princeton, NJ: Princeton University Press, 2019. (Tillgänglig online:
+[socviz.co](https://socviz.co/))
+]
+
+---
+
+.pull-left-60[
+C. O. Wilke, **Fundamentals of data visualization: a primer on making informative
+and compelling figures**, 1st edition. Sebastopol, CA: O’Reilly Media, 2019.
+(Tillgänglig online: [clauswilke.com/dataviz/](https://clauswilke.com/dataviz/))
+]
+
+.pull-right-40[
+&lt;img src="images/wilke-book.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.pull-left-40[
+&lt;img src="images/tufte-book.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right-60[
+E. R. Tufte, **The visual display of quantitative information**, 2nd edition.
+Cheshire, Conn: Graphics Press, 2001.
+]
+
+---
+
+### STAE04: Visualisering av data
+
+en introduktion till datavisualisering med R och ggplot2
+
+
+läs mer på &lt;https://stat.lu.se/utbildning/kurser/stae04_visualisering_av_data&gt;
+
+---
+
+class: section-title
+
+# Frågor? Tankar?
+
+
+---
+
+## Referenser
+
+&lt;a name=bib-harrower2003&gt;&lt;/a&gt;[Harrower, M. and C. A. Brewer](#cite-harrower2003) (2003). "ColorBrewer.Org: An Online Tool for Selecting Colour Schemes for Maps". In: _The Cartographic Journal_ 40.1, pp.
+27-37. ISSN: 0008-7041. DOI: [10.1179/000870403235002042](https://doi.org/10.1179%2F000870403235002042). URL:
+[https://www.tandfonline.com/doi/abs/10.1179/000870403235002042](https://www.tandfonline.com/doi/abs/10.1179/000870403235002042) (visited on sep. 16, 2020).
+
+&lt;a name=bib-tufte2001&gt;&lt;/a&gt;[Tufte, E. R.](#cite-tufte2001) (2001). _The Visual Display of Quantitative Information_. Second. Cheshire, CT, USA: Graphics Press. ISBN: 978-1-930824-13-3.
+
+&lt;a name=bib-wong2011a&gt;&lt;/a&gt;[Wong, B.](#cite-wong2011a) (2011). "Points of View: Color Blindness". In: _Nature Methods_ 8.6 (6), pp. 441-441. ISSN: 1548-7105. DOI:
+[10.1038/nmeth.1618](https://doi.org/10.1038%2Fnmeth.1618). URL: [https://www.nature.com/articles/nmeth.1618](https://www.nature.com/articles/nmeth.1618) (visited on maj. 13, 2021).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

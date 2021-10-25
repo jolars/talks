@@ -1,0 +1,35 @@
+\begin{tikzpicture}
+\begin{axis}[
+    xlabel = \(\beta_1\),
+    ylabel = \(\beta_2\),
+    ymin = -1.1,
+    ymax = 4,
+    xmin = -1.1,
+    xmax = 4,
+    axis lines = center,
+    yticklabels={,,},
+    xticklabels={,,}
+]
+\draw[rotate around={45:(2,2)}] (2,2) ellipse (1 and 0.5);
+\draw[rotate around={45:(2,2)}] (2,2) ellipse (1.4 and 0.7);
+\draw[rotate around={45:(2,2)}] (2,2) ellipse (1.77 and 0.87);
+
+\addplot[]
+    coordinates {
+    	(-1,0)
+    	(-0.75, 0.75)
+    	(0,1)
+    	(0.75,0.75)
+    	(1,0)
+    	(0.75,-0.75)
+    	(0,-1)
+    	(-0.75,-0.75)
+    	(-1,0)
+    };
+\addplot [only marks, mark=*] coordinates {(2,2)};
+\node [above right,black] at (2,2) {$h(\beta)$};
+
+\addplot [only marks, mark=*] coordinates { (0.75,0.75) };
+\node [below left] at (0.75,0.75) {$\hat\beta$};
+\end{axis}
+\end{tikzpicture}

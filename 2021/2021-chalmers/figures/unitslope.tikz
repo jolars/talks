@@ -1,0 +1,43 @@
+\begin{tikzpicture}
+\begin{axis}[
+    ylabel = \(c (\lambda)_j\),
+    xlabel = \(\lambda\),
+    xmax = 1.4,
+    ymin = -0.1,
+    width = 5cm,
+    height = 5cm
+]
+\addplot[style = dashed]
+    coordinates {
+        (0,0)
+        (1,1)
+    };
+\addplot[]
+    coordinates {
+        (0.8,0.2)
+        (0.5,0.5)
+    };
+\addplot[thick]
+    coordinates {
+        (0.8,0.2)
+        (0.4,0.4)
+        (0,0)
+    };
+\draw [decorate,decoration={brace},xshift=4pt]
+(0.8,0.5) -- (0.8,0.2)node [right,black,midway] {\footnotesize
+$\lambda_{k}-\lambda_{k + 1}$};
+
+\addplot[style=dotted]
+    coordinates {
+        (0.5,-0.2)
+        (0.5,0.5)
+    };
+\addplot[style=dotted]
+    coordinates {
+        (0.8,-0.2)
+        (0.8,0.2)
+    };
+\node [right] at (0.5,0) {\footnotesize$\lambda_{k + 1}$};
+\node [right] at (0.8,0) {\footnotesize$\lambda_{k}$};
+\end{axis}
+\end{tikzpicture}

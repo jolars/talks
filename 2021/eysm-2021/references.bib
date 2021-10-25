@@ -1,0 +1,374 @@
+@inproceedings{bonnefoy2014,
+  title      = {A Dynamic Screening Principle for the Lasso},
+  author     = {Bonnefoy, Antoine and Emiya, Valentin and Ralaivola, Liva and Gribonval, Rémi},
+  date       = {2014-09-01/2014-09-05},
+  booktitle  = {{{EUSIPCO}} 2014},
+  eventtitle = {{{EUSIPCO}} 2014},
+  location   = {{Lisbon, Portugal}},
+  pages      = {6--10},
+  isbn       = {978-0-9928626-1-9},
+  abstract   = {The Lasso is an optimization problem devoted to finding a sparse representation of some signal with respect to a predefined dictionary. An original and computationally-efficient method is proposed here to solve this problem, based on a dynamic screening principle. It makes it possible to accelerate a large class of optimization algorithms by iteratively reducing the size of the dictionary during the optimization process, discarding elements that are provably known not to belong to the solution of the Lasso. The iterative reduction of the dictionary is what we call dynamic screening. As this screening step is inexpensive, the computational cost of the algorithm using our dynamic screening strategy is lower than that of the base algorithm. Numerical experiments on synthetic and real data support the relevance of this approach.},
+  publisher  = {{IEEE}},
+  url        = {https://hal.archives-ouvertes.fr/hal-00880787v4},
+  urldate    = {2020-10-07}
+}
+% == BibLateX quality report for bonnefoy2014:
+% ? Unsure about the formatting of the booktitle
+% ? Unused libraryCatalog: HAL Archives Ouvertes
+% ? Unused version: 5081
+
+@article{bonnefoy2015,
+  title        = {Dynamic Screening: Accelerating First-Order Algorithms for the Lasso and Group-Lasso},
+  author       = {Bonnefoy, Antoine and Emiya, Valentin and Ralaivola, Liva and Gribonval, Remi},
+  date         = {2015-10},
+  journaltitle = {IEEE Transactions on Signal Processing},
+  volume       = {63},
+  number       = {19},
+  pages        = {5121--5132},
+  issn         = {1053-587X, 1941-0476},
+  doi          = {10.1109/TSP.2015.2447503},
+  abstract     = {Recent computational strategies based on screening tests have been proposed to accelerate algorithms addressing penalized sparse regression problems such as the Lasso. Such approaches build upon the idea that it is worth dedicating some small computational effort to locate inactive atoms and remove them from the dictionary in a preprocessing stage so that the regression algorithm working with a smaller dictionary will then converge faster to the solution of the initial problem. We believe that there is an even more efficient way to screen the dictionary and obtain a greater acceleration: inside each iteration of the regression algorithm, one may take advantage of the algorithm computations to obtain a new screening test for free with increasing screening effects along the iterations. The dictionary is henceforth dynamically screened instead of being screened statically, once and for all, before the first iteration. We formalize this dynamic screening principle in a general algorithmic scheme and apply it by embedding inside a number of first-order algorithms adapted existing screening tests to solve the Lasso or new screening tests to solve the Group-Lasso. Computational gains are assessed in a large set of experiments on synthetic data as well as real-world sounds and images. They show both the screening efficiency and the gain in terms running times.},
+  langid       = {english},
+  shortjournal = {IEEE Trans. Signal Process.},
+  shorttitle   = {Dynamic {{Screening}}}
+}
+% == BibLateX quality report for bonnefoy2015:
+% 'issn': not a valid ISSN
+% ? Unused libraryCatalog: DOI.org (Crossref)
+% ? Unused url: http://ieeexplore.ieee.org/document/7128732/
+% ? Unused version: 5080
+
+@book{boyd2004,
+  title     = {Convex Optimization},
+  author    = {Boyd, Stephen and Vandenberghe, Lieven},
+  date      = {2004},
+  location  = {{New York, NY, USA}},
+  isbn      = {978-0-521-83378-3},
+  edition   = {1},
+  publisher = {{Cambridge University Press}}
+}
+
+@article{eddelbuettel2011,
+  title        = {Rcpp: Seamless {{R}} and {{C}}++ Integration},
+  author       = {Eddelbuettel, Dirk and François, Romain},
+  date         = {2011},
+  journaltitle = {Journal of Statistical Software},
+  volume       = {40},
+  number       = {8},
+  pages        = {1--18},
+  doi          = {10/gc3hqm}
+}
+
+@article{eddelbuettel2014,
+  title        = {{{RcppArmadillo}}: Accelerating {{R}} with High-Performance {{C}}++ Linear Algebra},
+  author       = {Eddelbuettel, Dirk and Sanderson, Conrad},
+  date         = {2014-03},
+  journaltitle = {Computational Statistics and Data Analysis},
+  volume       = {71},
+  pages        = {1054--1063},
+  url          = {http://dx.doi.org/10.1016/j.csda.2013.02.005}
+}
+
+@report{elghaoui2010,
+  title       = {Safe Feature Elimination in Sparse Supervised Learning},
+  author      = {El Ghaoui, Laurent and Viallon, Vivian and Rabbani, Tarek},
+  date        = {2010-09-21},
+  location    = {{Berkeley}},
+  number      = {UCB/EECS-2010-126},
+  abstract    = {We investigate fast methods that allow to quickly eliminate variables (features) in supervised learning problems involving a convex loss function and a l₁-norm penalty, leading to a potentially substantial reduction in the number of variables prior to running the supervised learning algorithm. The methods are not heuristic: they only eliminate features that are \emph{guaranteed} to be absent after solving the learning problem. Our framework applies to a large class of problems, including support vector machine classification, logistic regression and least-squares. The complexity of the feature elimination step is negligible compared to the typical computational effort involved in the sparse supervised learning problem: it grows linearly with the number of features times the number of examples, with much better count if data is sparse. We apply our method to data sets arising in text classification and observe a dramatic reduction of the dimensionality, hence in computational effort required to solve the learning problem, especially when very sparse classifiers are sought. Our method allows to immediately extend the scope of existing algorithms, allowing us to run them on data sets of sizes that were out of their reach before.},
+  institution = {{EECS Department, University of California}},
+  url         = {http://www.eecs.berkeley.edu/Pubs/TechRpts/2010/EECS-2010-126.html}
+}
+% == BibLateX quality report for elghaoui2010:
+% Missing required field 'type'
+% ? Unused version: 5077
+
+@inproceedings{fercoq2015,
+  title      = {Mind the Duality Gap: Safer Rules for the Lasso},
+  author     = {Fercoq, Olivier and Gramfort, Alexandre and Salmon, Joseph},
+  date       = {2015-07-06/2015-07-11},
+  booktitle  = {Proceedings of the 37th International Conference on Machine Learning},
+  eventtitle = {{{ICML}} 2015},
+  location   = {{Lille, France}},
+  volume     = {37},
+  pages      = {333--342},
+  abstract   = {Screening rules allow to early discard irrelevant variables from the optimization in Lasso problems, or its derivatives, making solvers faster. In this paper, we propose new versions of the so-called rules for the Lasso. Based on duality gap considerations, our new rules create safe test regions whose diameters converge to zero, provided that one relies on a converging solver. This property helps screening out more variables, for a wider range of regularization parameter values. In addition to faster convergence, we prove that we correctly identify the active sets (supports) of the solutions in finite time. While our proposed strategy can cope with any solver, its performance is demonstrated using a coordinate descent algorithm particularly adapted to machine learning use cases. Significant computing time reductions are obtained with respect to previous safe rules.},
+  editor     = {Bach, Francis and Blei, David},
+  publisher  = {{PMLR}},
+  series     = {Proceedings of Machine Learning Research},
+  url        = {http://proceedings.mlr.press/v37/fercoq15}
+}
+% == BibLateX quality report for fercoq2015:
+% ? Unsure about the formatting of the booktitle
+% ? Unused version: 5081
+
+@article{friedman2007,
+  title        = {Pathwise Coordinate Optimization},
+  author       = {Friedman, Jerome and Hastie, Trevor and Höfling, Holger and Tibshirani, Robert},
+  date         = {2007-12},
+  journaltitle = {The Annals of Applied Statistics},
+  volume       = {1},
+  number       = {2},
+  pages        = {302--332},
+  issn         = {1932-6157},
+  doi          = {10/d88g8c},
+  abstract     = {We consider “one-at-a-time” coordinate-wise descent algorithms for a class of convex optimization problems. An algorithm of this kind has been proposed for the L1-penalized regression (lasso) in the literature, but it seems to have been largely ignored. Indeed, it seems that coordinate-wise algorithms are not often used in convex optimization. We show that this algorithm is very competitive with the well-known LARS (or homotopy) procedure in large lasso problems, and that it can be applied to related methods such as the garotte and elastic net. It turns out that coordinate-wise descent does not work in the “fused lasso,” however, so we derive a generalized algorithm that yields the solution in much less time that a standard convex optimizer. Finally, we generalize the procedure to the two-dimensional fused lasso, and demonstrate its performance on some image smoothing problems.},
+  langid       = {english},
+  shortjournal = {Ann. Appl. Stat.}
+}
+
+@article{friedman2010,
+  title        = {Regularization Paths for Generalized Linear Models via Coordinate Descent},
+  author       = {Friedman, Jerome and Hastie, Trevor and Tibshirani, Robert},
+  date         = {2010},
+  journaltitle = {Journal of Statistical Software},
+  volume       = {33},
+  number       = {1},
+  pages        = {1--22},
+  doi          = {10.18637/jss.v033.i01}
+}
+
+@article{golub1999,
+  title        = {Molecular Classification of Cancer: Class Discovery and Class Prediction by Gene Expression Monitoring},
+  author       = {Golub, T. R. and Slonim, D. K. and Tamayo, P. and Huard, C. and Gaasenbeek, M. and Mesirov, J. P. and Coller, H. and Loh, M. L. and Downing, J. R. and Caligiuri, M. A. and Bloomfield, C. D. and Lander, E. S.},
+  date         = {1999-10-15},
+  journaltitle = {Science},
+  volume       = {286},
+  number       = {5439},
+  pages        = {531--537},
+  issn         = {0036-8075},
+  doi          = {10.1126/science.286.5439.531},
+  abstract     = {Although cancer classification has improved over the past 30 years, there has been no general approach for identifying new cancer classes (class discovery) or for assigning tumors to known classes (class prediction). Here, a generic approach to cancer classification based on gene expression monitoring by DNA microarrays is described and applied to human acute leukemias as a test case. A class discovery procedure automatically discovered the distinction between acute myeloid leukemia (AML) and acute lymphoblastic leukemia (ALL) without previous knowledge of these classes. An automatically derived class predictor was able to determine the class of new leukemia cases. The results demonstrate the feasibility of cancer classification based solely on gene expression monitoring and suggest a general strategy for discovering and predicting cancer classes for other types of cancer, independent of previous biological knowledge.},
+  eprint       = {10521349},
+  eprinttype   = {pmid},
+  langid       = {english},
+  shortjournal = {Science},
+  shorttitle   = {Molecular Classification of Cancer}
+}
+
+@article{hastie2020,
+  title        = {Best Subset, Forward Stepwise or Lasso? {{Analysis}} and Recommendations Based on Extensive Comparisons},
+  author       = {Hastie, Trevor and Tibshirani, Robert and Tibshirani, Ryan},
+  date         = {2020-11},
+  journaltitle = {Statistical Science},
+  volume       = {35},
+  number       = {4},
+  pages        = {579--592},
+  issn         = {0883-4237},
+  doi          = {10.1214/19-STS733},
+  abstract     = {In exciting recent work, Bertsimas, King and Mazumder (Ann. Statist. 44 (2016) 813–852) showed that the classical best subset selection problem in regression modeling can be formulated as a mixed integer optimization (MIO) problem. Using recent advances in MIO algorithms, they demonstrated that best subset selection can now be solved at much larger problem sizes than what was thought possible in the statistics community. They presented empirical comparisons of best subset with other popular variable selection procedures, in particular, the lasso and forward stepwise selection. Surprisingly (to us), their simulations suggested that best subset consistently outperformed both methods in terms of prediction accuracy. Here, we present an expanded set of simulations to shed more light on these comparisons. The summary is roughly as follows: •neither best subset nor the lasso uniformly dominate the other, with best subset generally performing better in very high signal-to-noise (SNR) ratio regimes, and the lasso better in low SNR regimes; •for a large proportion of the settings considered, best subset and forward stepwise perform similarly, but in certain cases in the high SNR regime, best subset performs better; •forward stepwise and best subsets tend to yield sparser models (when tuned on a validation set), especially in the high SNR regime; •the relaxed lasso (actually, a simplified version of the original relaxed estimator defined in Meinshausen (Comput. Statist. Data Anal. 52 (2007) 374–393)) is the overall winner, performing just about as well as the lasso in low SNR scenarios, and nearly as well as best subset in high SNR scenarios.},
+  langid       = {english},
+  shortjournal = {Statist. Sci.},
+  shorttitle   = {Best {{Subset}}, {{Forward Stepwise}} or {{Lasso}}?}
+}
+
+@inproceedings{johnson2015,
+  title      = {Blitz: A Principled Meta-Algorithm for Scaling Sparse Optimization},
+  author     = {Johnson, Tyler B and Guestrin, Carlos},
+  date       = {2015},
+  booktitle  = {Proceedings  of  the 32nd {{International}}  {{Conference}}  on  {{Machine Learning}}},
+  eventtitle = {International  {{Conference}}  on  {{Machine Learning}}},
+  location   = {{Lille, France}},
+  volume     = {37},
+  pages      = {9},
+  abstract   = {By reducing optimization to a sequence of small subproblems, working set methods achieve fast convergence times for many challenging problems. Despite excellent performance, theoretical understanding of working sets is limited, and implementations often resort to heuristics to determine subproblem size, makeup, and stopping criteria. We propose BLITZ, a fast working set algorithm accompanied by useful guarantees. Making no assumptions on data, our theory relates subproblem size to progress toward convergence. This result motivates methods for optimizing algorithmic parameters and discarding irrelevant variables as iterations progress. Applied to 1-regularized learning, BLITZ convincingly outperforms existing solvers in sequential, limited-memory, and distributed settings. BLITZ is not specific to 1-regularized learning, making the algorithm relevant to many applications involving sparsity or constraints.},
+  langid     = {english},
+  publisher  = {{JMLR: W\&CP}},
+  url        = {http://proceedings.mlr.press/v37/johnson15.pdf}
+}
+
+@article{kurtzer2017,
+  title        = {Singularity: Scientific Containers for Mobility of Compute},
+  author       = {Kurtzer, Gregory M. and Sochat, Vanessa and Bauer, Michael W.},
+  date         = {2017-05-11},
+  journaltitle = {PLOS ONE},
+  volume       = {12},
+  number       = {5},
+  pages        = {e0177459},
+  issn         = {1932-6203},
+  doi          = {10.1371/journal.pone.0177459},
+  abstract     = {Here we present Singularity, software developed to bring containers and reproducibility to scientific computing. Using Singularity containers, developers can work in reproducible environments of their choosing and design, and these complete environments can easily be copied and executed on other platforms. Singularity is an open source initiative that harnesses the expertise of system and software engineers and researchers alike, and integrates seamlessly into common workflows for both of these groups. As its primary use case, Singularity brings mobility of computing to both users and HPC centers, providing a secure means to capture and distribute software and compute environments. This ability to create and deploy reproducible environments across these centers, a previously unmet need, makes Singularity a game changing development for computational science.},
+  langid       = {english},
+  publisher    = {{Public Library of Science}},
+  shortjournal = {PLOS ONE},
+  shorttitle   = {Singularity}
+}
+% == BibLateX quality report for kurtzer2017:
+% Unexpected field 'publisher'
+% ? Unused libraryCatalog: PLoS Journals
+% ? Unused url: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0177459
+% ? Unused version: 5083
+
+@inproceedings{massias2018,
+  title      = {Celer: A Fast Solver for the Lasso with Dual Extrapolation},
+  author     = {Massias, Mathurin and Gramfort, Alexandre and Salmon, Joseph},
+  date       = {2018-07-10/2018-07-15},
+  booktitle  = {Proceedings of the 35th {{International Conference}} on {{Machine Learning}}},
+  eventtitle = {{{ICML}} 2018},
+  location   = {{Stockholm, Sweden}},
+  volume     = {80},
+  pages      = {3315--3324},
+  abstract   = {Convex sparsity-inducing regularizations are ubiquitous in high-dimensional machine learning, but solving the resulting optimization problems can be slow. To accelerate solvers, state-of-the-art approaches consist in reducing the size of the optimization problem at hand. In the context of regression, this can be achieved either by discarding irrelevant features (screening techniques) or by prioritizing features likely to be included in the support of the solution (working set techniques). Duality comes into play at several steps in these techniques. Here, we propose an extrapolation technique starting from a sequence of iterates in the dual that leads to the construction of improved dual points. This enables a tighter control of optimality as used in stopping criterion, as well as better screening performance of Gap Safe rules. Finally, we propose a working set strategy based on an aggressive use of Gap Safe screening rules. Thanks to our new dual point construction, we show significant computational speedups on multiple real-world problems.},
+  editor     = {Dy, Jennifer and Krause, Andreas},
+  langid     = {english},
+  publisher  = {{PMLR}},
+  series     = {Proceedings of {{Machine Learning Research}}},
+  url        = {http://proceedings.mlr.press/v80/massias18a}
+}
+
+@article{ndiaye2017,
+  title        = {Gap Safe Screening Rules for Sparsity Enforcing Penalties},
+  author       = {Ndiaye, Eugene and Fercoq, Olivier and Gramfort, Alexandre and Salmon, Joseph},
+  date         = {2017},
+  journaltitle = {Journal of Machine Learning Research},
+  volume       = {18},
+  number       = {128},
+  pages        = {1--33},
+  url          = {http://jmlr.org/papers/v18/16-577.html}
+}
+
+@article{osborne2000,
+  title        = {On the {{LASSO}} and Its Dual},
+  author       = {Osborne, Michael R. and Presnell, Brett and Turlach, Berwin A.},
+  date         = {2000},
+  journaltitle = {Journal of Computational and Graphical Statistics},
+  volume       = {9},
+  number       = {2},
+  pages        = {319--337},
+  issn         = {1061-8600},
+  doi          = {10.2307/1390657},
+  abstract     = {Proposed by Tibshirani, the least absolute shrinkage and selection operator (LASSO) estimates a vector of regression coefficients by minimizing the residual sum of squares subject to a constraint on the l\textsuperscript{1}-norm of the coefficient vector. The LASSO estimator typically has one or more zero elements and thus shares characteristics of both shrinkage estimation and variable selection. In this article we treat the LASSO as a convex programming problem and derive its dual. Consideration of the primal and dual problems together leads to important new insights into the characteristics of the LASSO estimator and to an improved method for estimating its covariance matrix. Using these results we also develop an efficient algorithm for computing LASSO estimates which is usable even in cases where the number of regressors exceeds the number of observations. An S-Plus library based on this algorithm is available from StatLib.},
+  eprint       = {1390657},
+  eprinttype   = {jstor}
+}
+
+@article{sanderson2016,
+  title        = {Armadillo: A Template-Based {{C}}++ Library for Linear Algebra},
+  author       = {Sanderson, Conrad and Curtin, Ryan},
+  date         = {2016},
+  journaltitle = {The Journal of Open Source Software},
+  volume       = {1},
+  number       = {2},
+  pages        = {26},
+  doi          = {10.21105/joss.00026}
+}
+
+@article{tibshirani1996,
+  title        = {Regression Shrinkage and Selection via the Lasso},
+  author       = {Tibshirani, Robert},
+  date         = {1996},
+  journaltitle = {Journal of the Royal Statistical Society: Series B (Methodological)},
+  volume       = {58},
+  number       = {1},
+  pages        = {267--288},
+  issn         = {0035-9246},
+  abstract     = {We propose a new method for estimation in linear models. The `lasso' minimizes the residual sum of squares subject to the sum of the absolute value of the coefficients being less than a constant. Because of the nature of this constraint it tends to produce some coefficients that are exactly 0 and hence gives interpretable models. Our simulation studies suggest that the lasso enjoys some of the favourable properties of both subset selection and ridge regression. It produces interpretable models like subset selection and exhibits the stability of ridge regression. There is also an interesting relationship with recent work in adaptive function estimation by Donoho and Johnstone. The lasso idea is quite general and can be applied in a variety of statistical models: extensions to generalized regression models and tree-based models are briefly described.},
+  eprint       = {2346178},
+  eprinttype   = {jstor}
+}
+
+@article{tibshirani2012,
+  title        = {Strong Rules for Discarding Predictors in Lasso-Type Problems},
+  author       = {Tibshirani, Robert and Bien, Jacob and Friedman, Jerome and Hastie, Trevor and Simon, Noah and Taylor, Jonathan and Tibshirani, Ryan J.},
+  date         = {2012-03},
+  journaltitle = {Journal of the Royal Statistical Society. Series B: Statistical Methodology},
+  volume       = {74},
+  number       = {2},
+  pages        = {245--266},
+  issn         = {1369-7412},
+  doi          = {10/c4bb85},
+  langid       = {english}
+}
+% == BibLateX quality report for tibshirani2012:
+% ? Possibly abbreviated journal title Journal of the Royal Statistical Society. Series B: Statistical Methodology
+% ? Unused libraryCatalog: iths.pure.elsevier.com
+% ? Unused url: https://iths.pure.elsevier.com/en/publications/strong-rules-for-discarding-predictors-in-lasso-type-problems
+% ? Unused version: 5077
+
+@software{ushey2021,
+  title        = {Renv: Project Environments},
+  author       = {Ushey, Kevin},
+  date         = {2021},
+  organization = {{R Studio}},
+  url          = {https://CRAN.R-project.org/package=renv},
+  version      = {0.13.2}
+}
+
+@inproceedings{wang2014,
+  title     = {A Safe Screening Rule for Sparse Logistic Regression},
+  author    = {Wang, Jie and Zhou, Jiayu and Liu, Jun and Wonka, Peter and Ye, Jieping},
+  date      = {2014-12-08},
+  booktitle = {Proceedings of the 27th {{International Conference}} on {{Neural Information Processing Systems}} - {{Volume}} 1},
+  location  = {{Cambridge, MA, USA}},
+  pages     = {1053--1061},
+  abstract  = {The ℓ1-regularized logistic regression (or sparse logistic regression) is a widely used method for simultaneous classification and feature selection. Although many recent efforts have been devoted to its efficient implementation, its application to high dimensional data still poses significant challenges. In this paper, we present a fast and effective sparse logistic regression screening rule (Slores) to identify the "0" components in the solution vector, which may lead to a substantial reduction in the number of features to be entered to the optimization. An appealing feature of Slores is that the data set needs to be scanned only once to run the screening and its computational cost is negligible compared to that of solving the sparse logistic regression problem. Moreover, Slores is independent of solvers for sparse logistic regression, thus Slores can be integrated with any existing solver to improve the efficiency. We have evaluated Slores using high-dimensional data sets from different applications. Experiments demonstrate that Slores outperforms the existing state-of-the-art screening rules and the efficiency of solving sparse logistic regression can be improved by one magnitude.},
+  publisher = {{MIT Press}},
+  series    = {{{NIPS}}'14}
+}
+
+@article{wang2015,
+  title        = {Lasso Screening Rules via Dual Polytope Projection},
+  author       = {Wang, Jie and Wonka, Peter and Ye, Jieping},
+  date         = {2015-05-15},
+  journaltitle = {Journal of Machine Learning Research},
+  volume       = {16},
+  number       = {1},
+  pages        = {1063--1101},
+  issn         = {1532-4435},
+  abstract     = {Lasso is a widely used regression technique to find sparse representations. When the dimension of the feature space and the number of samples are extremely large, solving the Lasso problem remains challenging. To improve the efficiency of solving large-scale Lasso problems, El Ghaoui and his colleagues have proposed the SAFE rules which are able to quickly identify the inactive predictors, i.e., predictors that have 0 components in the solution vector. Then, the inactive predictors or features can be removed from the optimization problem to reduce its scale. By transforming the standard Lasso to its dual form, it can be shown that the inactive predictors include the set of inactive constraints on the optimal dual solution. In this paper, we propose an efficient and effective screening rule via Dual Polytope Projections (DPP), which is mainly based on the uniqueness and nonexpansiveness of the optimal dual solution due to the fact that the feasible set in the dual space is a convex and closed polytope. Moreover, we show that our screening rule can be extended to identify inactive groups in group Lasso. To the best of our knowledge, there is currently no exact screening rule for group Lasso. We have evaluated our screening rule using synthetic and real data sets. Results show that our rule is more effective in identifying inactive predictors than existing state-of-the-art screening rules for Lasso.}
+}
+
+@article{wu2008,
+  title        = {Coordinate Descent Algorithms for Lasso Penalized Regression},
+  author       = {Wu, Tong Tong and Lange, Kenneth},
+  date         = {2008-03},
+  journaltitle = {The Annals of Applied Statistics},
+  volume       = {2},
+  number       = {1},
+  pages        = {224--244},
+  issn         = {1932-6157},
+  doi          = {10/dqhmdg},
+  abstract     = {Imposition of a lasso penalty shrinks parameter estimates toward zero and performs continuous model selection. Lasso penalized regression is capable of handling linear regression problems where the number of predictors far exceeds the number of cases. This paper tests two exceptionally fast algorithms for estimating regression coefficients with a lasso penalty. The previously known ℓ2 algorithm is based on cyclic coordinate descent. Our new ℓ1 algorithm is based on greedy coordinate descent and Edgeworth’s algorithm for ordinary ℓ1 regression. Each algorithm relies on a tuning constant that can be chosen by cross-validation. In some regression problems it is natural to group parameters and penalize parameters group by group rather than separately. If the group penalty is proportional to the Euclidean norm of the parameters of the group, then it is possible to majorize the norm and reduce parameter estimation to ℓ2 regression with a lasso penalty. Thus, the existing algorithm can be extended to novel settings. Each of the algorithms discussed is tested via either simulated or real data or both. The Appendix proves that a greedy form of the ℓ2 algorithm converges to the minimum value of the objective function.},
+  langid       = {english},
+  mrnumber     = {MR2415601},
+  shortjournal = {Ann. Appl. Stat.},
+  zmnumber     = {1137.62045}
+}
+% == BibLateX quality report for wu2008:
+% Unexpected field 'mrnumber'
+% Unexpected field 'zmnumber'
+% 'issn': not a valid ISSN
+% ? Unused libraryCatalog: Project Euclid
+% ? Unused url: https://projecteuclid.org/euclid.aoas/1206367819
+% ? Unused version: 5077
+
+@online{zeng2017,
+  title         = {Efficient Feature Screening for Lasso-Type Problems via Hybrid Safe-Strong {{Rules}}},
+  author        = {Zeng, Yaohui and Yang, Tianbao and Breheny, Patrick},
+  date          = {2017-11-21},
+  abstract      = {The lasso model has been widely used for model selection in data mining, machine learning, and high-dimensional statistical analysis. However, due to the ultrahigh-dimensional, large-scale data sets collected in many real-world applications, it remains challenging to solve the lasso problems even with state-of-the-art algorithms. Feature screening is a powerful technique for addressing the Big Data challenge by discarding inactive features from the lasso optimization. In this paper, we propose a family of hybrid safe-strong rules (HSSR) which incorporate safe screening rules into the sequential strong rule (SSR) to remove unnecessary computational burden. In particular, we present two instances of HSSR, namely SSR-Dome and SSR-BEDPP, for the standard lasso problem. We further extend SSR-BEDPP to the elastic net and group lasso problems to demonstrate the generalizability of the hybrid screening idea. Extensive numerical experiments with synthetic and real data sets are conducted for both the standard lasso and the group lasso problems. Results show that our proposed hybrid rules substantially outperform existing state-of-the-art rules.},
+  archiveprefix = {arXiv},
+  eprint        = {1704.08742},
+  eprinttype    = {arxiv},
+  primaryclass  = {stat},
+  url           = {http://arxiv.org/abs/1704.08742},
+  urldate       = {2020-02-21}
+}
+% == BibLateX quality report for zeng2017:
+% Unexpected field 'archiveprefix'
+% Unexpected field 'primaryclass'
+% ? Unused version: 5082
+
+@article{zeng2021,
+  title        = {Hybrid Safe–Strong Rules for Efficient Optimization in Lasso-Type Problems},
+  author       = {Zeng, Yaohui and Yang, Tianbao and Breheny, Patrick},
+  date         = {2021-01-01},
+  journaltitle = {Computational Statistics \& Data Analysis},
+  volume       = {153},
+  pages        = {107063},
+  issn         = {0167-9473},
+  doi          = {10.1016/j.csda.2020.107063},
+  abstract     = {The lasso model has been widely used for model selection in data mining, machine learning, and high-dimensional statistical analysis. However, with the ultrahigh-dimensional, large-scale data sets now collected in many real-world applications, it is important to develop algorithms to solve the lasso that efficiently scale up to problems of this size. Discarding features from certain steps of the algorithm is a powerful technique for increasing efficiency and addressing the Big Data challenge. This paper proposes a family of hybrid safe–strong rules (HSSR) which incorporate safe screening rules into the sequential strong rule (SSR) to remove unnecessary computational burden. Two instances of HSSR are presented, SSR-Dome and SSR-BEDPP, for the standard lasso problem. SSR-BEDPP is further extended to the elastic net and group lasso problems to demonstrate the generalizability of the hybrid screening idea. Extensive numerical experiments with synthetic and real data sets are conducted for both the standard lasso and the group lasso problems. Results show that the proposed hybrid rules can substantially outperform existing state-of-the-art rules.},
+  langid       = {english},
+  shortjournal = {Computational Statistics \& Data Analysis}
+}

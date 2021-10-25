@@ -1,0 +1,5 @@
+# Notes for next presentation
+
+- Skip stuff regarding algorithm or simplify it considerably
+- Add some links to personal webpage
+- provide an example early on of effects of using screening rule (reducing problem size immensely)

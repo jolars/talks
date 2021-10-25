@@ -1,0 +1,76 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{presentation}[2021/05/31 Presentation Template]
+
+\RequirePackage{mathtools}
+
+% prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+
+% redefine part, section, and subsection headers
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering%
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+
+\AtBeginPart{\frame{\partpage}}
+\AtBeginSection{\ifbibliography\else\frame{\sectionpage}\fi}
+\AtBeginSubsection{\frame{\subsectionpage}}
+
+% beamer configuration
+\usecolortheme{dove}
+\usefonttheme{professionalfonts}
+\usefonttheme{structurebold}
+
+% add frame number and expand spacing slightly
+\setbeamertemplate{footline}[frame number]
+\addtobeamertemplate{footline}{\medskip}{\vskip1ex}
+
+%\addtobeamertemplate{}{}{}
+
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+
+\setbeamertemplate{frametitle}{
+  \begin{centering}\insertframetitle\par\end{centering}\medskip
+}
+\setbeamerfont{frametitle}{size=\large}
+
+\setbeamertemplate{itemize item}{$\bullet$}
+%\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{itemize subitem}{$\circ$}
+\setbeamertemplate{itemize subsubitem}{\textendash}
+
+\setbeamertemplate{headline}{\vskip6ex}
+
+\beamertemplatenavigationsymbolsempty
+%\setlength{\parskip}{1em} % add paragraph spacing
+
+% operators
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\E}{\text{E}}
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\cumsum}{cumsum}
+\DeclareMathOperator*{\prox}{prox}
+
+% macros
+\newcommand{\pkg}[1]{\textsf{#1}}

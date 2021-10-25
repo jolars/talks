@@ -1,0 +1,500 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode,pdfusetitle}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+
+\documentclass[10pt,ignorenonframetext]{beamer}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath,mathtools,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp} % provide euro and other symbols
+
+\usepackage{pgfpages}
+
+% prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+
+% redefine part, section, and subsection headers
+\raggedbottom
+\setbeamertemplate{part page}{
+ \centering
+ \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+ \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+ \centering
+ \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+ \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+ \centering
+ \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+ \end{beamercolorbox}
+}
+
+\AtBeginPart{\frame{\partpage}}
+\AtBeginSection{\ifbibliography\else\frame{\sectionpage}\fi}
+\AtBeginSubsection{\frame{\subsectionpage}}
+
+% beamer configuration
+\usecolortheme{dove}
+\usefonttheme{professionalfonts}
+\usefonttheme{structurebold}
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\setbeamertemplate{frametitle}{\begin{centering}\insertframetitle\par\end{centering}}
+\setbeamertemplate{itemize items}[circle]
+\setbeamerfont{frametitle}{size=\large}
+\setbeamertemplate{headline}{\vskip5ex}
+\beamertemplatenavigationsymbolsempty
+%\setlength{\parskip}{1em} % add paragraph spacing
+
+% Use upquote if available, for straight quotes in verbatim environments
+\usepackage{upquote}
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+
+\usepackage{xcolor}
+\usepackage{xurl} % add URL line breaks if available
+\usepackage{bookmark}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=Blue
+}
+
+% tikz and pgfplots stuff
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes,positioning,intersections}
+\usepackage{pgfplots}
+\usepgfplotslibrary{external,colormaps}
+\pgfplotsset{width=7cm,compat=1.11}
+\tikzexternalize
+
+\urlstyle{same} % disable monospaced font for URLs
+\newif\ifbibliography
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+%\usepackage{subfig}
+\usepackage{subcaption}
+\usepackage{algorithm,algpseudocode}
+\usepackage{booktabs}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\E}{\text{E}}
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\cumsum}{cumsum}
+\DeclareMathOperator*{\prox}{prox}
+\newcommand{\pkg}[1]{\textsf{#1}}
+\renewcommand{\vec}{\vectorsym}
+\newcommand{\mat}{\matrixsym}
+\newcommand{\du}{\mathrm{d}}
+
+% biblatex
+\usepackage[citestyle=authoryear]{biblatex}
+\addbibresource{references.bib}
+
+\title{The Strong Screening Rule for SLOPE}
+\subtitle{Statistical Learning Seminar}
+\author[shortname]{\texorpdfstring{\alert{Johan Larsson}}{Johan Larsson}\inst{1} \and Małgorzata Bogdan\inst{1,2} \and Jonas Wallin\inst{1}}
+\institute[shortinst]{\inst{1} Department of Statistics, Lund University, \and %
+                      \inst{2} Department of Mathematics, University of Wroclaw}
+\date{May 8, 2020}
+\titlegraphic{\includegraphics{lu.pdf}}
+
+\begin{document}
+\frame[noframenumbering,plain]{\titlepage}
+
+% \hypertarget{first-section}{%
+% \section{Setting}\label{first-section}}
+
+\begin{frame}{Recap: SLOPE}
+\protect\hypertarget{introduction}{}
+
+The SLOPE ~\autocite{bogdan2015} estimate is 
+\[
+\hat\beta = \argmin_{\beta \in \mathbb{R}^p}\left\{ g(\beta) + J(\beta;\lambda) \right\}
+\]
+where \(J(\beta;\lambda)=\sum_{i=1}^p\lambda_i \lvert \beta \rvert_{(i)}\) is the \alert{sorted \(\ell_1\) norm},
+where
+\[
+    \lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_p \geq 0, \qquad 
+    \lvert \beta \rvert_{(1)} \geq \lvert \beta \rvert_{(2)} \geq \cdots \geq \lvert \beta \rvert_{(p)}.
+\]
+\medskip
+\begin{columns}[T]
+\begin{column}{0.45\textwidth}
+Here we are interested in fitting a \alert{path} of regularization
+penalties \(\lambda^{(1)}, \lambda^{(2)}, \dots, \lambda^{(m)}\)\medskip
+
+We will
+let \(\hat\beta(\lambda^{(i)})\) correspond to the solution to SLOPE at the
+\(i\)th step on the path.
+\end{column}
+\begin{column}{0.45\textwidth}
+\pgfplotsset{width=6cm,height=6cm}
+\input{figures/sortedl1norm.tikz}   
+\end{column}
+\end{columns}
+
+\end{frame}
+
+% \begin{frame}{Problem}
+% \protect\hypertarget{introduction}{}
+
+% Solving SLOPE~\autocite{bogdan2015}
+% returns optimal point \(\hat\beta\) in variable \(\beta\) to
+% the optimization problem
+% \[
+% \begin{aligned}
+%     &\text{minimize}   && g(\beta) \\
+%     &\text{subject to} && \sum_{i=1}^n w_i \lvert \beta \rvert_{(i)} \leq t,
+% \end{aligned}
+% \]
+% or equivalently (in Lagrangian form),
+% \[
+% \hat\beta = \argmin_{\beta \in \mathbb{R}^p}\left\{ g(\beta) + \sum_{i=1}^p \lambda_i \lvert\beta\rvert_{(i)}\right\}
+% \]
+% where \(\sum_{i=1}^p\lambda_i \lvert \beta \rvert_{(i)}\) is the \alert{sorted \(\ell_1\) norm},
+% for which
+% \[\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_p \geq 0\]
+% and
+% \[\lvert \beta \rvert_{(1)} \geq \lvert \beta \rvert_{(2)} \geq \cdots \geq \lvert \beta \rvert_{(p)}.\]
+% \end{frame}
+
+% \begin{frame}{SLOPE constraint region}
+% sorted \(\ell_1\) norm defines a constraint region and the solution \(\hat\beta\) is
+% found at an intersection between the level curves of the smooth part, \(h\) and the
+% constraint region
+
+% \begin{center}
+% \input{figures/sortedl1norm.tikz}    
+% \end{center}
+% \end{frame}
+
+% \begin{frame}{Choosing \(\lambda\)}
+% \begin{itemize}
+%     \item \(\lambda\) is \(p\)-dimensional, which means there is \alert{considerable} 
+%           freedom in choosing it
+%     \item typically no informative decision\footnote{Except under
+%           certain, in general prohibitive, assumptions} and must rely on cross-validation
+%     \item to make this problem manageable, we therefore assume that each \(\lambda_i\)
+%           is a function of \(p\), \(n\), \(i\), and some parameters
+% \end{itemize}
+% \end{frame}
+
+% \begin{frame}{Principled choices of \(\lambda\)}
+% \begin{columns}
+%     \begin{column}{0.55\linewidth}
+%         \begin{block}{OSCAR~\autocite{bondell2008}}
+%             \[a(p - i) + b\]
+%         \end{block}
+%         \begin{block}{Benjamini--Hochberg (BH)~\autocite{bogdan2015}}
+%             \[\sigma\Phi^{-1}\left(1 - \frac{qi}{2p}\right),\]
+%             where \(\Phi^{-1}\) is the quantile function for the
+%             standard normal distribution
+%         \end{block}
+%         \begin{block}{Gaussian~\autocite{bogdan2015}}
+%             \[\min\left(\lambda_{i-1}, \lambda^{\mathrm{BH}}_i\sqrt{1 + \frac{1}{n-i} \sum_{j < i}\lambda_i^2}\right)\]
+%         \end{block}
+%     \end{column}
+%     \begin{column}{0.45\linewidth}
+%     \input{figures/lambdas.tikz}
+%     \end{column}
+% \end{columns}
+% \end{frame}
+
+% \begin{frame}{Choosing parameters for \(\lambda\) sequence}
+% \begin{columns}
+% \begin{column}{0.45\linewidth}
+% \begin{itemize}
+%     \item usually need \alert{cross-validation}, which
+%           means solving a \alert{large} number of optimization problems
+%     \item start regularization path with parameters such that \(\hat\beta\) at
+%           first step on the path is the \alert{null model} and last step
+%           \alert{almost saturated}
+% \end{itemize}
+% \end{column}
+% \begin{column}{0.55\linewidth}
+% \includegraphics[]{figures/path.pdf}
+% \end{column}
+% \end{columns}
+% \end{frame}
+
+\begin{frame}{Predictor screening rules}
+\begin{block}{motivation}
+many of the solutions, \(\hat\beta\), 
+along the regularization path will be \alert{sparse}, which means some 
+predictors (columns) in \(X\) will be \alert{inactive}, especially
+if \(p \gg n\)\medskip
+\end{block}
+\pause
+\begin{block}{basic idea}
+what if we could, based on a relatively \alert{cheap} test, determine which
+predictors will be inactive before fitting the model?
+\end{block}
+\pause
+\begin{block}{it turns out we can!}
+\begin{description}
+\item[safe rules] certifies that discarded predictors are not in model
+\item[heuristic rules] may incorrectly discard some predictors,
+                       which means problem must
+                       sometimes be solved several times (in practice never more
+                       than twice)
+\end{description}
+\end{block}
+\end{frame}
+
+\begin{frame}{Motivation for lasso strong rule}
+Assume we are solving the lasso, i.e. minimizing \[g(\beta) + h(\beta), \qquad h(\beta) \coloneqq \lambda \sum_{i=1}^p |\beta_i|.\]
+KKT stationarity condition is \[\boldsymbol{0} \in \nabla g(\hat\beta) + \partial h(\hat\beta),\] where
+\(\partial h(\hat\beta)\) is the subdifferential for the \(\ell_1\) norm with elements
+given by
+\[
+\partial h(\hat\beta)_i = 
+\begin{cases} 
+    \sign(\hat\beta_i)\lambda     & \hat\beta_i \neq 0\\ 
+    [-\lambda, \lambda]           & \hat\beta_i = 0,
+\end{cases}
+\]
+which means that \(\lvert \nabla g(\hat\beta)_i\rvert < \lambda \implies \hat\beta_i = 0\).
+\end{frame}
+
+\begin{frame}{Gradient estimate}
+Assume that we are fitting a regularization \alert{path} and have
+\(\hat\beta(\lambda^{(k-1)})\)---the solution for \(\lambda^{(k-1)}\)---and want
+to discard predictors corresponding to the problem for \(\lambda^{(k)}\).\medskip
+
+Basic idea: replace \(\nabla g(\hat\beta)\) with an estimate and apply the
+KKT stationarity criterion, discarding predictors that are estimated to be zero.\medskip
+
+What estimate should we use?\medskip
+\end{frame}
+
+\begin{frame}{The unit slope bound}
+A simple (and conservative) estimate turns out to be \(\lambda^{(k-1)} - \lambda^{(k)}\),
+i.e. assume that the gradient is piece-wise linear function with slope bounded by 1.
+
+\centering
+\input{figures/unitslope.tikz}
+\end{frame}
+
+\begin{frame}{The strong rule for the lasso}
+Discard the \(j\)th predictor if
+\[
+\begin{gathered}
+\underbrace{\underbrace{\left| \nabla g\left(\hat\beta(\lambda^{(k-1)})\right) \right|}_\text{previous gradient} + \underbrace{\lambda^{(k-1)} - \lambda^{(k)}}_\text{unit slope bound}}_\text{gradient prediction for \(k\)} < \lambda^{(k)}\\
+\iff\\
+\left| \nabla g\left(\hat\beta(\lambda^{(k-1)})\right) \right| < 2\lambda^{(k)} - \lambda^{(k-1)}
+\end{gathered}
+\]
+
+Empirical results show that the strong rule leads to remarkable
+performance improvements in \(p \gg n\) regime (and no penalty otherwise)~\autocite{tibshirani2012}.
+
+\end{frame}
+
+\begin{frame}[fragile]{Strong rule for lasso in action}
+\begin{figure}
+    \centering
+    \input{figures/lasso-path.tikz}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Strong rule for SLOPE}
+Exactly the same idea as for lasso strong rule.\medskip
+
+The subdifferential for SLOPE is is the
+set of all \(g \in \mathbb{R}^p\) such that
+\[
+g_{\mathcal{A}_i} =
+\left\{s \in \mathbb{R}^{\mathop{\mathrm{card}}{\mathcal{A}_i}} \bigm\vert 
+\begin{cases}
+  \mathop{\mathrm{cumsum}}(|s|_\downarrow - \lambda_{R(s)_{\mathcal{A}_i}}) \preceq \mathbf{0} &\text{if } \beta_{\mathcal{A}_i} = \mathbf{0},\\
+  \mathop{\mathrm{cumsum}}(|s|_\downarrow - \lambda_{R(s)_{\mathcal{A}_i}}) \preceq \mathbf{0} \\\quad\,\wedge\, \sum_{j \in \mathcal{A}_i}\left(|s_j| - \lambda_{R(s)_j}\right) = 0 & \text{otherwise.}
+\end{cases}
+\right\}
+\]
+\(\mathcal{A}_i\) defines a \alert{cluster} containing indices of coefficients
+equal in absolute value.\medskip
+
+\(R(x)\) is an operator that returns the \alert{ranks} of elements in \(|x|\).\medskip
+
+\(|x|_\downarrow\) returns the absolute values of \(x\) sorted in non-increasing
+order.\medskip
+\end{frame}
+
+\begin{frame}[fragile]{Strong rule algorithm for SLOPE}
+\label{alg:sparsity-rule}
+\begin{algorithmic}[1]
+\Require \(c \in \mathbb{R}^p\), 
+         \(\lambda \in \mathbb{R}^p\), where 
+         \(\lambda_1 \geq \cdots \geq \lambda_p \geq 0\).
+\State \(\mathcal{S}, \mathcal{B} \gets \varnothing\)
+\For{\(i \gets 1,\dots,p\)}
+  \State \(\mathcal{B} \gets \mathcal{B} \cup \{i\}\)
+  \If{\(\sum_{j \in \mathcal{B}}\big(c_j - \lambda_j\big) \geq 0\)}
+    \State \(\mathcal{S} \gets \mathcal{S} \cup \mathcal{B}\)
+    \State \(\mathcal{B} \gets \varnothing\)
+  \EndIf
+\EndFor
+\State Return \(\mathcal{S}\)
+\end{algorithmic}
+\medskip
+Set
+\[
+    c \coloneqq \lvert \nabla g(\hat\beta)+ \lambda^{(k-1)} - \lambda^{(k)}\rvert_\downarrow \qquad \lambda \coloneqq \lambda^{(k)},
+\] and run the algorithm above;
+the result is the predicted support for \(\hat\beta(\lambda^{(k)})\) (subject to a 
+permutation).
+\end{frame}
+
+\begin{frame}{Efficiency for simulated data}
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{figures/gaussian.pdf}
+\caption{Gaussian design, \(X \in \mathbb{R}^{200\times 5000}\),
+predictors pairwise correlated with correlation \(\rho\). There were no violations of
+the strong rule here.}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Efficiency for real data}
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{figures/efficiency-real.pdf}
+\caption{Efficiency for real data sets. The dimensions of the predictor matrices
+are \(100 \times 9920\) (arcene), \(800\times 88119\) (dorothea), \(6000\times 4955\)
+(gisette), and \(38 \times 7129\) (golub).}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Violations}
+Violations may occur if the unit slope bound fails, which can occur if
+ordering permutation of absolute gradient changes, or any predictor becomes active between
+\(\lambda^{(k-1)}\) and \(\lambda^{(k)}\).\medskip
+
+Thankfully, such violations turn out to be \alert{rare}.
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{figures/violations.pdf}
+\caption{Violations for sorted \(\ell_1\) regularized least squares regression
+with predictors pairwise correlated with \(\rho = 0.5\). \(X\in \mathbb{R}^{100 \times p}\).}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Performance}
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{figures/performance.pdf}
+\caption{Performance benchmarks for various generalized linear models
+with \(X \in \mathbb{R}^{200 \times 20000}\). Predictors are autocorrelated through an
+\(\operatorname{AR}(1)\) process with correlation \(\rho\).}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Algorithms}
+The original strong rule paper~\autocite{tibshirani2012} presents two
+strategies for using the screening rule.  For SLOPE, we have two \alert{slightly}
+modified versions of these algorithms
+
+\begin{block}{strong set algorithm}
+initialize \(\mathcal{E}\) with strong rule set
+\begin{enumerate}
+    \item fit SLOPE to predictors in \(\mathcal{E}\)
+    \item check KKT criteria against \(\mathcal{E}^C\); 
+              if there are any failures, add predictors that
+              fail the check to \(\mathcal{E}\) and go back to 1
+\end{enumerate}
+\end{block}
+\pause
+\begin{block}{previous set algorithm}
+initialize \(\mathcal{E}\) with ever-active predictors
+\begin{enumerate}
+    \item fit SLOPE to predictors in \(\mathcal{E}\)
+    \item check KKT criteria against predictors in \alert{strong} set
+        \begin{itemize}
+            \item if there are any failures, include these predictors in \(\mathcal{E}\) and
+                  go back to 1
+            \item if there are no failures, check KKT criteria against remaining predictors;
+                  if there are any failures, add these to \(\mathcal{E}\) and go back to 1
+        \end{itemize}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Comparing algorithms}
+\begin{columns}
+    \begin{column}{0.45\linewidth}
+        Strong set strategy marginally better for low--medium correlation\medskip
+        
+        Previous set strategy starts to become useful for high correlation
+    \end{column}
+    \begin{column}{0.45\linewidth}
+        \begin{figure}
+            \centering
+            \includegraphics[width=\textwidth]{figures/algorithms.pdf}
+            \caption{Performance of strong and previous set strategies for 
+                     OLS problems with varying correlation between predictors.}
+        \end{figure}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Limitations}
+\begin{itemize}
+    \item the unit slope bound is generally very conservative
+    \item does not use second-order structure in any way
+    \item current methods for solving SLOPE (FISTA, ADMM) do not make as good use of
+          screening rules as coordinate descent does (for the lasso)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The SLOPE package for R}
+
+Strong screening rule for SLOPE has been implemented in the R package
+SLOPE (\url{https://CRAN.R-project.org/package=SLOPE}). \medskip
+
+Features include
+\begin{itemize}
+    \item OLS, logistic, Poisson, and multinomial models
+    \item support for sparse and dense predictors
+    \item cross-validation
+    \item efficient codebase in \pkg{C++}
+\end{itemize}
+\begin{columns}[T]
+\begin{column}{0.65\linewidth}
+Also have a Google Summer of Code student involved in implementing
+proximal Newton solver for SLOPE this summer.
+\end{column}
+\begin{column}{0.25\linewidth}
+\begin{center}
+\includegraphics[width=\linewidth]{figures/logo.pdf}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}[allowframebreaks]{References}
+  \bibliographytrue
+  \printbibliography[heading=none]
+\end{frame}
+
+\end{document}
