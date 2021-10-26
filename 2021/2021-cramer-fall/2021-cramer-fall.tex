@@ -3,12 +3,12 @@
 \input{tex/macros}
 
 % title block
-\title{Lessons Learned from Running a Distance-Based Course in Data
+\title{Lessons Learned from Running A Distance-Based Course in Data
   Visualization}
 \subtitle{Cramér Society Fall Meeting 2021}
 \author{Johan Larsson}
 \institute{Department of Statistics, Lund University}
-\date{\today}
+\date{October 27, 2021}
 \titlegraphic{\includegraphics{figures/logo.pdf}}
 
 \begin{document}
@@ -54,9 +54,9 @@
   \begin{columns}[T,onlytextwidth]
     \begin{column}{0.7\linewidth}
       \begin{itemize}
-        \item 4 ECTS credits (\(\approx\) 10 hours/week)
-        \item Entirely distance-based
-        \item Based on R and the R-package ggplot2
+        \item 4 credits, half semester (\(\approx\) 10 hours/week)
+        \item Distance-based
+        \item Uses R and the R-package ggplot2
         \item Platform: Canvas
         \item Slack workspace for discussions
         \item Zoom for workshops
@@ -117,6 +117,20 @@
   \end{columns}
 \end{frame}
 
+\begin{frame}{Workshops}
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.5\linewidth}
+      \begin{itemize}
+        \item 1-hour online sessions on Zoom, once per week
+        \item Instruction and help with course content
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \includegraphics[width=\textwidth]{figures/dogs.jpg}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 \begin{frame}{Quizzes}
   \begin{columns}[c,onlytextwidth]
     \begin{column}{0.5\linewidth}
@@ -140,11 +154,10 @@
   \begin{columns}[c,onlytextwidth]
     \begin{column}{0.5\linewidth}
       \begin{itemize}
-        \item Three tasks in each
+        \item Short
         \item Progressively freer (and more challenging)
         \item Peer feedback
-        \item Short feedback loops
-        \item Encourage reproducible submissions (R Markdown)
+        \item Reproducible submissions (R Markdown) are encouraged
       \end{itemize}
     \end{column}
     \begin{column}{0.5\linewidth}
@@ -173,8 +186,9 @@
   \begin{itemize}
     \item Excellent student response
     \item Frees up time for real interaction
+    \item Play, pause, slow down/speed up
     \item Large time investment up-front
-    \item Best for old (stable) courses
+    \item Lock-in effects
   \end{itemize}
 \end{frame}
 
@@ -205,30 +219,43 @@
           \end{itemize}
     \item One second attempt seems appropriate, but leads to inflation
     \item "Encourages" students to actually read course literature
+    \item Gamifies the course (collect points)
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Using R: Feasible but not Frictionless}
-  \begin{itemize}
-    \item Anyone can learn how to use R
-    \item Makes assisting students easier
-    \item Speeds up revisions
-    \item Needs introduction
-    \item Divides students into two groups
-  \end{itemize}
+\begin{frame}{Using R and R Markdown: Feasible but not Frictionless}
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.5\linewidth}
+
+      \begin{itemize}
+        \item Anyone can learn how to use R
+        \item Makes assisting students easier
+        \item Speeds up revisions
+        \item Needs introduction
+        \item Student background matters
+        \item R Markdown is fantastic for assignments
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.45\linewidth}
+      \includegraphics[width=\linewidth]{figures/rmarkdown.png}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Retention}
+\begin{frame}{Workshops: Great (Provided Someone Shows Up)}
   \begin{itemize}
-    \item Register many students! \(\approx\) 50\% drop out.
-    \item
+    \item Works great
+    \item Remote control and sharing is effective
+    \item Flexible (drop-in, drop-out)
+    \item Problem is that few people show up
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Asynchronicity: A Mixed Bag}
   \begin{itemize}
     \item Great for some students
-    \item Does not combine so well with peer (and general) feedback
+    \item Does not combine so well with peer feedback
+    \item Access to everything at once may not suit everyone
   \end{itemize}
   \vspace{15ex}
   \begin{center}
@@ -238,10 +265,14 @@
 
 \begin{frame}{Conclusions}
   \begin{itemize}
-    \item Works well overall
+    \item Pre-recorded lectures: high costs up-front, but large rewards down
+       the road
     \item Peer reviews are great
-    \item Quizzes are efficient in stimulating learning
-    \item Automatic grading is useful but hard to design well
+    \item Quizzes are useful, but making well-made automatically graded quizzes
+          is hard
+    \item R Markdown is fantastic for student assignments
+    \item Expect large variation in ambition and engagement
+    \item Expect high drop-out rates
   \end{itemize}
 \end{frame}
 
