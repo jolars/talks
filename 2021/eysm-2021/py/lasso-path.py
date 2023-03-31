@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 from sklearn import linear_model
 from sklearn import datasets
 
-
 def set_size(width, fraction=1):
     """Set figure dimensions to avoid scaling in LaTeX.
 
