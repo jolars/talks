@@ -1,0 +1,383 @@
+@online{bogdan2013,
+  title         = {Statistical Estimation and Testing via the Sorted {{L1}} Norm},
+  author        = {
+    Bogdan, Ma\l{}gorzata and family=Berg, given=Ewout, prefix=van den, useprefix=false
+    and Su, Weijie and Cand\`{e}s, Emmanuel J.
+  },
+  doi           = {10.48550/arXiv.1310.1969},
+  url           = {http://arxiv.org/abs/1310.1969},
+  urldate       = {2020-04-16},
+  date          = {2013-10-29},
+  eprint        = {1310.1969},
+  eprinttype    = {arxiv},
+  eprintclass   = {math, stat},
+  abstract      = {
+    We introduce a novel method for sparse regression and variable selection, which is
+    inspired by modern ideas in multiple testing. Imagine we have observations from the
+    linear model y = X beta + z, then we suggest estimating the regression coefficients
+    by means of a new estimator called SLOPE, which is the solution to minimize 0.5
+    \vert{}\vert{}y - Xb\textbackslash \vert{}\_2\textasciicircum 2 + lambda\_1
+    \vert{}b\vert{}\_(1) + lambda\_2 \vert{}b\vert{}\_(2) + ... + lambda\_p
+    \vert{}b\vert{}\_(p); here, lambda\_1 {$>$}= \textbackslash lambda\_2 {\$>\$}= ...
+    {\$>\$}= \textbackslash lambda\_p {\$>\$}= 0 and \vert{}b\vert{}\_(1) {\$>\$}=
+    \vert{}b\vert{}\_(2) {\$>\$}= ... {\$>\$}= \vert{}b\vert{}\_(p) is the order
+    statistic of the magnitudes of b. The regularizer is a sorted L1 norm which
+    penalizes the regression coefficients according to their rank: the higher the rank,
+    the larger the penalty. This is similar to the famous BHq procedure [Benjamini and
+    Hochberg, 1995], which compares the value of a test statistic taken from a family
+    to a critical threshold that depends on its rank in the family. SLOPE is a convex
+    program and we demonstrate an efficient algorithm for computing the solution. We
+    prove that for orthogonal designs with p variables, taking lambda\_i =
+    F\textasciicircum\{-1\}(1-q\_i) (F is the cdf of the errors), q\_i = iq/(2p),
+    controls the false discovery rate (FDR) for variable selection. When the design
+    matrix is nonorthogonal there are inherent limitations on the FDR level and the
+    power which can be obtained with model selection methods based on L1-like
+    penalties. However, whenever the columns of the design matrix are not strongly
+    correlated, we demonstrate empirically that it is possible to select the parameters
+    lambda\_i as to obtain FDR control at a reasonable level as long as the number of
+    nonzero coefficients is not too large. At the same time, the procedure exhibits
+    increased power over the lasso, which treats all coefficients equally. The paper
+    illustrates further estimation properties of the new selection rule through
+    comprehensive simulation studies.
+  },
+  pubstate      = {preprint}
+}
+
+% == BibLateX quality report for bogdan2013:
+% ? unused Number ("arXiv:1310.1969")
+@article{bogdan2015,
+  title         = {{{SLOPE}} – Adaptive Variable Selection via Convex Optimization},
+  author        = {
+    Bogdan, Ma\l{}gorzata and family=Berg, given=Ewout, prefix=van den, useprefix=false
+    and Sabatti, Chiara and Su, Weijie and Cand\`{e}s, Emmanuel J.
+  },
+  volume        = {9},
+  number        = {3},
+  pages         = {1103--1140},
+  doi           = {10.1214/15-AOAS842},
+  issn          = {1932-6157},
+  url           = {https://projecteuclid.org/euclid.aoas/1446488733},
+  urldate       = {2018-12-17},
+  date          = {2015-09},
+  journaltitle  = {The annals of applied statistics},
+  shortjournal  = {Ann Appl Stat},
+  eprint        = {26709357},
+  eprinttype    = {pmid}
+}
+
+% == BibLateX quality report for bogdan2015:
+% ? unused Library catalog ("PubMed Central")
+@article{tibshirani1996,
+  title         = {Regression Shrinkage and Selection via the Lasso},
+  author        = {Tibshirani, Robert},
+  volume        = {58},
+  number        = {1},
+  pages         = {267--288},
+  doi           = {10.1111/j.2517-6161.1996.tb02080.x},
+  issn          = {0035-9246},
+  url           = {http://www.jstor.org/stable/2346178},
+  urldate       = {2018-03-12},
+  date          = {1996},
+  journaltitle  = {The Journal of the Royal Statistical Society, Series B (Statistical Methodology)},
+  eprint        = {2346178},
+  eprinttype    = {jstor},
+  abstract      = {
+    We propose a new method for estimation in linear models. The `lasso' minimizes the
+    residual sum of squares subject to the sum of the absolute value of the
+    coefficients being less than a constant. Because of the nature of this constraint
+    it tends to produce some coefficients that are exactly 0 and hence gives
+    interpretable models. Our simulation studies suggest that the lasso enjoys some of
+    the favourable properties of both subset selection and ridge regression. It
+    produces interpretable models like subset selection and exhibits the stability of
+    ridge regression. There is also an interesting relationship with recent work in
+    adaptive function estimation by Donoho and Johnstone. The lasso idea is quite
+    general and can be applied in a variety of statistical models: extensions to
+    generalized regression models and tree-based models are briefly described.
+  },
+  langid        = {english}
+}
+
+@inproceedings{larsson2020b,
+  title         = {The Strong Screening Rule for {{SLOPE}}},
+  author        = {Larsson, Johan and Bogdan, Ma\l{}gorzata and Wallin, Jonas},
+  booktitle     = {Advances in Neural Information Processing Systems 33},
+  location      = {Virtual},
+  publisher     = {Curran Associates, Inc.},
+  volume        = {33},
+  pages         = {14592--14603},
+  isbn          = {978-1-71382-954-6},
+  url           = {
+    https://papers.nips.cc/paper\%5Ffiles/paper/2020/hash/a7d8ae4569120b5bec12e7b6e9648b86-Abstract.html
+  },
+  editor        = {
+    Larochelle, Hugo and Ranzato, Marc'Aurelio and Hadsell, Raia and Balcan,
+    Maria-Florina and Lin, Hsuan-Tien
+  },
+  date          = {2020-12-06/2020-12-12},
+  abstract      = {
+    Extracting relevant features from data sets where the number of observations n is
+    much smaller then the number of predictors p is a major challenge in modern
+    statistics. Sorted L-One Penalized Estimation (SLOPE)--a generalization of the
+    lasso---is a promising method within this setting. Current numerical procedures for
+    SLOPE, however, lack the efficiency that respective tools for the lasso enjoy,
+    particularly in the context of estimating a complete regularization path. A key
+    component in the efficiency of the lasso is predictor screening rules: rules that
+    allow  predictors to be discarded before estimating the model. This is the first
+    paper to establish such a rule for SLOPE. We develop a screening rule for SLOPE by
+    examining its subdifferential and show that this rule is a generalization of the
+    strong rule for the lasso. Our rule is heuristic, which means that it may discard
+    predictors erroneously. In our paper, however, we show that such situations are
+    rare and easily safeguarded against by a simple check of the optimality conditions.
+    Our numerical experiments show that the rule performs well in practice, leading to
+    improvements by orders of magnitude for data in the \textbackslash (p
+    \textbackslash gg n\textbackslash ) domain, as well as incurring no additional
+    computational overhead when \$n {$>\$} p\$.
+  },
+  eventtitle    = {34th Conference on Neural Information Processing Systems ({{NeurIPS}} 2020)},
+  langid        = {english}
+}
+
+% == BibLateX quality report for larsson2020b:
+% ? Unsure about the formatting of the booktitle
+@inproceedings{larsson2021,
+  title         = {Look-Ahead Screening Rules for the Lasso},
+  author        = {Larsson, Johan},
+  booktitle     = {22nd {{European}} Young Statisticians Meeting - Proceedings},
+  location      = {Athens, Greece},
+  publisher     = {{Panteion university of social and political sciences}},
+  pages         = {61--65},
+  isbn          = {978-960-7943-23-1},
+  url           = {https://www.eysm2021.panteion.gr/files/Proceedings\%5FEYSM\%5F2021.pdf},
+  editor        = {
+    Makridis, Andreas and Milienos, Fotios S. and Papastamoulis, Panagiotis and
+    Parpoula, Christina and Rakitzis, Athanasios
+  },
+  date          = {2021-09-06},
+  abstract      = {
+    The lasso is a popular method to induce shrinkage and sparsity in the solution
+    vector (coefficients) of regression problems, particularly when there are many
+    predictors relative to the number of observations. Solving the lasso in this
+    high-dimensional setting can, however, be computationally demanding. Fortunately,
+    this demand can be alleviated via the use of screening rules that discard
+    predictors prior to fitting the model, leading to a reduced problem to be solved.
+    In this paper, we present a new screening strategy: look-ahead screening. Our
+    method uses safe screening rules to find a range of penalty values for which a
+    given predictor cannot enter the model, thereby screening predictors along the
+    remainder of the path. In experiments we show that these look-ahead screening rules
+    outperform the active warm-start version of the Gap Safe rules.
+  },
+  eventtitle    = {22nd {{European}} Young Statisticians Meeting},
+  langid        = {english}
+}
+
+% == BibLateX quality report for larsson2021:
+% ? Unsure about the formatting of the booktitle
+@inproceedings{larsson2022b,
+  title         = {The {{Hessian}} Screening Rule},
+  author        = {Larsson, Johan and Wallin, Jonas},
+  booktitle     = {Advances in Neural Information Processing Systems 35},
+  location      = {New Orleans, USA},
+  publisher     = {Curran Associates, Inc.},
+  volume        = {35},
+  pages         = {15823--15835},
+  isbn          = {978-1-71387-108-8},
+  url           = {
+    https://papers.nips.cc/paper\%5Ffiles/paper/2022/hash/65a925049647eab0aa06a9faf1cd470b-Abstract-Conference.html
+  },
+  editor        = {
+    Koyejo, Sanmi and Mohamed, Sidahmed and Agarwal, Alekh and Belgrave, Danielle and
+    Cho, Kyunghyun and Oh, Alice
+  },
+  date          = {2022-11-28/2022-12-09},
+  abstract      = {
+    Predictor screening rules, which discard predictors from the design matrix before
+    fitting a model, have had considerable impact on the speed with which
+    l1-regularized regression problems, such as the lasso, can be solved. Current
+    state-of-the-art screening rules, however, have difficulties in dealing with
+    highly-correlated predictors, often becoming too conservative. In this paper, we
+    present a new screening rule to deal with this issue: the Hessian Screening Rule.
+    The rule uses second-order information from the model to provide more accurate
+    screening as well as higher-quality warm starts. The proposed rule outperforms all
+    studied alternatives on data sets with high correlation for both l1-regularized
+    least-squares (the lasso) and logistic regression. It also performs best overall on
+    the real data sets that we examine.
+  },
+  eventtitle    = {
+    36th {{Conference}} on {{Neural Information Processing Systems}} ({{NeurIPS}} 2022)
+  },
+  langid        = {english}
+}
+
+% == BibLateX quality report for larsson2022b:
+% ? Unsure about the formatting of the booktitle
+@inproceedings{larsson2023,
+  title         = {Coordinate Descent for {{SLOPE}}},
+  author        = {Larsson, Johan and Klopfenstein, Quentin and Massias, Mathurin and Wallin, Jonas},
+  booktitle     = {
+    Proceedings of the 26th International Conference on Artificial Intelligence and
+    Statistics
+  },
+  location      = {Valencia, Spain},
+  publisher     = {PMLR},
+  series        = {Proceedings of Machine Learning Research},
+  volume        = {206},
+  pages         = {4802--4821},
+  url           = {https://proceedings.mlr.press/v206/larsson23a.html},
+  editor        = {
+    Ruiz, Francisco and Dy, Jennifer and family=Meent, given=Jan-Willem, prefix=van de,
+    useprefix=true
+  },
+  date          = {2023-04-25/2023-04-27},
+  abstract      = {
+    The lasso is the most famous sparse regression and feature selection method. One
+    reason for its popularity is the speed at which the underlying optimization problem
+    can be solved. Sorted L-One Penalized Estimation (SLOPE) is a generalization of the
+    lasso with appealing statistical properties. In spite of this, the method has not
+    yet reached widespread interest. A major reason for this is that current software
+    packages that fit SLOPE rely on algorithms that perform poorly in high dimensions.
+    To tackle this issue, we propose a new fast algorithm to solve the SLOPE
+    optimization problem, which combines proximal gradient descent and proximal
+    coordinate descent steps. We provide new results on the directional derivative of
+    the SLOPE penalty and its related SLOPE thresholding operator, as well as provide
+    convergence guarantees for our proposed solver. In extensive benchmarks on
+    simulated and real data, we demonstrate our method's performance against a long
+    list of competing algorithms.
+  },
+  eventtitle    = {{{AISTATS}} 2023}
+}
+
+% == BibLateX quality report for larsson2023:
+% ? Unsure about the formatting of the booktitle
+@inproceedings{moreau2022a,
+  title         = {Benchopt: Reproducible, Efficient and Collaborative Optimization Benchmarks},
+  shorttitle    = {Benchopt},
+  author        = {
+    Moreau, Thomas and Massias, Mathurin and Gramfort, Alexandre and Ablin, Pierre and
+    Bannier, Pierre-Antoine and Charlier, Benjamin and Dagr\'{e}ou, Mathieu and
+    family=Tour, given=Tom Dupr\'{e}, prefix=la, useprefix=false and Durif, Ghislain
+    and Dantas, Cassio F. and Klopfenstein, Quentin and Larsson, Johan and Lai, En and
+    Lefort, Tanguy and Mal\'{e}zieux, Benoit and Moufad, Badr and Nguyen, Binh T. and
+    Rakotomamonjy, Alain and Ramzi, Zaccharie and Salmon, Joseph and Vaiter, Samuel
+  },
+  booktitle     = {Advances in Neural Information Processing Systems 35},
+  location      = {New Orleans, USA},
+  publisher     = {Curran Associates, Inc.},
+  volume        = {35},
+  pages         = {25404--25421},
+  isbn          = {978-1-71387-108-8},
+  url           = {
+    https://proceedings.neurips.cc/paper\%5Ffiles/paper/2022/hash/a30769d9b62c9b94b72e21e0ca73f338-Abstract-Conference.html
+  },
+  editor        = {Koyejo, S. and Mohamed, S. and Agarwal, A. and Belgrave, D. and Cho, K. and Oh, A.},
+  date          = {2022-11-28/2022-12-09},
+  abstract      = {
+    Numerical validation is at the core of machine learning research as it allows to
+    assess the actual impact of new methods, and to confirm the agreement between
+    theory and practice. Yet, the rapid development of the field poses several
+    challenges: researchers are confronted with a profusion of methods to compare,
+    limited transparency and consensus on best practices, as well as tedious
+    re-implementation work. As a result, validation is often very partial, which can
+    lead to wrong conclusions that slow down the progress of research. We propose
+    Benchopt, a collaborative framework to automate, reproduce and publish optimization
+    benchmarks in machine learning across programming languages and hardware
+    architectures. Benchopt simplifies benchmarking for the community by providing an
+    off-the-shelf tool for running, sharing and extending experiments. To demonstrate
+    its broad usability, we showcase benchmarks on three standard learning tasks:
+    \$\textbackslash ell\_2\$-regularized logistic regression, Lasso, and ResNet18
+    training for image classification. These benchmarks highlight key practical
+    findings that give a more nuanced view of the state-of-the-art for these problems,
+    showing that for practical evaluation, the devil is in the details. We hope that
+    Benchopt will foster collaborative work in the community hence improving the
+    reproducibility of research findings.
+  },
+  eventtitle    = {36th Conference on Neural Information Processing Systems ({{NeurIPS}} 2022)}
+}
+
+% == BibLateX quality report for moreau2022a:
+% ? Unsure about the formatting of the booktitle
+@inproceedings{schmidt2021,
+  title         = {Descending through a Crowded Valley -- Benchmarking Deep Learning Optimizers},
+  author        = {Schmidt, Robin M. and Schneider, Frank and Hennig, Philipp},
+  booktitle     = {Proceedings of the 38th {{International Conference}} on {{Machine Learning}}},
+  location      = {Virtual},
+  publisher     = {PMLR},
+  series        = {Proceedings of {{Machine Learning Research}}},
+  volume        = {139},
+  pages         = {9367--9376},
+  issn          = {2640-3498},
+  url           = {https://proceedings.mlr.press/v139/schmidt21a.html},
+  urldate       = {2024-06-19},
+  editor        = {Meila, Marina and Zhang, Tong},
+  date          = {2021-07-18/2021-07-24},
+  abstract      = {
+    Choosing the optimizer is considered to be among the most crucial design decisions
+    in deep learning, and it is not an easy one. The growing literature now lists
+    hundreds of optimization methods. In the absence of clear theoretical guidance and
+    conclusive empirical evidence, the decision is often made based on anecdotes. In
+    this work, we aim to replace these anecdotes, if not with a conclusive ranking,
+    then at least with evidence-backed heuristics. To do so, we perform an extensive,
+    standardized benchmark of fifteen particularly popular deep learning optimizers
+    while giving a concise overview of the wide range of possible choices. Analyzing
+    more than 50,000 individual runs, we contribute the following three points: (i)
+    Optimizer performance varies greatly across tasks. (ii) We observe that evaluating
+    multiple optimizers with default parameters works approximately as well as tuning
+    the hyperparameters of a single, fixed optimizer. (iii) While we cannot discern an
+    optimization method clearly dominating across all tested tasks, we identify a
+    significantly reduced subset of specific optimizers and parameter choices that
+    generally lead to competitive results in our experiments: Adam remains a strong
+    contender, with newer methods failing to significantly and consistently outperform
+    it. Our open-sourced results are available as challenging and well-tuned baselines
+    for more meaningful evaluations of novel optimization methods without requiring any
+    further computational efforts.
+  },
+  eventtitle    = {International {{Conference}} on {{Machine Learning}}},
+  langid        = {english}
+}
+
+@article{tibshirani2012,
+  title         = {Strong Rules for Discarding Predictors in Lasso-Type Problems},
+  author        = {
+    Tibshirani, Robert and Bien, Jacob and Friedman, Jerome and Hastie, Trevor and
+    Simon, Noah and Taylor, Jonathan and Tibshirani, Ryan J.
+  },
+  volume        = {74},
+  number        = {2},
+  pages         = {245--266},
+  doi           = {10/c4bb85},
+  issn          = {1369-7412},
+  url           = {
+    https://iths.pure.elsevier.com/en/publications/strong-rules-for-discarding-predictors-in-lasso-type-problems
+  },
+  urldate       = {2018-03-16},
+  date          = {2012-03},
+  journaltitle  = {The Journal of the Royal Statistical Society, Series B (Statistical Methodology)},
+  langid        = {english}
+}
+
+@inproceedings{fercoq2015,
+  title         = {Mind the Duality Gap: Safer Rules for the Lasso},
+  author        = {Fercoq, Olivier and Gramfort, Alexandre and Salmon, Joseph},
+  booktitle     = {Proceedings of the 37th International Conference on Machine Learning},
+  location      = {Lille, France},
+  publisher     = {PMLR},
+  series        = {Proceedings of Machine Learning Research},
+  volume        = {37},
+  pages         = {333--342},
+  url           = {http://proceedings.mlr.press/v37/fercoq15},
+  editor        = {Bach, Francis and Blei, David},
+  date          = {2015-07-06/2015-07-11},
+  abstract      = {
+    Screening rules allow to early discard irrelevant variables from the optimization
+    in Lasso problems, or its derivatives, making solvers faster. In this paper, we
+    propose new versions of the so-called rules for the Lasso. Based on duality gap
+    considerations, our new rules create safe test regions whose diameters converge to
+    zero, provided that one relies on a converging solver. This property helps
+    screening out more variables, for a wider range of regularization parameter values.
+    In addition to faster convergence, we prove that we correctly identify the active
+    sets (supports) of the solutions in finite time. While our proposed strategy can
+    cope with any solver, its performance is demonstrated using a coordinate descent
+    algorithm particularly adapted to machine learning use cases. Significant computing
+    time reductions are obtained with respect to previous safe rules.
+  },
+  eventtitle    = {{{ICML}} 2015}
+}
