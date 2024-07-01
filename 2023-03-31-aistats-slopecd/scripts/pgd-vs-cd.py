@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 from labellines import labelLines
 
+from pythesis.utils import save_fig
+
 
 def suboptim(x):
     return x - np.min(x) + 1e-10
@@ -22,38 +24,28 @@ news20["objective_value"] = suboptim(news20["objective_value"])
 rcv1["objective_value"] = suboptim(rcv1["objective_value"])
 # news20["objective_value"] = news20["objective_value"] - np.min(news20["objective_value"])
 
-plt.close("all")
-
-plt.rcParams["text.usetex"] = True
-plt.rcParams["font.size"] = 8
-
-fig, axs = plt.subplots(2, 1, figsize=(1.8, 2.4), sharex=True, constrained_layout=True)
+fig, axs = plt.subplots(
+    1, 2, figsize=(3.5, 1.8), sharey=True, constrained_layout=True, edgecolor="white"
+)
 
 for key, grp in news20.groupby(["solver_name"]):
     axs[0].semilogy(grp["time"], grp["objective_value"], label=key)
 
-for key, grp in news20.groupby(["solver_name"]):
+for key, grp in rcv1.groupby(["solver_name"]):
     axs[1].semilogy(grp["time"], grp["objective_value"], label=key)
 
 axs[0].set_title("news20")
+axs[0].set_ylabel("Suboptimality")
 
 axs[1].set_title("RCV1")
-axs[1].set_xlabel("Time (s)")
 
-fig.supylabel("Suboptimality")
+fig.supxlabel("Time (s)")
 
 for i in range(2):
-    labelLines(axs[i].get_lines(), align=True)
+    labelLines(axs[i].get_lines())
 
-# ax.plot(glmnet["end"], glmnet["downloads"], label = "glmnet")
-# ax.plot(slope["end"], slope["downloads"], label = "SLOPE")
-#
-# ax.set_ylabel("Downloads")
-# ax.set_xlabel("Time")
+path = "paper5-cd-vs-pgd.pdf"
 
-plt.show(block=False)
+save_fig(path)
 
-path = "figures/cd-vs-pgd.pdf"
-
-fig.savefig(path, bbox_inches="tight", pad_inches=0.01)
-
+plt.close("all")
