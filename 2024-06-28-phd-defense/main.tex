@@ -14,6 +14,8 @@
 \usepackage{amssymb,amsmath,mathtools,amsthm}
 \usepackage{textcomp}
 \usepackage{pifont}
+\usepackage{dirtree}
+\usepackage{siunitx}
 
 \usepackage{upquote} % straight quotes in verbatim environments
 \usepackage{microtype}
@@ -52,6 +54,9 @@
 \usepackage{xcolor}
 \usepackage{xurl} % add URL line breaks if available
 \usepackage{bookmark}
+
+\usepackage[noabbrev,nameinlink]{cleveref}
+
 \usepackage{hyperref}
 
 \hypersetup{%
@@ -62,12 +67,12 @@
   urlcolor   = mLightGreen
 }
 
-%% subfigures
-% \usepackage{subcaption}
+% subfigures
+\usepackage{subcaption}
 
-% % algorithms
-% \usepackage[ruled,vlined]{algorithm2e}
-% \resetcounteronoverlays{algocf}
+% algorithms
+\usepackage[ruled,vlined]{algorithm2e}
+\resetcounteronoverlays{algocf}
 
 % tikz and pgfplots stuff
 \usepackage{tikz}
@@ -77,6 +82,8 @@
 \pgfplotsset{compat=1.15}
 %\tikzexternalize
 
+% \definecolor{graphicbackground}{rgb}{0.96,0.96,0.8}
+% \setbeamercolor{background canvas}{bg=graphicbackground}
 
 \usepackage{booktabs}
 
@@ -109,52 +116,20 @@
   \frametitle{Synopsis}
 
   \begin{exampleblock}{Overarching Theme}
-    Optimization methods and numerical algorithms (screening rules) that help speed
-    up the estimation of sparse regression models.
+    Practical concerns in sparse regression: speed, accuracy, and reproducibility.
   \end{exampleblock}
 
   \pause
 
   \begin{block}{Overview}
     \begin{description}[I--III]
-      \item[I--III] Screening rules for sparse regression
+      \item[I--III] Screening rules
       \item[IV] Benchmarking optimization methods
       \item[V] Coordinate descent (an optimization method) for SLOPE
-      \item[VI] Normalization in penalized regression
+      \item[VI] Normalization and regularization
     \end{description}
   \end{block}
 \end{frame}
-
-% \begin{frame}[c]
-%   \frametitle{Properties of SLOPE}
-%
-%   \begin{columns}
-%     \begin{column}{0.45\textwidth}
-%       SLOPE has many appealing properties:
-%       \begin{itemize}
-%         \item \alert{Clustering}~\parencite{bogdan2022,schneider2020a,figueiredo2016}
-%         \item \alert{Control of false discovery rate}~\parencite{bogdan2013,bogdan2015}
-%         \item \alert{Recovery of sparsity and ordering patterns}~\parencite{bogdan2022}
-%         \item \alert{Convexity}
-%       \end{itemize}
-%
-%       \onslide<2->{\bfseries{So why isn't SLOPE more popular?}}
-%
-%     \end{column}
-%     \begin{column}{0.45\textwidth}
-%       \begin{figure}
-%         \centering
-%         \pgfplotsset{width=7cm,height=7cm}
-%         \input{figures/sortedl1norm.tikz}
-%         \caption{%
-%           The SLOPE solution seen as a constrained problem.
-%         }
-%       \end{figure}
-%
-%     \end{column}
-%   \end{columns}
-%
-% \end{frame}
 
 \section{The Strong Screening Rule for SLOPE (Paper I)}
 
@@ -165,7 +140,7 @@
 
   \bigskip
 
-  Co-written with supervisors Malgorzata Bogdan and Jonas Wallin.
+  Co-written with supervisors Małgorzata Bogdan and Jonas Wallin.
 
   \begin{center}
     \hfill%
@@ -178,13 +153,10 @@
 \begin{frame}[c]
   \frametitle{Motivation}
 
-  \begin{itemize}
+  \begin{itemize}[<+->]
     \item Data sets are growing in size.
     \item Fitting models to sets of millions (maybe billions) of features is computationally costly.
     \item Hyperparameter tuning increases costs further.
-    \item In sparse regression, we can solve a reduced problem if we somehow knew which features were
-          active.
-    \item Can we somehow figure this out \textbf{before} fitting the model?
   \end{itemize}
 
 \end{frame}
@@ -192,29 +164,39 @@
 \begin{frame}[c]
   \frametitle{Screening Rules}
 
+  \begin{block}{Basic Insight}
+    \begin{itemize}
+      \item The support set is small in sparse regression, especially when \(p \gg n\).\footnote{The
+              lasso can for instance at most select \(\min(n, p)\) features.}
+      \item Can we somehow figure this support \textbf{before} fitting the model?
+    \end{itemize}
+  \end{block}
+
+  \pause
+
   \begin{block}{General Idea}
     \begin{enumerate}
-      \item If \(p \gg n\), the solution will be sparse.\footnote{The lasso can for instance at most
-              select \(\min(n, p)\) features.}
-      \item Estimate feature importance before fitting (correlations, etc) and solve a reduced problem.
-      \item Maybe not so bad to miss some features---just add them back and update the fit.
+      \item Estimate how likely it is that a feature is in the support set.
+      \item If unlikely, discard it.
+      \item Fit a reduced model.
+      \item If we were wrong, just refit the model with missing features added.
     \end{enumerate}
-
-    \medskip\pause
-
-    Turn out to be a pretty good idea!
   \end{block}
+
+  \medskip\pause
+
+  Turns out to be a pretty good idea!
 \end{frame}
 
 \begin{frame}[c]
   \frametitle{Optimality Conditions and the Gradient}
 
-  \begin{columns}
+  \begin{columns}[T]
     \begin{column}{0.51\textwidth}
       \begin{block}{Optimality Condition}
-        \(\vec{\beta}\) is optimal if
+        \(\bm{\beta}\) is optimal if
         \begin{equation*}
-          \boldsymbol{0} \in \nabla g(\vec{\beta}) + \partial h(\vec{\beta}),
+          \boldsymbol{0} \in \nabla g(\bm{\beta}) + \partial h(\vec{\beta}),
         \end{equation*}
         where \(\partial h (\vec{\beta})\) is the subdifferential of the penalty term \(h\).
       \end{block}
@@ -228,10 +210,10 @@
           \begin{cases}
             \{
             \lambda\sign(\beta_j)\} & \text{if } \beta_j \neq 0, \\
-            [-\lambda, \lambda]     & \text{otherwise}.
+            [-\lambda, \lambda]     & \text{if } \beta_j = 0.
           \end{cases}
         \]
-        Hence, if \(|\nabla g(\vec{\beta})_j| < \lambda,\) then \(\beta_j^* = 0\).
+        If \(|\nabla g(\vec{\beta}^*)_j| < \lambda,\) \alert{then \(\beta_j^* = 0\)}.
       \end{block}
 
     \end{column}
@@ -239,9 +221,9 @@
 
       \begin{figure}[htpb]
         \centering
-        \includegraphics[width=\textwidth]{figures/paper1-subgradient-split.pdf}
+        \includegraphics{figures/paper1-subgradient-split.pdf}
         \caption{%
-          The lasso penalty (\(h(\bm{\beta}) =\lambda \lVert \bm{\beta}\rVert_1\)) and its subdifferential
+          The lasso penalty \(h(\bm{\beta}) = \lambda \lVert \bm{\beta}\rVert_1\) and its subdifferential at \(\lambda = 1\).
         }
       \end{figure}
     \end{column}
@@ -250,12 +232,12 @@
 \end{frame}
 
 \begin{frame}[c]
-  \frametitle{Correlations and Coefficients}
+  \frametitle{The Lasso Path}
   \begin{figure}[htpb]
     \centering
     \includegraphics[]{figures/paper1-cor-coef-lasso-path.pdf}
     \caption{%
-      Coefficients and correlations along the lasso path
+      Coefficients and correlations (\(\bm{c}\)) along the lasso path
     }
   \end{figure}
 \end{frame}
@@ -267,7 +249,7 @@
     \centering
     \includegraphics[]{figures/paper1-strong-rule.pdf}
     \caption{%
-      The strong rule for the lasso~\parencite{tibshirani2012}
+    The strong rule for the lasso~\parencite{tibshirani2012}. \(|\hat{c}_j^{(k+1)}| = |c_j^{(k)}| + \lambda_{k} - \lambda_{k+1} \) is the absolute correlation estimate for feature \(j\) at step \(k+1\).
     }
   \end{figure}
 \end{frame}
@@ -277,18 +259,20 @@
 
   Same idea as for lasso strong rule! Just need the subdifferential.
 
+  % TODO: give an example
+
   \begin{block}{SLOPE Subdifferential}
 
-    The set of all \(g \in \mathbb{R}^p\) such that
+    The set of all \(\bm{g} \in \mathbb{R}^p\) such that
     \[
       \small
-      g_{\mathcal{A}_i} =
-      \left\{s \in \mathbb{R}^{|{\mathcal{A}_i}|} \bigm\vert
+      \vec{g}_{\mathcal{A}_i} =
+      \left\{\vec{s} \in \mathbb{R}^{|{\mathcal{A}_i}|} \bigm\vert
         \begin{cases}
-          \mathop{\mathrm{cumsum}}(|s|_\downarrow - \lambda_{R(s)_{\mathcal{A}_i}}) \preceq \mathbf{0} & \text{if } \beta_{\mathcal{A}_i} = \mathbf{0}, \\
-          \mathop{\mathrm{cumsum}}(|s|_\downarrow - \lambda_{R(s)_{\mathcal{A}_i}}) \preceq \mathbf{0}                                                  \\
-          \quad\,\text{and } \sign(\beta_{\mathcal{A}_i}) = \sign s                                                                                     \\
-          \quad\,\text{and } \sum_{j \in \mathcal{A}_i}\left(|s_j| - \lambda_{R(s)_j}\right) = 0       & \text{otherwise.}
+          \mathop{\mathrm{cumsum}}(|\bm{s}|_\downarrow - \bm{\lambda}_{R(\bm{s})_{\mathcal{A}_i}}) \preceq \mathbf{0} & \text{if } \beta_{\mathcal{A}_i} = \mathbf{0}, \\
+          \mathop{\mathrm{cumsum}}(|\bm{s}|_\downarrow - \bm{\lambda}_{R(\bm{s})_{\mathcal{A}_i}}) \preceq \mathbf{0}                                                  \\
+          \quad\,\text{and } \sign(\bm{\beta}_{\mathcal{A}_i}) = \sign(\bm{s})                                                                                         \\
+          \quad\,\text{and } \sum_{j \in \mathcal{A}_i}\left(|s_j| - \lambda_{R(\bm{s})_j}\right) = 0                 & \text{otherwise.}
         \end{cases}
       \right\}
     \]
@@ -299,8 +283,8 @@
   \begin{itemize}
     \item \(\mathcal{A}_i\) defines a \alert{cluster} containing indices of coefficients
           equal in absolute value.
-    \item \(R(x)\) is an operator that returns the \alert{ranks} of elements in \(|x|\).
-    \item \(|x|_\downarrow\) returns the absolute values of \(x\) sorted in non-increasing
+    \item \(R(\bm{x})\) returns \alert{ranks} of absolute values of elements in \(\bm{x}\).
+    \item \(|\vec{x}|_\downarrow\) returns the absolute values of \(x\) sorted in non-increasing
           order.
   \end{itemize}
 
@@ -320,37 +304,46 @@
 
 \begin{frame}[c]
   \frametitle{Results: Speed}
-
-  \begin{figure}[htpb]
+  \begin{table}
+    \caption{Time to fit lasso paths using either the strong screening rule or no rule.}
     \centering
-    \includegraphics[width=0.95\textwidth]{figures/paper1-performance.pdf}
-    \caption{%
-      Time to fit a full SLOPE path with and without the strong rule
-    }
-  \end{figure}
+    \small
+    \begin{tabular}{llS[table-format=4.0]S[table-format=6.0]S[table-format=5.0]S[table-format=4.0]}
+      \toprule
+      \multicolumn{1}{c}{} & \multicolumn{1}{c}{} & \multicolumn{1}{c}{} & \multicolumn{1}{c}{} & \multicolumn{2}{c}{{Time (s)}}               \\
+      \cmidrule(l{3pt}r{3pt}){5-6}
+      Dataset              & Model                & $n$                  & $p$                  & {No Screening}                 & {Screening} \\
+      \midrule
+      dorothea             & Logistic             & 800                  & 88119                & 914                            & 14          \\
+      e2006-tfidf          & Least squares        & 3308                 & 150358               & 43353                          & 4944        \\
+      news20               & Multinomial          & 1000                 & 62061                & 5485                           & 517         \\
+      physician            & Poisson              & 4406                 & 25                   & 34                             & 34          \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
 \end{frame}
 
-\begin{frame}[c]
-  \frametitle{Heuristic Screening and Violations}
-
-  \begin{itemize}
-    \item The rule is \textbf{heuristic}\footnote{As opposed to \emph{safe}.}, which means that
-          \alert{violations} may occur.
-    \item But they are so rare and checking for and refitting with them so cheap that it rarely
-          matters.
-  \end{itemize}
-
-  \pause
-
-  \begin{figure}[htpb]
-    \centering
-    \includegraphics[width=\textwidth]{figures/paper1-violations.pdf}
-    \caption{%
-      Violations of the strong rule for SLOPE
-    }
-  \end{figure}
-
-\end{frame}
+% \begin{frame}[c]
+%   \frametitle{Heuristic Screening and Violations}
+%
+%   \begin{itemize}
+%     \item The rule is \textbf{heuristic}\footnote{As opposed to \emph{safe}.}, which means that
+%           \alert{violations} may occur.
+%     \item But they are so rare and checking for and refitting with them so cheap that it rarely
+%           matters.
+%   \end{itemize}
+%
+%   \pause
+%
+%   \begin{figure}[htpb]
+%     \centering
+%     \includegraphics[width=\textwidth]{figures/paper1-violations.pdf}
+%     \caption{%
+%       Violations of the strong rule for SLOPE
+%     }
+%   \end{figure}
+%
+% \end{frame}
 
 \begin{frame}[c]
   \frametitle{Summary}
@@ -358,11 +351,9 @@
   \begin{exampleblock}{Contributions}
     \begin{itemize}
       \item The first screening rule for SLOPE
-      \item An efficient algorithm with which to apply it
       \item A new formulation of the subdifferential for SLOPE
-      \item Implemented in the R package
+      \item Implementation in the R package
             \texttt{SLOPE}\footnote{\url{https://doi.org/10.32614/CRAN.package.SLOPE}}
-
     \end{itemize}
   \end{exampleblock}
 
@@ -371,6 +362,8 @@
   \begin{alertblock}{Limitations}
     \begin{itemize}
       \item Somewhat conservative
+      \item Heuristic\footnote[frame]{As opposed to \emph{safe}.} rule, so violations may occur. But
+            are not problematic in practice.
     \end{itemize}
   \end{alertblock}
 \end{frame}
@@ -400,68 +393,13 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{The Dual}
-  Complementary to the primal problem. For the lasso, it is
-  \[
-    \operatorname*{maximize}_{\vec{\theta} \in \mathbb{R}^n}
-    \Bigg(
-    D(\vec{\theta}; \lambda) = \frac 1 2 \vec{y}^\intercal \vec{y} -
-    \frac{\lambda^2}{2} \Big\lVert \vec{\theta} - \frac{\vec{y}}{\lambda} \Big\rVert_2^2.
-    \Bigg)
-  \]
-  \pause
-  \begin{columns}
-    \begin{column}[t]{0.45\linewidth}
-      \begin{block}{Duality Gap}
-        Difference between the primal and dual
-        objectives and is tight at the optimum, that is
-        \[
-          P(\vec{\beta}^*; \lambda) - D(\vec{\theta}^*; \lambda) = 0.
-        \]
-      \end{block}
-    \end{column}
-    \begin{column}[t]{0.45\linewidth}
-      \begin{figure}[htpb]
-        \centering
-        \includegraphics[]{figures/paper2-duality-gap.pdf}
-      \end{figure}
-    \end{column}
-  \end{columns}
-  \medskip
-
-  \pause
-
-  \begin{block}{Dual--Primal Relationship}
-    The two problems are related via
-    \[
-      \vec{y} = \mat{X}\vec{\beta}(\lambda) + \lambda \vec{\theta}(\lambda).
-    \]
-  \end{block}
-\end{frame}
-
 \begin{frame}[c]
   \frametitle{Gap Safe Screening}
 
-  Recall the optimality conditions for the lasso:
-  \[
-    \text{if} \quad |\nabla g(\vec{\beta}^*)_j| < \lambda \iff |\vec{x}_j^\intercal \vec{\theta}^*| < 1 \quad \text{then}\quad \beta_j^* = 0.
-  \]
-
-  \pause
-
-  \begin{exampleblock}{Idea}
-    Replace the inequality \(|\vec{x}_j^\intercal \vec{\theta}^*| < 1\) with an inequality
-    that offers same conclusion, but doesn't involve \(\vec{\theta}^*\).
-  \end{exampleblock}
-
-  % TODO: Add citation here.
-
-  \medskip\pause
-
-  Gap Safe screening~\parencite{fercoq2015} uses the \textbf{duality gap} to define such a
-  region, and discards the \(j\)th predictor if
-  \begin{equation*}
+  Gap Safe screening~\parencite{fercoq2015} uses the \textbf{duality gap} as a basis for a
+  safe screening rule, and discards the \(j\)th predictor if
+  \begin{equation}
+    \label{eq:gap-safe}
     |\vec{x}_j^\intercal \vec{\theta}_\lambda| + \lVert \vec{x}_j\rVert_2
     \sqrt{
       \frac{1}{\lambda_+^2}
@@ -469,37 +407,18 @@
       \mathcal{D}(\vec{\theta}_\lambda; \lambda_+)\big)
     }
     < 1
-  \end{equation*}
-  where \(\vec{\theta}_\lambda\) is the \alert{scaled} dual,
+  \end{equation}\pause
+  where \(\vec{\theta}_\lambda\) is the \alert{scaled} dual variable,
   \[
     \bm{\theta}_\lambda = \frac{\vec{y} - \bm{X\beta}_\lambda}{
       \max\big( \lVert \bm{X}^\intercal(\bm{y} - \bm{X\beta}_\lambda)\rVert_\infty, \lambda\big)}.
   \]
-\end{frame}
+  \pause\medskip
 
-\begin{frame}[c]
-  \frametitle{Look-Ahead Screening}
-  Inequality on last slide is \alert{quadratic}, which means we can find the next
-  critical point easily:
-  \[
-    \lambda_+ = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \quad
-  \]
-  where
-  \[
-    \begin{aligned}
-      a & = \big( 1 - | \vec{x}_j^\intercal \vec{\theta}_\lambda|\big)^2 -
-      \frac 12 \vec{\theta}_\lambda^\intercal \vec{\theta}_\lambda \lVert \vec{x}_j\rVert_2^2,     \\
-      b & = \big(\vec{\theta}_\lambda^\intercal \vec{y} - \lVert \vec{\beta}_\lambda \rVert_1\big)
-      \lVert \bm{x}_j \rVert_2^2,                                                                  \\
-      c & = - \frac 12 \lVert \bm{y} - \bm{X\beta}_\lambda\rVert_2^2
-      \lVert \bm{x}_j\rVert_2^2.                                                                   \\
-    \end{aligned}
-  \]
+  \Cref{eq:gap-safe} is \alert{quadratic} in \(\lambda\),
+  so we can use it to find the next critical value for \(\lambda\) and
+  screen for \alert{all} steps ahead.
 
-  \medskip\pause
-
-  This allows us to screen predictors for \textbf{all} upcoming steps by simply checking the
-  inequality for all \(\lambda_{k +1},\lambda_{k + 2}, \dots\)
 \end{frame}
 
 \begin{frame}[c]
@@ -541,7 +460,6 @@
   \begin{alertblock}{Limitations}
     \begin{itemize}
       \item Needs a safe rule
-      \item Most effective at start of path
     \end{itemize}
   \end{alertblock}
 \end{frame}
@@ -555,6 +473,10 @@
     \begin{column}{0.45\textwidth}
 
       Published and presented at NeurIPS 2022\footnote[frame]{\fullcite{larsson2022b}}
+
+      \bigskip
+
+      Co-authored with Jonas
     \end{column}
     \begin{column}{0.45\textwidth}
       \includegraphics[width=\textwidth]{figures/neurips.pdf}
@@ -567,42 +489,40 @@
 
   \begin{itemize}
     \item Previous screening rules, like the strong rule, struggle with highly correlated features.
-    \item Using second order information, we might both be able to improve screening, but also
-          improve solving the problem.
+    \item Previous rules do not use information about the correlations along the lasso path.
   \end{itemize}
 \end{frame}
 
+% \begin{frame}
+%   \frametitle{Screening Rules Seen As Gradient Estimates}
+%
+%   Recall that \(\vec{c} = -\nabla g(\vec{\beta})\) and hence optimality condition is
+%   \(\vec{c} \in \partial h (\vec{\beta})\).
+%
+%   \medskip
+%
+%   \begin{exampleblock}{Lasso Screening Rule Template }
+%     \begin{enumerate}
+%       \item Replace \(\vec{c}\) with an estimate \(\tilde{\vec{c}}\).
+%       \item If \(|\tilde{\vec{c}}_j| < \lambda\), discard feature \(j\).
+%     \end{enumerate}
+%
+%     \medskip
+%
+%     If \(\tilde{\vec{c}}\) is accurate and not too conservative, we have a useful rule.
+%   \end{exampleblock}
+% \end{frame}
+
 \begin{frame}
-  \frametitle{Screening Rules Seen As Gradient Estimates}
-
-  Let \(\vec{c}(\lambda) = -\nabla g(\vec{\beta}(\lambda))\) be the \alert{correlation}
-  (negative gradient).
-
-  \medskip
-
-  \begin{exampleblock}{Lasso Screening Rule Template }
-    \(\boldsymbol{0} \in \nabla g(\vec{\beta}) + \lambda \partial\) suggests simple rule:
-    \begin{enumerate}
-      \item Replace \(\vec{c}\) with an estimate \(\tilde{\vec{c}}\).
-      \item If \(|\tilde{\vec{c}}_j| < \lambda\), discard feature \(j\).
-    \end{enumerate}
-
-    \medskip
-
-    If \(\tilde{\vec{c}}\) is accurate and not too conservative, we have a useful rule.
-  \end{exampleblock}
-\end{frame}
-
-\begin{frame}
-  \frametitle{The Ordinary Lasso}
+  \frametitle{The Hessian Screening Rule}
   \begin{columns}
     \begin{column}{0.45\textwidth}
-      We now focus on the ordinary lasso, \(\ell_1\)-regularized least
-      squares:
+      For the ordinary lasso,
       \begin{align*}
         g(\bm{\beta})        & = \frac 1 2 \lVert \vec{y} - \bm{X \beta} \rVert_2^2, \\
-        \nabla g(\bm{\beta}) & = \bm{X}^\intercal(\bm{X\beta} - \bm{y}).
+        \nabla g(\bm{\beta}) & = \bm{X}^\intercal(\bm{X\beta} - \bm{y}),
       \end{align*}
+      solution is \alert{piecewise linear}.
     \end{column}
     \begin{column}{0.45\textwidth}
       \centering
@@ -610,17 +530,17 @@
     \end{column}
   \end{columns}
 
-  \bigskip
+  \bigskip\pause
 
-  \pause
+  % It turns out that we can express the solution as a function of \(\lambda\):
+  % \begin{equation*}
+  %   \hat{\bm{\beta}}(\lambda) = \big({\bm{X}_\mathcal{A}}^\intercal \bm{X}_\mathcal{A}\big)^{-1}
+  %   \big({\bm{X}_\mathcal{A}}^\intercal \bm{y} - \lambda \sign(\hat{\bm{\beta}}_\mathcal{A})\big).
+  % \end{equation*}
+  %
+  % \pause
 
-  It turns out that we can express the solution as a function of \(\lambda\):
-  \begin{equation*}
-    \hat{\bm{\beta}}(\lambda) = \big({\bm{X}_\mathcal{A}}^\intercal \bm{X}_\mathcal{A}\big)^{-1}
-    \big({\bm{X}_\mathcal{A}}^\intercal \bm{y} - \lambda \sign(\hat{\bm{\beta}}_\mathcal{A})\big).
-  \end{equation*}
-
-  Holds for \([\lambda_k,\lambda_{k+1}]\) if active set remains constant, and so
+  If active set is constant in \([\lambda_k,\lambda_{k+1}]\), we can express the solution as
   \begin{equation*}
     \hat{\vec{\beta}}(\lambda_{k+1})_\mathcal{A} =
     \hat{\vec{\beta}}(\lambda_k)_\mathcal{A} -
@@ -628,14 +548,10 @@
     \sign\big(\hat{\vec{\beta}}(\lambda_k)_\mathcal{A}\big).
   \end{equation*}
 
-\end{frame}
+  \pause
 
-\begin{frame}
-  \frametitle{The Hessian Screening Rule}
-
-  \begin{block}{Basic Form of the Rule}
-    Take expression for \(\hat{\bm{\beta}}\) on last slide and stick it into the gradient at step \(k +
-    1\):
+  \begin{exampleblock}{Hessian Screening Rule (Basic Form)}
+    Plug \(\hat{\bm{\beta}}\) into the gradient at step \(k + 1\):
     \begin{equation*}
       \begin{aligned}
         \tilde{\bm{c}}^H(\lambda_{k+1})
@@ -645,14 +561,7 @@
         \sign\big(\hat{\vec{\beta}}(\lambda_k)_\mathcal{A}\big).
       \end{aligned}
     \end{equation*}
-  \end{block}
-
-  \pause
-
-  \begin{itemize}
-    \item Exact expression for \(\vec{c}\) at \(k+1\) if active set is constant.\medskip
-    \item Heuristic rule, so needs checks for violations.
-  \end{itemize}
+  \end{exampleblock}
 
 \end{frame}
 
@@ -676,7 +585,7 @@
     \caption{%
       Features screened for a lasso path for \(\ell_1\)-regularized
       least-squares to a design with varying correlation (\(\rho\)), \(n = 200\), and \(p =
-      20000\).
+      \num{20000}\).
     }
   \end{figure}
 \end{frame}
@@ -698,19 +607,20 @@
   \begin{exampleblock}{Contributions}
     \begin{itemize}
       \item New screening rule that performs better in general and particularly for highly correlated
-            features.
-      \item Works well for both least-squares and logistic regression.
-      \item Can be used in combination with approximate homotopy.
+            features
+      \item Provides better warm starts along the path
+      \item Works well for both least-squares and logistic regression
+            % \item Can be used in combination with approximate homotopy
     \end{itemize}
   \end{exampleblock}
 
   \pause
   \begin{alertblock}{Limitations}
     \begin{itemize}
-      \item Not well-tailored to problems with more complex Hessians.
+      \item Not optimal for problems with more complex Hessians
       \item Implementation is a bit more involved.
-      \item Although the rule works well with high correlation, speed-ups are not commensurate since
-            our warm starts are worse.
+            % \item Although the rule works well with high correlation, speed-ups are not commensurate since
+            %       our warm starts are worse.
     \end{itemize}
   \end{alertblock}
 \end{frame}
@@ -738,20 +648,17 @@
   \frametitle{Motivation}
   \begin{columns}[c]
     \begin{column}{0.45\textwidth}
-      \begin{itemize}
+      \begin{itemize}[<+->]
         \item Surging number of optimization methods
-        \item Best choice often depends on problem:
+        \item Optimal choice depends on problem
               \begin{itemize}
-                \item data set (dimensions, sparsity, conditioning, normalization)
-                \item hyper-parameters (regularization)
-                \item implementation (language)
+                \item Data set (dimensions, sparsity, conditioning, normalization)
+                \item Hyper-parameters (regularization)
+                      % \item Implementation (programming language)
+                \item Hardware (GPU acceleration)
               \end{itemize}
-        \item Can we trust researchers to publish \emph{fair} comparisons?
+        \item Reproducibility
       \end{itemize}
-
-      \medskip
-
-      Benchopt attempts to help with all of this!
     \end{column}
     \begin{column}{0.45\textwidth}
       \begin{figure}[htpb]
@@ -767,9 +674,11 @@
 \end{frame}
 
 \begin{frame}[c]
+  \frametitle{Benchopt Tries to Solve This!}
+
   \begin{figure}[htpb]
     \centering
-    \includegraphics[width=\textwidth]{figures/paper4-benchopt_schema.pdf}
+    \multiinclude[format=pdf,start=0,graphics={width=\textwidth}]{figures/paper4-benchopt_schema}
     \caption{%
       Schematic over how benchopt works
     }
@@ -830,19 +739,34 @@ benchopt run benchmark_slope \
 %   \end{figure}
 % \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Benchmark Structure}
 
-  A benchopt benchmark is a directory with
-  \begin{itemize}
-    \item an \lstinline+objective.py+ file with an \lstinline+Objective+,
-    \item a directory \lstinline+solvers+ with one file per solver, and
-    \item a directory \lstinline+datasets+ with dataset generators/fetchers.
-  \end{itemize}
+  % A benchopt benchmark is a directory with
+  % \begin{itemize}
+  %   \item an \lstinline+objective.py+ file with an \lstinline+Objective+,
+  %   \item a directory \lstinline+solvers+ with one file per solver, and
+  %   \item a directory \lstinline+datasets+ with dataset generators/fetchers.
+  % \end{itemize}
+  %
+  % \pause
 
-  \medskip
-
-  \frame{\includegraphics[width=.9\textwidth,trim={1em 1em 1em 3.8em},clip]{figures/paper4-benchopt_structure}}
+  % \begin{exampleblock}{Example}
+  \dirtree{%
+    .1 benchmark\_slope.
+    .2 datasets.
+    .3 dorothea.py.
+    .3 simulated.py.
+    .3 $\dots$.
+    .2 solvers.
+    .3 pgd.py.
+    .3 rSLOPE.py.
+    .3 \alert{my\_new\_solver.py}.
+    .3 $\dots$.
+    .2 objective.py.
+    .2 README.rst.
+  }
+  % \end{exampleblock}
 \end{frame}
 
 \begin{frame}
@@ -852,10 +776,10 @@ benchopt run benchmark_slope \
     A framework that simplifies benchmarking of optimization methods:
     \begin{itemize}
       \item Automatic installation of dependencies
-      \item Parametrized datasets, objectives and solvers
       \item Caching
-      \item Interactive visualizations and easy publishing of results
-      \item Mostly language agnostic
+      \item Interactive visualizations
+      \item Easy to publish results
+      \item Support for multiple programming languages
     \end{itemize}
   \end{exampleblock}
 
@@ -863,7 +787,6 @@ benchopt run benchmark_slope \
 
   \begin{alertblock}{Limitations}
     \begin{itemize}
-      \item Doesn't directly solve the problem of varying implementations.
       \item Dealing with dependencies for 20+ solvers is still challenging.
     \end{itemize}
   \end{alertblock}
@@ -878,9 +801,9 @@ benchopt run benchmark_slope \
 
   \begin{center}
     \hfill%
-    \includegraphics[height=2cm]{figures/mathurin.jpg}\hfill%
-    \includegraphics[height=2cm]{figures/quentin.png}\hfill%
-    \includegraphics[height=2cm]{figures/jonas.jpg}\hfill\null
+    \includegraphics[height=2.4cm]{figures/mathurin.jpg}\hfill%
+    \includegraphics[height=2.4cm]{figures/quentin.png}\hfill%
+    \includegraphics[height=2.4cm]{figures/jonas.jpg}\hfill\null
   \end{center}
 
   Co-authored with Mathurin Massias, Quentin Bertrand, and Jonas Wallin.
@@ -890,12 +813,11 @@ benchopt run benchmark_slope \
 \begin{frame}[c]
   \frametitle{Motivation}
 
-  \begin{itemize}
+  \begin{itemize}[<+->]
     \item SLOPE has many appealing properties but the best algorithms for solving SLOPE are slow
           (relative to the lasso)
     \item Lasso solvers are fast because they use coordinate descent
-    \item Unfortunately, we cannot use coordinate descent directly for SLOPE
-    \item But what if we could combine coordinate descent with another method?
+    \item Unfortunately cannot use basic coordinate descent for SLOPE
   \end{itemize}
 \end{frame}
 
@@ -903,12 +825,12 @@ benchopt run benchmark_slope \
   \frametitle{Coordinate Descent}
 
   \begin{columns}[c]
-    \begin{column}{0.45\textwidth}
+    \begin{column}{0.35\textwidth}
       \begin{exampleblock}{Simple Method!}
         At each iteration, update a single coordinate (coefficient).
       \end{exampleblock}
     \end{column}
-    \begin{column}{0.45\textwidth}
+    \begin{column}{0.55\textwidth}
       \begin{figure}[htpb]
         \centering
         \includegraphics[]{figures/paper5-cd.pdf}
@@ -922,32 +844,28 @@ benchopt run benchmark_slope \
 
 \begin{frame}
   \frametitle{Coordinate Descent Performance}
+  Performs (surprisingly) well!
 
-  \begin{columns}[c]
-    \begin{column}{0.45\textwidth}
-      Performs (surprisingly) well!
-    \end{column}
-    \begin{column}{0.45\textwidth}
-      \begin{figure}[htpb]
-        \centering
-        \includegraphics[]{figures/paper5-cd-vs-pgd.pdf}
-        \caption{%
-          Coordinate descent versus proximal gradient descent for the lasso.
-        }
-      \end{figure}
-    \end{column}
-  \end{columns}
+  \medskip
+
+  \begin{figure}[htpb]
+    \centering
+    \includegraphics[]{figures/paper5-cd-vs-pgd.pdf}
+    \caption{%
+      Coordinate descent versus proximal gradient descent for the lasso.
+    }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Coordinate Descent and Seperability}
+  \frametitle{Coordinate Descent and Separability}
   \begin{columns}[T]
-    \begin{column}{0.45\textwidth}
+    \begin{column}{0.39\textwidth}
       \only<1->{%
         Cannot use basic coordinate descent for SLOPE since the
         sorted \(\ell_1\) norm is \alert{inseparable}:
         \[
-          J(\vec{\beta}) = \sum_{j=1}^p \lambda_j |\beta_{(j)}|.
+          h(\vec{\beta}) = \sum_{j=1}^p \lambda_j |\beta_{(j)}|.
         \]
       }
 
@@ -967,7 +885,7 @@ benchopt run benchmark_slope \
       }
 
     \end{column}
-    \begin{column}{0.45\textwidth}
+    \begin{column}{0.51\textwidth}
       \only<1->{%
         \begin{figure}[htpb]
           \centering
@@ -1021,7 +939,7 @@ benchopt run benchmark_slope \
 
   \begin{exampleblock}{Contributions}
     \begin{itemize}
-      \item A hybrid algorithm for SLOPE that brings the speed of coordinate descent to SLOPE.
+      \item A hybrid algorithm for SLOPE that brings the speed of coordinate descent to SLOPE
       \item Faster than existing methods
       \item Implemented in Python package
             \texttt{sortedl1}\footnote{\url{https://pypi.org/project/sortedl1/}}
@@ -1032,8 +950,8 @@ benchopt run benchmark_slope \
 
   \begin{alertblock}{Limitations}
     \begin{itemize}
-      \item Implementation is a bit complex.
-      \item Not quite as fast as coordinate descent solvers for the lasso.
+      \item Somewhat tricky to implement
+      \item Not quite as fast as coordinate descent solvers for the lasso
     \end{itemize}
   \end{alertblock}
 \end{frame}
@@ -1054,9 +972,9 @@ benchopt run benchmark_slope \
   \frametitle{Motivation}
 
   \begin{itemize}[<+->]
-    \item Most regularized methods (e.g. SLOPE and lasso) are scale-sensitive
-    \item Straightforward when everything is normal, but about features that have other
-          distributions, such as binary features?
+    \item Most regularized methods are scale-sensitive, so have to normalize.
+    \item Straightforward normalization when everything is normal, but what about features that have
+          other distributions (binary features)?
     \item No literature on the effects of different normalization strategies
   \end{itemize}
 \end{frame}
@@ -1064,35 +982,36 @@ benchopt run benchmark_slope \
 \begin{frame}[c]
   \frametitle{The Elastic Net}
 
-  Linear regression plus a combination of the \(\ell_1\) and \(\ell_2\) penalties:
+  % Linear regression plus a combination of the \(\ell_1\) and \(\ell_2\) penalties:
+  % \begin{equation*}
+  %   (\hat{\beta}_0, \hat{\vec{\beta}}) = \argmin_{\beta_0 \in \mathbb{R},\beta \in \mathbb{R}^p} \left( \frac{1}{2} \lVert \vec y - \beta_0 - \mat{X}\vec{\beta} \rVert^2_2  + \lambda_1 \lVert \vec\beta \rVert_1 + \frac{\lambda_2}{2}\lVert \vec \beta \rVert_2^2\right).
+  % \end{equation*}
   \begin{equation*}
-    (\hat{\beta}_0, \hat{\vec{\beta}}) = \argmin_{\beta_0 \in \mathbb{R},\beta \in \mathbb{R}^p} \left( \frac{1}{2} \lVert \vec y - \beta_0 - \mat{X}\vec{\beta} \rVert^2_2  + \lambda_1 \lVert \vec\beta \rVert_1 + \frac{\lambda_2}{2}\lVert \vec \beta \rVert_2^2\right).
+    \vec{\beta}^* = \operatorname*{minimize}_{\beta \in \mathbb{R}^p} \bigg( \frac{1}{2} \lVert \vec y - \mat{X}\vec{\beta} \rVert^2_2  + \underbrace{\lambda_1 \lVert \vec\beta \rVert_1}_\text{lasso} + \underbrace{\frac{\lambda_2}{2}\lVert \vec \beta \rVert_2^2}_\text{ridge}\bigg)
   \end{equation*}
 
   \pause
 
   \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/paper6-elasticnet-balls.pdf}
+    \includegraphics[width=0.85\textwidth]{figures/paper6-elasticnet-balls.pdf}
     \caption{%
       The elastic net penalty is a combination of the lasso and ridge penalties. Here shown as a constrained problem.
     }
   \end{figure}
-
-  % TODO: Insert figure of elastic net, ridge, lasso here. Possibly just the constraint regions?
 \end{frame}
 
 \begin{frame}[c]
   \frametitle{Sensitivity to Scale}
 
-  Lasso and ridge penalties are \textbf{norms} of the coefficients---feature scales matter!
+  Lasso and ridge penalties are \textbf{norms}---feature scales matter!
 
   \pause
 
   \begin{exampleblock}{Example}
     Assume
     \[
-      \mat{X} \sim \operatorname{Normal}\left(\begin{bmatrix}0 \\ 0\end{bmatrix}, \begin{bmatrix} 2 & 0 \\ 0 & 1\end{bmatrix}\right), \qquad \vec{\beta}^* = \begin{bmatrix} \frac{1}{2} \\ 1 \end{bmatrix}.
+      \mat{X} \sim \operatorname{Normal}\left(\begin{bmatrix}0 \\ 0\end{bmatrix}, \begin{bmatrix} 4 & 0 \\ 0 & 1\end{bmatrix}\right), \qquad \vec{\beta}^* = \begin{bmatrix} \frac{1}{2} \\ 1 \end{bmatrix}.
     \]
 
     \medskip\pause
@@ -1100,11 +1019,11 @@ benchopt run benchmark_slope \
     \begin{table}
       \begin{tabular}{lcc}
         \toprule
-        Model & \(\hat{\vec{\beta}}\)                                  & \(\hat{\vec{\beta}}_\text{std}\)                      \\
+        Model & \(\hat{\vec{\beta}}\)                                  & \(\hat{\vec{\beta}}_\text{std}\)                             \\
         \midrule
-        OLS   & \(\begin{bmatrix} 0.50 & 1.00\end{bmatrix}^\intercal\) & \(\begin{bmatrix}1.00 & 1.00\end{bmatrix}^\intercal\) \\
-        Lasso & \(\begin{bmatrix} 0.38 & 0.50\end{bmatrix}^\intercal\) & \(\begin{bmatrix}0.74 & 0.50\end{bmatrix}^\intercal\) \\
-        Ridge & \(\begin{bmatrix} 0.37 & 0.41\end{bmatrix}^\intercal\) & \(\begin{bmatrix}0.74 & 0.41\end{bmatrix}^\intercal\) \\
+        OLS   & \(\begin{bmatrix} 0.50 & 1.00\end{bmatrix}^\intercal\) & \(\begin{bmatrix}1.00 & 1.00\end{bmatrix}^\intercal\) \pause \\
+        Lasso & \(\begin{bmatrix} 0.38 & 0.50\end{bmatrix}^\intercal\) & \(\begin{bmatrix}0.74 & 0.50\end{bmatrix}^\intercal\) \pause \\
+        Ridge & \(\begin{bmatrix} 0.37 & 0.41\end{bmatrix}^\intercal\) & \(\begin{bmatrix}0.74 & 0.41\end{bmatrix}^\intercal\)        \\
         \bottomrule
       \end{tabular}
     \end{table}
@@ -1123,16 +1042,12 @@ benchopt run benchmark_slope \
     \item Scale sensitivity can be mitigated by normalizing the features.
     \item Let \(\tilde{\mat X}\) be the normalized feature matrix, with elements
           \[
-            \tilde{x}_{ij} = \frac{x_{ij} - c_{j}}{s_j},
+            \tilde{x}_{ij} = \frac{x_{ij} - c_{j}}{s_j}.
           \]
-          where \(x_{ij}\) is an element of the (unnormalized) feature matrix and \(c_j\) and \(s_j\)
-          are the \emph{centering} and \emph{scaling} factors respectively.
-    \item Usage of key terms ambiguous in literature.
     \item After fitting, we transform the coefficients back to their original scale via
           \[
             \hat\beta_j = \frac{\hat\beta^{(n)}_j}{s_j} \quad\text{for}\quad j = 1,2,\dots,p.
           \]
-
   \end{itemize}
 
   % \bigskip\pause
@@ -1175,7 +1090,7 @@ benchopt run benchmark_slope \
     \centering
     \includegraphics[width=\textwidth]{figures/paper6-realdata_paths.pdf}
     \caption{%
-      Lasso paths under two different types of normalization (standardization and max--abs normalization). The union of the first ten features selected in any of the schemes are colored.
+      Lasso paths under two different types of normalization (standardization and max--abs normalization). The union of the first five features selected in any of the schemes are colored.
     }
   \end{figure}
 
@@ -1184,24 +1099,39 @@ benchopt run benchmark_slope \
 \begin{frame}[c]
   \frametitle{Binary Features}
 
-  For binary features (values 0 and 1 only), we have for the noiseless case
-  \[
-    \hat{\beta}_j = \frac{\operatorname{S}_{\lambda_1}(\tilde{\vec{x}}^\intercal \vec{y})}{s_j\left(\tilde{\vec{x}}_j^\intercal \tilde{\vec{x}}_j + \lambda_2\right)}
-    =
-    \frac{\operatorname{S}_{\lambda_1}\left(\frac{\beta_j^* n (q - q^2)}{s_j}\right)}{s_j\left(\frac{n(q - q^2)}{s_j^2} + \lambda_2\right)}.
-  \]
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+
+      For binary features (values 0 and 1 only), we have for the noiseless case
+      \[
+        \hat{\beta}_j =
+        % \frac{\operatorname{S}_{\lambda_1}(\tilde{\vec{x}}^\intercal \vec{y})}{s_j\left(\tilde{\vec{x}}_j^\intercal \tilde{\vec{x}}_j + \lambda_2\right)}
+        % =
+        \frac{\operatorname{S}_{\lambda_1}\left(\frac{\beta_j^* n \alert{(q - q^2)}}{s_j}\right)}{s_j\left(\frac{n\alert{(q - q^2)}}{s_j^2} + \lambda_2\right)}.
+      \]
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}[htpb]
+        \centering
+        \includegraphics[]{figures/paper6-st.pdf}
+        \caption{%
+          Soft-thresholding
+        }
+      \end{figure}
+    \end{column}
+  \end{columns}
+
   \pause
+
   \begin{itemize}[<+->]
     \item Means that the elastic net estimator depends on class balance (\(q\)).
-    \item To remove the effect of \(q\), an intuitive setting would be \(s_j = q - q^2\) (the
-          variance of \(\vec{x}_j\)) in the case of the lasso and \(s_j = \sqrt{q-q^2}\) (the
-          standard deviation of \(\vec{x}_j\)) in the case of the ridge.
+    \item \(s_j = q - q^2\) for lasso and \(s_j = \sqrt{q-q^2}\) for ridge removes effect of \(q\).
     \item Suggests the parametrization
           \[
             s_j = (q - q^2)^\delta, \qquad \delta \geq 0.
           \]
-    \item Indicates there might be no (simple) \(s_j\) that works for the elastic net. (Need to use
-          weighted elastic net.)
+          % \item Indicates there is no simple \(s_j\) that works for the elastic net. (Need to use weighted
+          %       elastic net.)
   \end{itemize}
 \end{frame}
 
@@ -1214,22 +1144,6 @@ benchopt run benchmark_slope \
     \caption{%
       Comparison between lasso and ridge estimators for a data set with one binary and one quasi-normal feature.}
   \end{figure}
-\end{frame}
-
-\begin{frame}[c]
-  \frametitle{Hyperparameter Optimization}
-
-  \textbf{Idea:} The choice of \(\delta\) affects the model, so let's optimize over it.
-
-  \begin{figure}[htpb]
-    \centering
-    \includegraphics[width=\textwidth]{figures/paper6-hyperopt_surfaces.pdf}
-    \caption{%
-      Contour plots of hold-out (validation set) error across a grid of \(\delta\) and \(\lambda\) values for the
-      lasso and ridge.
-    }
-  \end{figure}
-
 \end{frame}
 
 \begin{frame}[c]
@@ -1253,7 +1167,6 @@ benchopt run benchmark_slope \
               \item Orthogonal features
               \item Normal and binary features
             \end{itemize}
-      \item Only experimental results for interactions
     \end{itemize}
   \end{alertblock}
 \end{frame}
@@ -1261,17 +1174,331 @@ benchopt run benchmark_slope \
 \begin{frame}[c]
   \frametitle{Recap}
 
+  \begin{itemize}[<+->]
+    \item Several screening rules that improve performance for lasso and SLOPE
+    \item Framework for benchmarking optimization methods
+    \item Fast optimization method for SLOPE
+    \item Analysis of interplay between normalization and penalization
+  \end{itemize}
+
 \end{frame}
 
 \begin{frame}[standout]
   Thank you!
 \end{frame}
 
-% \appendix
-%
-% \begin{frame}[allowframebreaks]{References}
-%   \printbibliography[heading=none]
-% \end{frame}
+\appendix
+
+\begin{frame}[allowframebreaks]{References}
+  \printbibliography[heading=none]
+\end{frame}
+
+\section{Paper I Extras}
+
+\begin{frame}[fragile]
+  \frametitle{Strong Rule Algorithm for SLOPE}
+  \begin{algorithm}[H]
+    \SetAlgoLined
+    \KwData{\(\bm{c} \in \mathbb{R}^p\),
+      \(\bm{\lambda} \in \mathbb{R}^p\), where
+      \(\lambda_1 \geq \cdots \geq \lambda_p \geq 0\)}
+    \(\mathcal{S}, \mathcal{B} \gets \varnothing\)\;
+    \For{\(i \gets 1\) \KwTo \(p\)}{
+      \(\mathcal{B} \gets \mathcal{B} \cup \{i\}\)\;
+      \If{\(\sum_{j \in \mathcal{B}}\big(c_j - \lambda_j\big) \geq 0\)}{
+        \(\mathcal{S} \gets \mathcal{S} \cup \mathcal{B}\)\;
+        \(\mathcal{B} \gets \varnothing\)\;
+      }
+    }
+    \Return \(\mathcal{S}\)\;
+    \caption{Basic algorithm for the strong rule for SLOPE}
+  \end{algorithm}
+  \medskip\pause
+  Set
+  \[
+    \bm{c} = \lvert \nabla g(\hat{\bm{\beta}})+ \bm{\lambda}^{(k-1)} - \bm{\lambda}^{(k)}\rvert_\downarrow \qquad \bm{\lambda} = \bm{\lambda}^{(k)},
+  \] and run the algorithm above; the result is the predicted support for
+  \(\hat{\bm{\beta}}(\bm{\lambda}^{(k)})\) (subject to a permutation).
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Results: Speed}
+
+  \begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/paper1-performance.pdf}
+    \caption{%
+      Time to fit a full SLOPE path with and without the strong rule
+    }
+  \end{figure}
+\end{frame}
+
+\section{Paper II Extras}
+
+\begin{frame}
+  \frametitle{The Dual}
+  Complementary to the primal problem. For the lasso, it is
+  \[
+    \operatorname*{maximize}_{\vec{\theta} \in \mathbb{R}^n}
+    \Bigg(
+    D(\vec{\theta}; \lambda) = \frac 1 2 \vec{y}^\intercal \vec{y} -
+    \frac{\lambda^2}{2} \Big\lVert \vec{\theta} - \frac{\vec{y}}{\lambda} \Big\rVert_2^2.
+    \Bigg)
+  \]
+  \pause
+  \begin{columns}
+    \begin{column}{0.45\linewidth}
+      \begin{block}{Duality Gap}
+        Difference between the primal and dual
+        objectives. Tight at the optimum (for the lasso):
+        \[
+          P(\vec{\beta}^*; \lambda) - D(\vec{\theta}^*; \lambda) = 0.
+        \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.45\linewidth}
+      \begin{figure}[htpb]
+        \centering
+        \includegraphics[]{figures/paper2-duality-gap.pdf}
+      \end{figure}
+    \end{column}
+  \end{columns}
+  \medskip
+
+  \pause
+
+  \begin{block}{Dual--Primal Relationship}
+    The two problems are related via
+    \[
+      \frac{\vec{y} - \mat{X}\vec{\beta}}{\lambda} = \vec{\theta}.
+    \]
+  \end{block}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Look-Ahead Screening}
+  Inequality for Gaps Safe screening rule is \alert{quadratic} in \(\lambda\), which means we can find the next
+  critical point easily:
+  \[
+    \lambda_+ = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \quad
+  \]
+  where
+  \[
+    \begin{aligned}
+      a & = \big( 1 - | \vec{x}_j^\intercal \vec{\theta}_\lambda|\big)^2 -
+      \frac 12 \vec{\theta}_\lambda^\intercal \vec{\theta}_\lambda \lVert \vec{x}_j\rVert_2^2,     \\
+      b & = \big(\vec{\theta}_\lambda^\intercal \vec{y} - \lVert \vec{\beta}_\lambda \rVert_1\big)
+      \lVert \bm{x}_j \rVert_2^2,                                                                  \\
+      c & = - \frac 12 \lVert \bm{y} - \bm{X\beta}_\lambda\rVert_2^2
+      \lVert \bm{x}_j\rVert_2^2.                                                                   \\
+    \end{aligned}
+  \]
+
+  \medskip\pause
+
+  Allows us to screen predictors for \textbf{all} upcoming steps
+\end{frame}
+
+\section{Paper III Extras}
+
+\begin{frame}
+  \frametitle{Warm Starts}
+  The availability of the Hessian inverse enables a better warm start:
+  \[
+    \hat\beta(\lambda_{k+1})_\mathcal{A} =
+    \hat\beta(\lambda_k)_\mathcal{A} +
+    (\lambda_k - \lambda_{k+1}) \big({X_\mathcal{A}}^T{X_\mathcal{A}}\big)^{-1}
+    \sign\big(\hat\beta(\lambda_k)_\mathcal{A}\big)
+  \]
+
+  \pause
+
+  \begin{figure}
+    \centering
+    \includegraphics{figures/paper3-warm-starts}
+    \caption{Number of passes of coordinate descent for two datasets
+      using either Hessian warm
+      starts or standard warm starts.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Updating the Hessian}
+  Computing the Hessian and its inverse naively is expensive:
+  \(\mathcal{O}(|\mathcal{A}|^3 + |\mathcal{A}|^2n)\)
+
+  \medskip\pause
+
+  Fortunately, we can sweep columns of the Hessian and inverse in our out, yielding
+  complexity
+  \begin{itemize}
+    \item \(\mathcal{O}(|\mathcal{D}|^2n + n|\mathcal{D}||\mathcal{E}| +
+          |\mathcal{D}^2||\mathcal{E}| + |\mathcal{D}|^3)\) when
+          augmenting the Hessian and
+    \item \(\mathcal{O}(|\mathcal{C}|^3 + |\mathcal{C}|^2|\mathcal{E}| +
+          |\mathcal{C}||\mathcal{E}|^2)\) when reducing it,
+  \end{itemize}
+  where
+  \begin{itemize}
+    \item \(\mathcal{C} = \mathcal{A}_{k-1} \setminus \mathcal{A}_k\)
+          (to-be deactivated)
+    \item \(\mathcal{D} = \mathcal{A}_k \setminus \mathcal{A}_{k-1}\)
+          (to-be activated)
+    \item \(\mathcal{E} = \mathcal{A}_k \cap \mathcal{A}_{k-1}\)
+          (still activate)
+  \end{itemize}
+\end{frame}
+
+\section{Paper V Extras}
+
+\begin{frame}
+  \frametitle{How Do We Minimize Over One Cluster?}
+
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      The optimality condition, using the directional derivative, is
+      \[
+        \forall \delta \in \{-1, 1\}, \quad G'(z; \delta) \geq 0,
+      \]
+      with
+      \[
+        \begin{multlined}
+          G'(z; \delta)  \\= \delta \sum_{j \in \mathcal{C}_k} X_{:j}^\top(X\beta(z) - y) \\
+          + H'(z; \delta).
+        \end{multlined}
+      \]
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.9\textwidth]{figures/paper5-directional-derivative.pdf}
+        \caption{%
+        \(G\) and its directional derivative \(G'( \cdot ; \delta)\) for
+        an example with \(\beta = [-3, 1, 3, 2]^T\), \(k = 1\), and consequently
+        \(c^{\setminus k} = \{1, 2\}\).
+        }
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The SLOPE Thresholding Operator}
+
+  \begin{figure}[htpb]
+    \centering
+    \includegraphics[width=\textwidth]{figures/paper5-slope-thresholding.pdf}
+    \caption{%
+      The SLOPE Thresholding Operator
+    }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Experiments: Real Data}
+
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.55]{figures/paper5-real_legend.pdf}
+    \includegraphics[scale=0.55]{figures/paper5-real.pdf}
+    \caption{%
+      Benchmarks on real data
+    }
+  \end{figure}
+\end{frame}
+
+\section{Paper VI Extras}
+
+\begin{frame}[c]
+  \frametitle{Probability of Selection}
+
+  Since \(\mat{X}\) is fixed and \(\vec{\varepsilon}\) is normal, it is straightforward to
+  compute the probability of selection:
+  \[
+    \Pr(\hat{\beta}_j \neq 0) = \Phi\left(\frac{\mu - \lambda_1}{\sigma}\right) + \Phi\left(\frac{- \mu -\lambda_1}{\sigma}\right).
+  \]
+
+  \begin{figure}[htpb]
+    \centering
+    \includegraphics[width=\textwidth]{figures/paper6-selection_probability.pdf}
+    \caption{%
+      Probability that the elastic net selects a feature across different noise levels \((\sigma_\varepsilon)\), types of normalization (\(\delta\)), and class balance (\(q\)).
+      The dashed line is asymptotic behavior for \(\delta = 1/2\).
+    }
+  \end{figure}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Asymptotic Results for Bias and Variance}
+
+  \begin{theorem}
+    If \(\bm{x}_j\) is a binary feature with class balance \(q \in (0, 1)\) and \(\lambda_1,\lambda_2 \in (0,\infty)\), \(\sigma_\varepsilon > 0\), and \(s_j = (q - q^2)^{\delta}\), \(\delta \geq 0\), then
+    \[
+      \lim_{q \rightarrow 1^+} \E \hat{\beta}_j =
+      \begin{cases}
+        0                                                                                                  & \text{if } 0 \leq \delta < \frac{1}{2}, \\
+        \frac{2n \beta_j^*}{n + \lambda_2} \Phi\left(-\frac{\lambda_1}{\sigma_\varepsilon \sqrt{n}}\right) & \text{if } \delta = \frac{1}{2},        \\
+        \beta^*_j                                                                                          & \text{if } \delta \geq \frac{1}{2}.
+      \end{cases}
+    \]
+    \pause and
+    \[
+      \lim_{q \rightarrow 1^+} \var \hat{\beta}_j =
+      \begin{cases}
+        0      & \text{if } 0 \leq \delta < \frac{1}{2}, \\
+        \infty & \text{if } \delta \geq \frac{1}{2}.
+      \end{cases}
+    \]
+  \end{theorem}
+
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{A Bias--Variance Tradeoff}
+
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.94\textwidth]{figures/paper6-bias-var-onedim.pdf}
+    \caption{%
+      Bias, variance, and mean-squared error for a one-dimensional lasso problem. Theoretical result for orthogonal features. Dotted line is asymptotic result or \(\delta = 1/2\).
+    }
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Multiple Features: Power, FDR, and NMSE}
+
+  Lasso example with 10 true signals and varying \(q\) and \(p\).
+
+  \begin{figure}[htpb]
+    \centering
+    \subcaptionbox{%
+      Power in the sense of detecting all the true signals. Constant \(p\).
+    }{\includegraphics[width=0.35\textwidth]{figures/paper6-power.pdf}}\hfill\pause%
+    \subcaptionbox{%
+      False discovery rate (FDR) and normalized mean-squared error (NMSE).
+    }{\includegraphics[width=0.55\textwidth]{figures/paper6-fdr_mse.pdf}}
+    \caption{%
+      Mean squared error (MSE), false discovery rate (FDR), and power.
+    }
+  \end{figure}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Hyperparameter Optimization}
+
+  \textbf{Idea:} The choice of \(\delta\) affects the model, so let's optimize over it.
+
+  \begin{figure}[htpb]
+    \centering
+    \includegraphics[width=\textwidth]{figures/paper6-hyperopt_surfaces.pdf}
+    \caption{%
+      Contour plots of hold-out (validation set) error across a grid of \(\delta\) and \(\lambda\) values for the
+      lasso and ridge.
+    }
+  \end{figure}
+\end{frame}
 
 \end{document}
 

@@ -45,6 +45,6 @@ ax[1].set_ylim((-1050, 1050))
 for a in ax:
     a.get_xaxis().set_inverted(True)
 
-save_fig("cor-coef-lasso-path.pdf")
+save_fig("paper1-cor-coef-lasso-path.pdf")
 
 plt.close("all")

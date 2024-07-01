@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.animation import FuncAnimation
 
-from pythesis.utils import PAL, save_fig, set_default_plot_settings
+from pythesis.utils import save_fig, set_default_plot_settings
 
 set_default_plot_settings()
 
@@ -95,7 +94,7 @@ for i in range(len(w1_vals)):
         J[j, i] = 0.5 * np.linalg.norm(y - x @ w) ** 2 + lmbd * np.linalg.norm(w, 1)
 
 
-fig, ax = plt.subplots(figsize=(2.5, 2.2), layout="constrained")
+fig, ax = plt.subplots(figsize=(2.5, 2.2), layout="constrained", edgecolor="white")
 
 ax.hlines(0, x_lim[0], x_lim[1], "grey", ":", zorder=2)
 ax.vlines(0, y_lim[0], y_lim[1], "grey", ":", zorder=2)
@@ -111,6 +110,6 @@ ax.text(w0[0] + 0.05, w0[1], r"$\boldsymbol{\beta}^{(0)}$", va="bottom", ha="lef
 ax.set_xlabel(r"$\beta_1$")
 ax.set_ylabel(r"$\beta_2$")
 
-save_fig("cd.pdf")
+save_fig("paper5-cd.pdf", transparent=False, edgecolor="white", facecolor="none")
 
 plt.close("all")

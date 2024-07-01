@@ -34,16 +34,25 @@ def set_default_plot_settings():
     plt.rcParams["axes.titlesize"] = 9
     plt.rcParams["lines.markersize"] = 3
     plt.rcParams["figure.labelsize"] = "medium"
-    plt.rcParams["font.family"] = "serif"
+    # plt.rcParams["font.family"] = "serif"
     plt.rcParams["text.latex.preamble"] = (
         r"\usepackage[T1]{fontenc}\usepackage{lmodern}\usepackage{mathtools}\usepackage{bm}"
     )
 
 
-def save_fig(name, pad_inches=0.01):
+def save_fig(
+    name, pad_inches=0.01, transparent=False, facecolor="none", edgecolor="white"
+):
     set_default_plot_settings()
 
     path = here("figures") / name
 
-    plt.savefig(path, bbox_inches="tight", pad_inches=pad_inches, transparent=True)
+    plt.savefig(
+        path,
+        bbox_inches="tight",
+        pad_inches=pad_inches,
+        transparent=transparent,
+        facecolor=facecolor,
+        edgecolor=edgecolor,
+    )
     os.system("pdfcrop %s %s >/dev/null 2>&1" % (path, path))

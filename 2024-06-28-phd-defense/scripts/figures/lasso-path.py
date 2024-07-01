@@ -13,24 +13,13 @@ y = diabetes.target
 
 alphas, _, coefs = linear_model.lars_path(X, y, method="lasso", verbose=True)
 
-features = [
-    "Age",
-    "Sex",
-    "BMI",
-    "Blood pressure",
-    "Total serum cholesterol",
-    "Low-density lipoproteins",
-    "High-density lipoproteins (HDL)",
-    "Total cholesterol / HDL",
-    "Serum triglycerides",
-    "Blood sugar",
-]
-
+coefs = coefs[:, 0:5]
+alphas = alphas[0:5]
 
 xx = np.sum(np.abs(coefs.T), axis=1)
 xx /= xx[-1]
 
-fig = plt.figure(figsize=(4.5, 5), layout="constrained")
+fig = plt.figure(figsize=(2, 1.4), layout="constrained")
 ax = fig.gca()
 
 ymin = np.min(coefs)
@@ -42,35 +31,9 @@ cmap = ListedColormap(PAL)
 for i in range(coefs.shape[0]):
     plt.plot(xx, coefs[i], color=PAL[i])
 
-plt.xlabel(r"$t / \max t$")
+plt.xlabel(r"$\lambda$")
 plt.ylabel(r"$\hat{\boldsymbol{\beta}}$")
 
-for i, label in enumerate(features):
-    y_pos = coefs[i, -1]
-
-    nudge = 0.0
-
-    # if i == 9:
-    #     nudge = -10
-    # elif i == 6:
-    #     nudge = 10
-    # elif label == "BMI":
-    #     nudge = 5
-    # elif i == 5:
-    #     nudge = -5
-
-    plt.text(
-        1.02,
-        y_pos + nudge,
-        label,
-        fontsize="small",
-        verticalalignment="center",
-        color=PAL[i],
-    )
-
-
-ax.spines[["right", "top"]].set_visible(False)
-
-save_fig("lasso-path.pdf")
+save_fig("paper3-lasso-path.pdf")
 
 plt.close("all")

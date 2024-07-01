@@ -115,6 +115,6 @@ ax.set_aspect("equal")
 
 ax.get_xaxis().set_inverted(True)
 
-save_fig("strong-rule.pdf")
+save_fig("paper1-strong-rule.pdf")
 
 plt.close("all")

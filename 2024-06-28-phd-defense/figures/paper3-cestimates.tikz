@@ -8,7 +8,8 @@
       ymax = 0.65,
       max space between ticks = 1000pt,
       try min ticks = 5,
-      x dir = reverse
+      x dir = reverse,
+      axis background/.style={fill=white}
     ]
     \addplot[style = dashed, color=Grey]
     coordinates {
