@@ -45,7 +45,8 @@
 \begin{frame}
   \frametitle{Sorted L-One Penalized Estimation (SLOPE)}
 
-  For a design matrix \(X \in \mathbb{R}^{n \times p}\) and response vector \(y \in \mathbb{R}^n\), the solution to SLOPE is
+  For a design matrix \(X \in \mathbb{R}^{n \times p}\) and response vector \(y \in
+  \mathbb{R}^n\), the solution to SLOPE is
   \[
     \beta^* \in \argmin_{\beta \in \mathbb{R}^p}
     \left\{P(\beta) =  \frac{1}{2} \norm{y - X \beta}^2 + J(\beta)\right\}
@@ -110,10 +111,10 @@
       \begin{itemize}
         \item<1-> The lasso is much more popular than SLOPE.
         \item<2-> One reason is that current state-of-the-art algorithms for fitting the lasso are faster.
-        \medskip
+              \medskip
 
-        \textbf{Example}: Fitting the \texttt{bcTCGA} data set with the R-package SLOPE takes
-        43 seconds versus 0.14 seconds for glmnet (lasso).
+              \textbf{Example}: Fitting the \texttt{bcTCGA} data set with the R-package SLOPE takes
+              43 seconds versus 0.14 seconds for glmnet (lasso).
       \end{itemize}
 
     \end{column}
@@ -139,11 +140,11 @@
       \begin{itemize}
         \item<1-> Coordinate descent (CD) works great for the lasso~\parencite{friedman2010}.
         \item<2->
-        Unfortunately, we cannot directly use CD for SLOPE since the
-        sorted \(\ell_1\) norm is \alert{not separable}:
-        \[
-          J(\beta) = \sum_{j=1}^p \lambda_j |\beta_{(j)}|.
-        \]
+              Unfortunately, we cannot directly use CD for SLOPE since the
+              sorted \(\ell_1\) norm is \alert{not separable}:
+              \[
+                J(\beta) = \sum_{j=1}^p \lambda_j |\beta_{(j)}|.
+              \]
       \end{itemize}
 
       \medskip
@@ -200,8 +201,8 @@
   \frametitle{Hybrid Algorithm}
 
   \begin{itemize}
-    \item Every \(v\)th iteration, take a full proximal gradient step.
-          This allows clusters to split (or merge).
+    \item Every \(v\)th iteration, take a full proximal gradient step. This allows clusters to split
+          (or merge).
     \item At all other iterations, take coordinate descent steps on the clusters.
   \end{itemize}
 
@@ -232,8 +233,8 @@
 
   \pause
 
-  Minimizing the objective in this direction amounts to solving the following
-  one-dimensional problem:
+  Minimizing the objective in this direction amounts to solving the following one-dimensional
+  problem:
   \[
     \min_{z \in \mathbb{R}} \Big(
     G(z) = P(\beta(z))  = \frac{1}{2} \lVert y - X \beta(z)\rVert^2 + H(z)
@@ -303,7 +304,6 @@
     \caption{%
       The SLOPE Thresholding Operator
     }
-    \label{fig:thresholding-operator}
   \end{figure}
 \end{frame}
 
@@ -330,8 +330,8 @@
     \includegraphics[scale=0.55]{figures/simulated_legend.pdf}
     \includegraphics[scale=0.6]{figures/simulated.pdf}
     \caption{%
-      Benchmarks on simulated data. Scenario 1: \(n = 200\) and \(p = 20\,000\), 
-      \(X\). Scenario 2: \(n = 20\,000\) and \(p = 200\). Scenario 3: \(n = 200\), 
+      Benchmarks on simulated data. Scenario 1: \(n = 200\) and \(p = 20\,000\),
+      \(X\). Scenario 2: \(n = 20\,000\) and \(p = 200\). Scenario 3: \(n = 200\),
       \(p = 200\,000\), and sparse \(X\).
     }
   \end{figure}
@@ -341,8 +341,8 @@
   \frametitle{Wrap Up}
 
   \begin{itemize}
-    \item Experiments were set up using
-          Benchopt (\href{https://benchopt.github.io}{\texttt{benchopt.github.io}})
+    \item Experiments were set up using Benchopt
+          (\href{https://benchopt.github.io}{\texttt{benchopt.github.io}})
     \item Code is available at
           \href{https://github.com/jolars/slopecd}{\texttt{github.com/jolars/slopecd}}
     \item Add your own solver for SLOPE at
