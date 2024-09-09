@@ -98,23 +98,6 @@
 
 \maketitle
 
-% \begin{frame}[c]
-%   \frametitle{Overview}
-%
-%   \tableofcontents
-% \end{frame}
-
-\begin{frame}[c]
-  \frametitle{Motivation}
-
-  \begin{itemize}[<+->]
-    \item Most regularized methods are scale-sensitive, so have to normalize.
-    \item Straightforward normalization when everything is normal, but what about features that have
-          other distributions (binary features)?
-    \item No literature on the effects of different normalization strategies
-  \end{itemize}
-\end{frame}
-
 \begin{frame}[c]
   \frametitle{The Elastic Net}
 
@@ -185,16 +168,6 @@
             \hat\beta_j = \frac{\hat\beta^{(n)}_j}{s_j} \quad\text{for}\quad j = 1,2,\dots,p.
           \]
   \end{itemize}
-
-  % \bigskip\pause
-  % \begin{block}{Ambiguous Nomenclature}
-  %   \begin{itemize}
-  %     \item Some refer to this as \emph{standardization} (which we dedicate for the mean--standard deviation combo).
-  %     \item Some take normalization to mean \alert{sample-wise} normalization.
-  %     \item Some take normalization to mean scaling with a \alert{norm}.
-  %     \item Some refer to this (centering and scaling) as \alert{scaling}.
-  %   \end{itemize}
-  % \end{block}
 \end{frame}
 
 \begin{frame}[c]
@@ -262,37 +235,31 @@
 \end{frame}
 
 \begin{frame}[c]
-  \frametitle{Summary}
-  \begin{exampleblock}{Contributions}
-    \begin{itemize}
-      \item As far as we know the first paper to investigate the interplay between normalization and
-            regularization
-      \item New scaling approach to deal with class-imbalanced binary features
-      \item Discussion and suggestions for dealing with mixed data
-    \end{itemize}
-  \end{exampleblock}
+  \frametitle{Conclusions and Outlook}
 
-  \pause
-
-  \begin{alertblock}{Limitations}
-    \begin{itemize}
-      \item So far only theoretical results for limited cases:
-            \begin{itemize}
-              \item Fixed data (\(\mat{X}\)), normal noise
-              \item Orthogonal features
-              \item Normal and binary features
-            \end{itemize}
+  \begin{block}{So Far}
+    \begin{itemize}[<+->]
+      \item Normalization matters
+      \item Binary features require special treatment; importance of class balance.
+      \item Mixed data is tricky
     \end{itemize}
-  \end{alertblock}
+
+    \pause
+
+    \begin{block}{Outlook}
+      \begin{itemize}[<+->]
+        \item Categorical features?
+        \item Other types of noise and data?
+        \item Computational aspects of normalization?
+      \end{itemize}
+    \end{block}
+
+  \end{block}
 \end{frame}
 
 \begin{frame}[standout]
   Thank you!
 \end{frame}
-
-% \begin{frame}[standout]
-%   Thank you!
-% \end{frame}
 
 % \appendix
 % 
