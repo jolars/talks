@@ -2,6 +2,7 @@
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 
+
 \documentclass[aspectratio=1610,onlytextwidth]{beamer}
 
 \usetheme{moloch}
@@ -88,15 +89,15 @@
 
 \usepackage{booktabs}
 
-\date{June 28, 2024}
+\date{March 24, 2025}
 \titlegraphic{\hfill\includegraphics[height=2cm]{figures/logo.pdf}\hspace{1cm}\includegraphics[height=2cm]{figures/ucph-vertical.pdf}\bigskip}
 
 \usepackage[style=authoryear,url=false,backend=biber]{biblatex}
 \addbibresource{bibliography.bib}
 
 \title{Optimization and Algorithms in Sparse Regression}
-\subtitle{A Summary of My Thesis}
-\author{Johan Larsson}
+\subtitle{Cramér Mini-Conference 2025}
+\author{Johan Larsson\\\smallskip\scriptsize \url{https://jolars.co}, {\texttt{@jolars@mastodon.social}}}
 \institute{Department of Mathematical Sciences, University of Copenhagen\\Department of Statistics, Lund University}
 
 \input{tex/macros.tex}
@@ -114,20 +115,27 @@
 \begin{frame}[c]
   \frametitle{Synopsis}
 
-  \begin{exampleblock}{Overarching Theme}
-    Practical concerns in sparse regression: speed, accuracy, and reproducibility.
-  \end{exampleblock}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Overarching Theme}
+        Practical concerns in sparse regression: speed, accuracy, and reproducibility.
+      \end{exampleblock}
+      \uncover<2->{%
+        \begin{block}{Overview}
+          \begin{description}[I--III]
+            \item[I--III] Screening rules
+            \item[IV] Benchmarking optimization methods
+            \item[V] Coordinate descent (an optimization method) for SLOPE
+            \item[VI] Normalization and regularization
+          \end{description}
+        \end{block}
+      }
+    \end{column}
+    \begin{column}{0.35\textwidth}
+      \uncover<1->{\includegraphics[width=\textwidth]{figures/front-cover.png}}
+    \end{column}
+  \end{columns}
 
-  \pause
-
-  \begin{block}{Overview}
-    \begin{description}[I--III]
-      \item[I--III] Screening rules
-      \item[IV] Benchmarking optimization methods
-      \item[V] Coordinate descent (an optimization method) for SLOPE
-      \item[VI] Normalization and regularization
-    \end{description}
-  \end{block}
 \end{frame}
 
 \section{Screening Rules (Papers I--III)}
@@ -150,93 +158,119 @@
 % \end{frame}
 
 \begin{frame}[c]
-  \frametitle{Motivation}
+  \frametitle{Key Components}
 
-  \begin{itemize}[<+->]
-    \item Data sets are growing in size.
-    \item Fitting models to sets of millions (maybe billions) of features is computationally costly.
-    \item Hyperparameter tuning increases costs further.
-  \end{itemize}
+  \begin{block}{Motivation}
+    Fitting models to sets of millions or billions of features is computationally costly, and
+    exacerbated by the fact we often need to do cross-validation.
+  \end{block}
 
-\end{frame}
+  \pause
 
-\begin{frame}[c]
-  \frametitle{Screening Rules}
-
-  \begin{block}{Basic Insight}
+  \begin{block}{Basic Idea of Screening}
     \begin{itemize}
-      % TODO: Add an illustration of this, preferably a heatmap of when coefficients are zero
       \item The support set is small in sparse regression, especially when \(p \gg n\).\footnote{The
               lasso can for instance at most select \(\min(n, p)\) features.}
-      \item Can we somehow figure this support \textbf{before} fitting the model?
+      \item If we could estimate the model's support \textbf{before} fitting the model, then we would
+            save a lot of time.
     \end{itemize}
   \end{block}
 
   \pause
 
-  \begin{block}{General Idea}
+  \begin{block}{General Outline}
     \begin{enumerate}
       \item Estimate how likely it is that a feature is in the support set.
-      \item If unlikely, discard it.
-      \item Fit a reduced model.
-      \item If we were wrong, just refit the model with missing features added.
+      \item If unlikely, discard it and fit a smaller model.
+      \item If we are wrong, just refit the model with missing features added.
     \end{enumerate}
   \end{block}
-
-  \medskip\pause
-
-  Turns out to be a pretty good idea!
 \end{frame}
-
-% \begin{frame}[c]
-%   \frametitle{Optimality Conditions and the Gradient}
-%
-%   \begin{columns}[T]
-%     \begin{column}{0.51\textwidth}
-%       \begin{block}{Optimality Condition}
-%         \(\bm{\beta}\) is optimal if
-%         \begin{equation*}
-%           \boldsymbol{0} \in \nabla g(\bm{\beta}) + \partial h(\vec{\beta}),
-%         \end{equation*}
-%         where \(\partial h (\vec{\beta})\) is the subdifferential of the penalty term \(h\).
-%       \end{block}
-%
-%       \pause
-%
-%       \begin{block}{The Lasso}
-%         Here we have
-%         \[
-%           \partial h (\beta)_j =
-%           \begin{cases}
-%             \{
-%             \lambda\sign(\beta_j)\} & \text{if } \beta_j \neq 0, \\
-%             [-\lambda, \lambda]     & \text{if } \beta_j = 0.
-%           \end{cases}
-%         \]
-%         If \(|\nabla g(\vec{\beta}^*)_j| < \lambda,\) \alert{then \(\beta_j^* = 0\)}.
-%       \end{block}
-%
-%     \end{column}
-%     \begin{column}{0.39\textwidth}
-%
-%       \begin{figure}[htpb]
-%         \centering
-%         \includegraphics{figures/paper1-subgradient-split.pdf}
-%         \caption{%
-%           The lasso penalty \(h(\bm{\beta}) = \lambda \lVert \bm{\beta}\rVert_1\) and its subdifferential at \(\lambda = 1\).
-%         }
-%       \end{figure}
-%     \end{column}
-%   \end{columns}
-%
-% \end{frame}
 
 \begin{frame}[c]
   \begin{figure}[htpb]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/paper1-cor-coef-lasso-path.pdf}
+    \includegraphics[]{figures/regularization-path.pdf}
     \caption{%
-      Coefficients and correlations (\(\bm{c}\)) along the lasso path
+      The regularization path for the lasso. The path is piecewise linear.
+    }
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}[c]
+  \begin{figure}[htpb]
+    \centering
+    \uncover<1->{\includegraphics{figures/sparsity-path-1.pdf}}\hfill%
+    \uncover<2->{\includegraphics{figures/sparsity-path-2.pdf}}\hfill%
+    \uncover<3->{\includegraphics{figures/sparsity-path-3.pdf}}
+    \uncover<1->{%
+      \caption{%
+        Non-zero coefficients along the path, ordered by the time they enter the model. The
+        number of observations, \(n\), is
+        50.
+      }
+    }
+  \end{figure}
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Optimality Conditions and the Gradient}
+
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{block}{Optimality Condition}
+        \(\bm{\beta}\) is optimal if \(\boldsymbol{0} \in \nabla g(\bm{\beta}) + \partial h(\vec{\beta}),\) where \(\partial h (\vec{\beta})\) is the subdifferential of the penalty term \(h\).
+      \end{block}
+
+      \uncover<2->{
+        \begin{exampleblock}{Example: Lasso}
+          \[
+            \partial h (\bm{\beta})_j =
+            \begin{cases}
+              \{
+              \lambda\sign(\beta_j)\} & \text{if } \beta_j \neq 0, \\
+              [-\lambda, \lambda]     & \text{if } \beta_j = 0.
+            \end{cases}
+          \]
+          So if \(|\nabla g(\hat{\bm{\beta}})_j| < \lambda,\) \alert{then \(\hat{\beta}_j = 0\)}.
+        \end{exampleblock}
+      }
+
+      \uncover<3->{
+        \begin{block}{Screening Rule Template}
+          \begin{enumerate}
+            \item Replace \(\nabla g(\hat{\bm{\beta}})\) with an estimate \(\tilde{\nabla} g(\vec{\beta})\).
+            \item If \(|\tilde{\nabla} g(\vec{\beta})_j| < \lambda,\) discard feature \(j\).
+          \end{enumerate}
+        \end{block}
+      }
+
+    \end{column}
+
+    \begin{column}{0.4\textwidth}
+      \uncover<2->{
+        \begin{figure}[htpb]
+          \centering
+          \includegraphics{figures/paper1-subgradient-split.pdf}
+          \caption{%
+            The lasso penalty \(h(\bm{\beta}) = \lambda \lVert \bm{\beta}\rVert_1\) and its subdifferential at \(\lambda = 1\).
+          }
+        \end{figure}
+      }
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}[c]
+  \begin{figure}[htpb]
+    \centering
+    \includegraphics{figures/paper1-cor-coef-lasso-path.pdf}
+    \caption{%
+      Coefficients and correlations (\(\bm{c}\)) along the lasso path. If
+      the gradient of any given coefficient is smaller than the penalty (dotted line), then
+      the coefficient has to be zero.
     }
   \end{figure}
 \end{frame}
@@ -254,36 +288,55 @@
 \begin{frame}[c]
   \frametitle{Strong Rule for SLOPE (Paper I)}
 
-  Same idea as for lasso strong rule! Just need the subdifferential.
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+
+      Same idea as for lasso strong rule! Just need the subdifferential.
+
+      \bigskip
+
+      In our paper\footnote[frame]{\fullcite{larsson2020b}}, we derive the subdifferential for
+      SLOPE/OWL and present an efficient algorithm for using it to screen features.
+    \end{column}
+    \begin{column}{0.5\textwidth}
+
+      \begin{center}
+        \frame{\includegraphics[height=3cm]{figures/gosia.jpeg}}\hfill%
+        \frame{\includegraphics[height=3cm]{figures/jonas.jpg}}
+      \end{center}
+    \end{column}
+  \end{columns}
+
+  \bigskip
 
   % TODO: give an example
 
-  \begin{block}{SLOPE Subdifferential}
-
-    The set of all \(\bm{g} \in \mathbb{R}^p\) such that
-    \[
-      \small
-      \vec{g}_{\mathcal{A}_i} =
-      \left\{\vec{s} \in \mathbb{R}^{|{\mathcal{A}_i}|} \bigm\vert
-        \begin{cases}
-          \mathop{\mathrm{cumsum}}(|\bm{s}|_\downarrow - \bm{\lambda}_{R(\bm{s})_{\mathcal{A}_i}}) \preceq \mathbf{0} & \text{if } \beta_{\mathcal{A}_i} = \mathbf{0}, \\
-          \mathop{\mathrm{cumsum}}(|\bm{s}|_\downarrow - \bm{\lambda}_{R(\bm{s})_{\mathcal{A}_i}}) \preceq \mathbf{0}                                                  \\
-          \quad\,\text{and } \sign(\bm{\beta}_{\mathcal{A}_i}) = \sign(\bm{s})                                                                                         \\
-          \quad\,\text{and } \sum_{j \in \mathcal{A}_i}\left(|s_j| - \lambda_{R(\bm{s})_j}\right) = 0                 & \text{otherwise.}
-        \end{cases}
-      \right\}
-    \]
-  \end{block}
-
-  \medskip
-
-  \begin{itemize}
-    \item \(\mathcal{A}_i\) defines a \alert{cluster} containing indices of coefficients
-          equal in absolute value.
-    \item \(R(\bm{x})\) returns \alert{ranks} of absolute values of elements in \(\bm{x}\).
-    \item \(|\vec{x}|_\downarrow\) returns the absolute values of \(x\) sorted in non-increasing
-          order.
-  \end{itemize}
+  % \begin{block}{SLOPE Subdifferential}
+  %
+  %   The set of all \(\bm{g} \in \mathbb{R}^p\) such that
+  %   \[
+  %     \small
+  %     \vec{g}_{\mathcal{A}_i} =
+  %     \left\{\vec{s} \in \mathbb{R}^{|{\mathcal{A}_i}|} \bigm\vert
+  %       \begin{cases}
+  %         \mathop{\mathrm{cumsum}}(|\bm{s}|_\downarrow - \bm{\lambda}_{R(\bm{s})_{\mathcal{A}_i}}) \preceq \mathbf{0} & \text{if } \beta_{\mathcal{A}_i} = \mathbf{0}, \\
+  %         \mathop{\mathrm{cumsum}}(|\bm{s}|_\downarrow - \bm{\lambda}_{R(\bm{s})_{\mathcal{A}_i}}) \preceq \mathbf{0}                                                  \\
+  %         \quad\,\text{and } \sign(\bm{\beta}_{\mathcal{A}_i}) = \sign(\bm{s})                                                                                         \\
+  %         \quad\,\text{and } \sum_{j \in \mathcal{A}_i}\left(|s_j| - \lambda_{R(\bm{s})_j}\right) = 0                 & \text{otherwise.}
+  %       \end{cases}
+  %     \right\}
+  %   \]
+  % \end{block}
+  %
+  % \medskip
+  %
+  % \begin{itemize}
+  %   \item \(\mathcal{A}_i\) defines a \alert{cluster} containing indices of coefficients
+  %         equal in absolute value.
+  %   \item \(R(\bm{x})\) returns \alert{ranks} of absolute values of elements in \(\bm{x}\).
+  %   \item \(|\vec{x}|_\downarrow\) returns the absolute values of \(x\) sorted in non-increasing
+  %         order.
+  % \end{itemize}
 
 \end{frame}
 
@@ -292,7 +345,7 @@
     \centering
     \includegraphics[width=0.9\textwidth]{figures/paper1-efficiency-real.pdf}
     \caption{%
-      Effectiveness for some real data sets
+      Effectiveness of the strong screening rule for SLOPE on some real data sets.
     }
   \end{figure}
 \end{frame}
@@ -418,25 +471,34 @@
 \begin{frame}[c]
   \frametitle{Look-Ahead Screening (Paper II)}
 
+  \begin{itemize}[<+->]
+    \item There's nothing special about the current step's \(\lambda\) in a screening rule, so why
+          not look further ahead?\footnote{\fullcite{larsson2021}}
+    \item The problem is that the strong rule is heuristic.
+    \item But there are \alert{safe rules}, that guarantee that we do not make a mistake.
+  \end{itemize}
+
+  \pause
+
   \begin{figure}[htpb]
     \centering
-    \includegraphics[width=\textwidth]{figures/paper2-casestudy.pdf}
+    \includegraphics{figures/paper2-casestudy.pdf}
     \caption{%
-      The lasso path for a sample of 20 features from the leukemia data set. The squares
+      Lasso path for a sample of features from the leukemia data set. The squares
       show for which steps the feature can be discarded.
     }
   \end{figure}
 \end{frame}
 
-\begin{frame}[c]
-  \begin{figure}[htpb]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/paper2-simulated-data.pdf}
-    \caption{%
-      Benchmarks of time to fit the full lasso path with or without look-ahead screening.
-    }
-  \end{figure}
-\end{frame}
+% \begin{frame}[c]
+%   \begin{figure}[htpb]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{figures/paper2-simulated-data.pdf}
+%     \caption{%
+%       Benchmarks of time to fit the full lasso path with or without look-ahead screening.
+%     }
+%   \end{figure}
+% \end{frame}
 
 % \begin{frame}[c]
 %   \frametitle{Summary}
@@ -486,28 +548,43 @@
 % \end{frame}
 
 \begin{frame}
-  \frametitle{The Hessian Screening Rule}
-  \begin{columns}[c]
-    \begin{column}{0.45\textwidth}
-      For the ordinary lasso,
-      \begin{align*}
-        g(\bm{\beta})        & = \frac 1 2 \lVert \vec{y} - \bm{X \beta} \rVert_2^2, \\
-        \nabla g(\bm{\beta}) & = \bm{X}^\intercal(\bm{X\beta} - \bm{y}),
-      \end{align*}
-      solution is \alert{piecewise linear}.\medskip
+  \frametitle{The Hessian Screening Rule (Paper III)}
+  % \begin{columns}[c]
+  % \begin{column}{0.45\textwidth}
 
-      And if active set is constant in \([\lambda_k,\lambda_{k+1}]\), we can express the solution
-      in closed form.
-    \end{column}
-    \begin{column}{0.45\textwidth}
-      \centering
-      % TODO: X axis label is incorrect, fix it!
-      \includegraphics[width=\textwidth]{figures/paper3-lasso-path.pdf}
-      NEED TO FIX X AXIS LABEL
-    \end{column}
-  \end{columns}
+  A screening rule for the lasso that uses second-order information to obtain better
+  estimates of future gradients.\footnote[frame]{\fullcite{larsson2022b}}
 
-  \bigskip\pause
+  \pause
+
+  \begin{block}{Improved Screening}
+    Uses information about the gradient of the gradients along the path, which is
+    less conservative than the strong rule.
+  \end{block}
+
+  \pause
+
+  \begin{block}{Better Warm Starts}
+    Allows also to estimate the entire coefficient vector for the next step.
+  \end{block}
+
+  %   For the ordinary lasso,
+  %   \begin{align*}
+  %     g(\bm{\beta})        & = \frac 1 2 \lVert \vec{y} - \bm{X \beta} \rVert_2^2, \\
+  %     \nabla g(\bm{\beta}) & = \bm{X}^\intercal(\bm{X\beta} - \bm{y}),
+  %   \end{align*}
+  %   solution is \alert{piecewise linear}.\medskip
+  %
+  %   And if active set is constant in \([\lambda_k,\lambda_{k+1}]\), we can express the solution
+  %   in closed form.
+  % \end{column}
+  % \begin{column}{0.45\textwidth}
+  %   \centering
+  %   \includegraphics[width=\textwidth]{figures/paper3-lasso-path.pdf}
+  % \end{column}
+  % \end{columns}
+
+  % \bigskip\pause
 
   % It turns out that we can express the solution as a function of \(\lambda\):
   % \begin{equation*}
@@ -523,18 +600,18 @@
   %   \sign\big(\hat{\vec{\beta}}(\lambda_k)_\mathcal{A}\big).
   % \end{equation*}
 
-  \begin{exampleblock}{Hessian Screening Rule (Basic Form)}
-    Plug \(\hat{\bm{\beta}}\) into the gradient at step \(k + 1\):
-    \begin{equation*}
-      % \begin{aligned}
-      \tilde{\bm{c}}^H(\lambda_{k+1})
-      = -\nabla g\big(\hat{\vec{\beta}}(\lambda_{k+1})_\mathcal{A}\big)
-      = \bm{c}(\lambda_k) + (\lambda_{k+1} - \lambda_k)\bm{X}^\intercal {\bm{X}_\mathcal{A}}
-      \big({\bm{X}_\mathcal{A}}^\intercal \bm{X}_\mathcal{A}\big)^{-1}
-      \sign\big(\hat{\vec{\beta}}(\lambda_k)_\mathcal{A}\big).
-      % \end{aligned}
-    \end{equation*}
-  \end{exampleblock}
+  % \begin{exampleblock}{Hessian Screening Rule (Basic Form)}
+  %   Plug \(\hat{\bm{\beta}}\) into the gradient at step \(k + 1\):
+  %   \begin{equation*}
+  %     % \begin{aligned}
+  %     \tilde{\bm{c}}^H(\lambda_{k+1})
+  %     = -\nabla g\big(\hat{\vec{\beta}}(\lambda_{k+1})_\mathcal{A}\big)
+  %     = \bm{c}(\lambda_k) + (\lambda_{k+1} - \lambda_k)\bm{X}^\intercal {\bm{X}_\mathcal{A}}
+  %     \big({\bm{X}_\mathcal{A}}^\intercal \bm{X}_\mathcal{A}\big)^{-1}
+  %     \sign\big(\hat{\vec{\beta}}(\lambda_k)_\mathcal{A}\big).
+  %     % \end{aligned}
+  %   \end{equation*}
+  % \end{exampleblock}
 
 \end{frame}
 
@@ -549,47 +626,47 @@
   \end{figure}
 \end{frame}
 
-\begin{frame}
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/paper3-simulateddata-efficiency}
-    \caption{%
-      Features screened for a lasso path for \(\ell_1\)-regularized
-      least-squares to a design with varying correlation (\(\rho\)), \(n = 200\), and \(p =
-      \num{20000}\).
-    }
-  \end{figure}
-\end{frame}
+% \begin{frame}
+%   \begin{figure}
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{figures/paper3-simulateddata-efficiency}
+%     \caption{%
+%       Features screened for a lasso path for \(\ell_1\)-regularized
+%       least-squares to a design with varying correlation (\(\rho\)), \(n = 200\), and \(p =
+%       \num{20000}\).
+%     }
+%   \end{figure}
+% \end{frame}
 
-\begin{frame}[c]
-  \begin{figure}
-    \centering
-    \includegraphics{figures/paper3-simulateddata-timings}
-    \caption{
-      Time to fit a full path of \(\ell_1\)-regularized least-squares and
-      logistic regression to a design with \(n\) observations, \(p\) features, and pairwise
-      correlation between features of \(\rho\).
-    }
-  \end{figure}
-\end{frame}
+% \begin{frame}[c]
+%   \begin{figure}
+%     \centering
+%     \includegraphics{figures/paper3-simulateddata-timings}
+%     \caption{
+%       Time to fit a full path of \(\ell_1\)-regularized least-squares and
+%       logistic regression to a design with \(n\) observations, \(p\) features, and pairwise
+%       correlation between features of \(\rho\).
+%     }
+%   \end{figure}
+% \end{frame}
 
-\begin{frame}[c]
-  \frametitle{The Hessian Screening Rule}
-
-  \begin{columns}
-    \begin{column}{0.45\textwidth}
-
-      Published and presented at NeurIPS 2022\footnote[frame]{\fullcite{larsson2022b}}
-
-      \bigskip
-
-      Co-authored with Jonas
-    \end{column}
-    \begin{column}{0.45\textwidth}
-      \includegraphics[width=\textwidth]{figures/neurips.pdf}
-    \end{column}
-  \end{columns}
-\end{frame}
+% \begin{frame}[c]
+%   \frametitle{The Hessian Screening Rule}
+%
+%   \begin{columns}
+%     \begin{column}{0.45\textwidth}
+%
+%       Published and presented at NeurIPS 2022\footnote[frame]{\fullcite{larsson2022b}}
+%
+%       \bigskip
+%
+%       Co-authored with Jonas
+%     \end{column}
+%     \begin{column}{0.45\textwidth}
+%       \includegraphics[width=\textwidth]{figures/neurips.pdf}
+%     \end{column}
+%   \end{columns}
+% \end{frame}
 
 % \begin{frame}[c]
 %   \frametitle{Summary}
@@ -617,59 +694,43 @@
 \section{Coordinate Descent for SLOPE (Paper~V)}
 
 \begin{frame}[c]
-  \frametitle{Coordinate Descent for SLOPE}
-
-  Published and presented at AISTATS 2023\footnote{\fullcite{larsson2023}}
-
-  \begin{center}
-    \hfill%
-    \includegraphics[height=2.4cm]{figures/mathurin.jpg}\hfill%
-    \includegraphics[height=2.4cm]{figures/quentin.png}\hfill%
-    \includegraphics[height=2.4cm]{figures/jonas.jpg}\hfill\null
-  \end{center}
-
-  Co-authored with Mathurin Massias, Quentin Bertrand, and Jonas Wallin.
-
-\end{frame}
-
-\begin{frame}[c]
   \frametitle{Motivation}
 
-  \begin{itemize}[<+->]
-    \item SLOPE has many appealing properties but the best algorithms for solving SLOPE are slow
-          (relative to the lasso)
-    \item Lasso solvers are fast because they use coordinate descent
-    \item Unfortunately cannot use basic coordinate descent for SLOPE
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Coordinate Descent}
-
   \begin{columns}[c]
-    \begin{column}{0.35\textwidth}
-      \begin{exampleblock}{Simple Method!}
-        At each iteration, update a single coordinate (coefficient).
-      \end{exampleblock}
+    \begin{column}{0.45\textwidth}
+      \begin{itemize}[<+->]
+        \item SLOPE has appealing properties but algorithms for solving SLOPE are\footnote{Used to be!}
+              slow (relative to the lasso)
+        \item Lasso solvers are fast because they use coordinate descent.
+        \item Unfortunately cannot use basic coordinate descent for SLOPE
+      \end{itemize}
     \end{column}
-    \begin{column}{0.55\textwidth}
-      \begin{figure}[htpb]
-        \centering
-        \includegraphics[]{figures/paper5-cd.pdf}
-        \caption{%
-          A basic example of coordinate descent in two dimensions
-        }
-      \end{figure}
+    \begin{column}{0.5\textwidth}
+      \uncover<2->{
+        \begin{figure}[htpb]
+          \centering
+          \includegraphics[]{figures/paper5-cd.pdf}
+          \caption{%
+            A basic example of coordinate descent in two dimensions
+          }
+        \end{figure}
+      }
     \end{column}
   \end{columns}
+  %
+  % \begin{columns}[c]
+  %   \begin{column}{0.35\textwidth}
+  %     \begin{exampleblock}{Simple Method!}
+  %       At each iteration, update a single coordinate (coefficient).
+  %     \end{exampleblock}
+  %   \end{column}
+  %   \begin{column}{0.55\textwidth}
+  %
+  %   \end{column}
+  % \end{columns}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Coordinate Descent Performance}
-  Performs (surprisingly) well!
-
-  \medskip
-
   \begin{figure}[htpb]
     \centering
     \includegraphics[]{figures/paper5-cd-vs-pgd.pdf}
@@ -726,14 +787,27 @@
 \begin{frame}[c]
   \frametitle{Hybrid Algorithm}
 
+  Our algorithm is a combination of coordinate descent and proximal gradient
+  descent:\footnote{\fullcite{larsson2023}}
+
   \begin{itemize}
     \item Every \(v\)th iteration, take a full proximal gradient step. This allows clusters to split
           (or merge).
     \item At all other iterations, take coordinate descent steps on the clusters.
   \end{itemize}
 
+  \bigskip
   \pause
 
+  \begin{center}
+    \hfill%
+    \includegraphics[height=2.4cm]{figures/mathurin.jpg}\hfill%
+    \includegraphics[height=2.4cm]{figures/quentin.png}\hfill%
+    \includegraphics[height=2.4cm]{figures/jonas.jpg}\hfill\null
+  \end{center}
+\end{frame}
+
+\begin{frame}[c]
   \begin{figure}[htpb]
     \centering
     \includegraphics[width=\textwidth]{figures/paper5-illustration_solvers.pdf}
@@ -764,7 +838,7 @@
       \begin{block}{LibSLOPE}
         \begin{itemize}
           \item \texttt{C++} library for solving SLOPE using the hybrid coordinate method
-          \item Natively parallelized routines for fitting paths and cross-validation
+          \item Parallelized fitting and cross-validation
           \item Algorithmic improvements to SLOPE thresholding and cluster handling for sparse data
         \end{itemize}
       \end{block}
@@ -774,14 +848,21 @@
     \end{column}
   \end{columns}
 
-  \bigskip
+  \bigskip\pause
 
   \begin{block}{Packages}
-    \begin{description}[SLOPE]
-      \item[R] SLOPE: \url{https://jolars.github.io/slope/}
-      \item[Python] sortedl1: \url{https://jolars.github.io/sortedl1/}
-      \item[C++] libslope: \url{https://jolars.github.io/sortedl1/}
-    \end{description}
+    \begin{center}
+      \begin{tabular}{lll}
+        \toprule
+        Language & Package  & URL                                     \\
+        \midrule
+        R        & SLOPE    & \url{https://jolars.github.io/SLOPE}    \\
+        Python   & sortedl1 & \url{https://jolars.github.io/sortedl1} \\
+        C++      & libslope & \url{https://jolars.github.io/libslope} \\
+        \bottomrule
+      \end{tabular}
+    \end{center}
+
   \end{block}
 
 \end{frame}
@@ -793,7 +874,7 @@
 
   Linear regression plus a combination of the \(\ell_1\) and \(\ell_2\) penalties:
   \begin{equation*}
-    \vec{\beta}^* = \operatorname*{arg\,min}_{\beta \in \mathbb{R}^p} \bigg( \frac{1}{2} \lVert \vec y - \mat{X}\vec{\beta} \rVert^2_2  + \underbrace{\lambda_1 \lVert \vec\beta \rVert_1}_\text{lasso} + \underbrace{\frac{\lambda_2}{2}\lVert \vec \beta \rVert_2^2}_\text{ridge}\bigg)
+    \hat{\bm{\beta}} = \operatorname*{arg\,min}_{\beta \in \mathbb{R}^p} \bigg( \frac{1}{2} \lVert \vec y - \mat{X}\vec{\beta} \rVert^2_2  + \underbrace{\lambda_1 \lVert \vec\beta \rVert_1}_\text{lasso} + \underbrace{\frac{\lambda_2}{2}\lVert \vec \beta \rVert_2^2}_\text{ridge}\bigg)
   \end{equation*}
 
   \pause
@@ -885,7 +966,7 @@
     \centering
     \includegraphics[width=0.95\textwidth]{figures/paper6-realdata_paths.pdf}
     \caption{%
-      The motivation: normalization matters. Lasso paths under two different types of normalization (standardization and max--abs normalization). The union of the first ten features selected in any of the settings are colored.
+      Normalization matters. Lasso paths under two different types of normalization (standardization and max--abs normalization). The union of the first ten features selected in any of the settings are colored.
     }
   \end{figure}
 
@@ -896,23 +977,21 @@
 
   \begin{block}{Motivation}
     \begin{itemize}[<+->]
-      \item So, normalization matters but there has been no research into this.
+      \item Normalization matters, yet there is almost no research on this topic.
       \item Everyone agrees you need to normalize, but how to do so is usually motivated by being
             ``standard''.
-      \item Documentation for popular machine learning packages advocate different normalization
-            strategies when data is sparse.
+      \item Documentation for popular software advocate different normalization strategies when data is
+            sparse.
       \item Approach depends on field: statisticians standardize, signal processors use $\ell_1$
-            normalization, machine learning people scale to $[0, 1]$ or $[-1, 1]$.)
+            normalization, machine learners scale to $[0, 1]$ or $[-1, 1]$.)
     \end{itemize}
   \end{block}
 
   \pause
 
-  \begin{block}{Aims}
-    \begin{itemize}[<+->]
-      \item Binary features, particularly with respect to the \alert{class balance} thereof
-      \item A mix of binary and normally distributed features
-    \end{itemize}
+  \begin{block}{Our Paper: Focus on Binary Features}
+    In our paper, we focus on binary features particularly with respect to \alert{class
+      balance}.
   \end{block}
 
 \end{frame}
@@ -926,12 +1005,12 @@
   \pause\bigskip
 
   \begin{columns}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.55\textwidth}
       But if we assume that the features are orthogonal, that is
       \[
         \tilde{\bm{X}}^\intercal \tilde{\bm{X}} = \diag(\tilde{\vec{x}}_1^\intercal \tilde{\vec{x}}_1, \dots, \tilde{\vec{x}}_p^\intercal \tilde{\vec{x}}_p),
       \]
-      then there is:\footnote[frame]{We have also assumed that the features are mean-centered
+      then there is:\footnote<2->[frame]{We have also assumed that the features are mean-centered
         here.}:
       \begin{equation*}
         \hat\beta_j = \frac{\st_{\lambda_1}\left(\tilde{\vec{x}}_j^\T \vec{y}\right)}{s_j\left(\tilde{\vec{x}}_j^\T \tilde{\vec{x}}_j + \lambda_2\right)},
@@ -955,34 +1034,63 @@
 \end{frame}
 
 \begin{frame}[c]
-  \frametitle{Bias and Variance of the Elastic Net Estimator}
+  \frametitle{Noiseless Case for Binary Features}
 
-  The goal is computing the expected value of the elastic net estimator,
+  In the noiseless case, we have
   \[
-    \E \hat\beta_j = \frac{\E \st_{\lambda_1}\left(\tilde{\vec{x}}_j^\T \vec{y}\right)}{s_j\left(\tilde{\vec{x}}_j^\T \tilde{\vec{x}}_j + \lambda_2\right)},
+    \hat{\beta}_j = \frac{\st_{\lambda_1}(\tilde{\vec{x}}^\intercal \vec{y})}{s_j\left(\tilde{\vec{x}}_j^\intercal \tilde{\vec{x}}_j + \lambda_2\right)}
+    =
+    \frac{\operatorname{S}_{\lambda_1}\left(\frac{\beta_j^* n \alert{(q - q^2)}}{s_j}\right)}{s_j\left(\frac{n\alert{(q - q^2)}}{s_j^2} + \lambda_2\right)}.
   \]
-  since we treat \(\mat{X}\) as fixed.
-
-  \bigskip\pause
-
-  Letting \(Z = \tilde{\vec{x}}^\intercal \vec{y}\) and assuming that \(\varepsilon_i\) is
-  i.i.d. Normally-distributed with mean zero and finite variance \(\sigma_\varepsilon^2\), we
-  have
-  \[
-    Z \sim \normal\left(\mu = \tilde{\vec{x}}_j^\T\vec{x}_j \beta_j, \sigma^2 =  \sigma_\varepsilon^2 \lVert \tilde{\vec{x}}_j\rVert_2^2 \right).
-  \]
-
-  % \begin{align*}
-  %   % \E Z   & = \mu = \E \left( \tilde{\vec{x}}_j^\T (\vec{x}_j\beta_j + \vec{\varepsilon}) \right)  = \tilde{\vec{x}}_j^\T\vec{x}_j \beta_j,  \\
-  %   % \var Z & = \sigma^2 = \var\left(\tilde{\vec{x}}_j ^\T \vec{\varepsilon}\right) = \sigma_\varepsilon^2 \lVert \tilde{\vec{x}}_j\rVert_2^2.
-  %   \E Z   & = \mu = \tilde{\vec{x}}_j^\T\vec{x}_j \beta_j,                        \\
-  %   \var Z & = \sigma^2 = \sigma_\varepsilon^2 \lVert \tilde{\vec{x}}_j\rVert_2^2.
-  % \end{align*}
-
-  \bigskip
-
-  Next, will will turn to \(\E \st_{\lambda_1}(Z)\).
+  \pause
+  \begin{itemize}[<+->]
+    \item Means that the elastic net estimator depends on class balance (\(q\)).
+    \item \(s_j = q - q^2\) for lasso and \(s_j = \sqrt{q-q^2}\) for ridge removes effect of \(q\).
+    \item Suggests the parametrization
+          \[
+            s_j = (q - q^2)^\delta, \qquad \delta \geq 0,
+          \]
+          which we will rely on for the sequel.
+    \item Indicates there might be no (simple) \(s_j\) that will work for the elastic net.
+  \end{itemize}
+  % \pause
+  % \begin{block}{Scaling Parametrization}
+  %   We are going to use the scaling parametrization
+  %   \[
+  %     s_j = (q - q^2)^\delta, \qquad \delta \geq 0.
+  %   \]
+  % \end{block}
 \end{frame}
+
+% \begin{frame}[c]
+%   \frametitle{Bias and Variance of the Elastic Net Estimator}
+%
+%   The goal is computing the expected value of the elastic net estimator,
+%   \[
+%     \E \hat\beta_j = \frac{\E \st_{\lambda_1}\left(\tilde{\vec{x}}_j^\T \vec{y}\right)}{s_j\left(\tilde{\vec{x}}_j^\T \tilde{\vec{x}}_j + \lambda_2\right)},
+%   \]
+%   since we treat \(\mat{X}\) as fixed.
+%
+%   \bigskip\pause
+%
+%   Letting \(Z = \tilde{\vec{x}}^\intercal \vec{y}\) and assuming that \(\varepsilon_i\) is
+%   i.i.d. Normally-distributed with mean zero and finite variance \(\sigma_\varepsilon^2\), we
+%   have
+%   \[
+%     Z \sim \normal\left(\mu = \tilde{\vec{x}}_j^\T\vec{x}_j \beta_j, \sigma^2 =  \sigma_\varepsilon^2 \lVert \tilde{\vec{x}}_j\rVert_2^2 \right).
+%   \]
+%
+%   % \begin{align*}
+%   %   % \E Z   & = \mu = \E \left( \tilde{\vec{x}}_j^\T (\vec{x}_j\beta_j + \vec{\varepsilon}) \right)  = \tilde{\vec{x}}_j^\T\vec{x}_j \beta_j,  \\
+%   %   % \var Z & = \sigma^2 = \var\left(\tilde{\vec{x}}_j ^\T \vec{\varepsilon}\right) = \sigma_\varepsilon^2 \lVert \tilde{\vec{x}}_j\rVert_2^2.
+%   %   \E Z   & = \mu = \tilde{\vec{x}}_j^\T\vec{x}_j \beta_j,                        \\
+%   %   \var Z & = \sigma^2 = \sigma_\varepsilon^2 \lVert \tilde{\vec{x}}_j\rVert_2^2.
+%   % \end{align*}
+%
+%   \bigskip
+%
+%   Next, will will turn to \(\E \st_{\lambda_1}(Z)\).
+% \end{frame}
 
 % \begin{frame}[c]
 %   \frametitle{Bias}
@@ -1083,42 +1191,48 @@
 % \end{frame}
 
 \begin{frame}[c]
-  \frametitle{Noiseless Case for Binary Features}
+  \frametitle{The Paper\footnote{\fullcite{larsson2025}}}
 
-  In the noiseless case, we have
-  \[
-    \hat{\beta}_j = \frac{\st_{\lambda_1}(\tilde{\vec{x}}^\intercal \vec{y})}{s_j\left(\tilde{\vec{x}}_j^\intercal \tilde{\vec{x}}_j + \lambda_2\right)}
-    =
-    \frac{\operatorname{S}_{\lambda_1}\left(\frac{\beta_j^* n \alert{(q - q^2)}}{s_j}\right)}{s_j\left(\frac{n\alert{(q - q^2)}}{s_j^2} + \lambda_2\right)}.
-  \]
-  \pause
-  \begin{itemize}[<+->]
-    \item Means that the elastic net estimator depends on class balance (\(q\)).
-    \item \(s_j = q - q^2\) for lasso and \(s_j = \sqrt{q-q^2}\) for ridge removes effect of \(q\).
-    \item Suggests the parametrization
-          \[
-            s_j = (q - q^2)^\delta, \qquad \delta \geq 0,
-          \]
-          which we will rely on for the rest of the talk.
-    \item Indicates there might be no (simple) \(s_j\) that will work for the elastic net.
-  \end{itemize}
-  % \pause
-  % \begin{block}{Scaling Parametrization}
-  %   We are going to use the scaling parametrization
-  %   \[
-  %     s_j = (q - q^2)^\delta, \qquad \delta \geq 0.
-  %   \]
-  % \end{block}
+  \begin{columns}[T]
+    \begin{column}{0.47\textwidth}
+      \begin{block}{Parameterization}
+        We introduce a scaling parameterization
+        \[
+          s_j = (q - q^2)^\delta ,\quad \delta \geq 0.
+        \]
+        so that \(\delta = 0\) corresponds to no scaling, \(\delta = 1/2\) standardization, and
+        \(\delta = 1\) to variance scaling.
+      \end{block}
+
+      \pause
+
+      \begin{block}{Class Balance}
+        We focus on binary features and the effect of class balance on the elastic net.
+      \end{block}
+
+      \pause
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \begin{block}{Bias and Variance}
+        We introduce normal noise and study bias, variance, and probability of selection.
+      \end{block}
+      \pause
+
+      \begin{block}{Mixed Data (Not Covered Here)}
+        We consider a mix of binary and continuous features.
+      \end{block}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}[c]
   \frametitle{Probability of Selection}
 
-  Since \(\mat{X}\) is fixed and \(\vec{\varepsilon}\) is normal, we can compute the
-  probability of selection:
-  \[
-    \Pr(\hat{\beta}_j \neq 0) = \cdf\left(\frac{\mu - \lambda_1}{\sigma}\right) + \cdf\left(\frac{- \mu -\lambda_1}{\sigma}\right).
-  \]
+  Assuming \(\mat{X}\) is fixed and noise is normal, we can compute the probability of
+  selection.
+  % \[
+  %   \Pr(\hat{\beta}_j \neq 0) = \cdf\left(\frac{\mu - \lambda_1}{\sigma}\right) + \cdf\left(\frac{- \mu -\lambda_1}{\sigma}\right).
+  % \]
 
   \begin{figure}[htpb]
     \centering
@@ -1131,52 +1245,27 @@
   \end{figure}
 \end{frame}
 
-\begin{frame}[c]
-  \frametitle{Implications}
-  \begin{columns}[T]
-    \begin{column}{0.45\textwidth}
-      \begin{block}{Rare Traits}
-        Features with large class-imbalances might not be selected even if effect is \alert{very strong}
-        (e.g. rare SNPs, mutations).
-      \end{block}
-    \end{column}
-    \pause
-    \begin{column}{0.45\textwidth}
-      \begin{block}{Subgroup Data}
-        Results become dependent on data colection. \medskip
-
-        Collecting more data with different class balances influences the results (since class
-        balances change).
-      \end{block}
-
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[c]
-  \frametitle{Asymptotic Results for Bias and Variance}
-
-  \begin{theorem}
-    If \(\vec{x}_j\) is a binary feature with class balance \(q \in (0, 1)\) and \(\lambda_1,\lambda_2 \in (0,\infty)\), \(\sigma_\varepsilon > 0\), and \(s_j = (q - q^2)^{\delta}\), \(\delta \geq 0\), then
-    \[
-      \lim_{q \rightarrow 1^+} \E \hat{\beta}_j =
-      \begin{cases}
-        0                                                                                                  & \text{if } 0 \leq \delta < \frac{1}{2}, \\
-        \frac{2n \beta_j^*}{n + \lambda_2} \cdf\left(-\frac{\lambda_1}{\sigma_\varepsilon \sqrt{n}}\right) & \text{if } \delta = \frac{1}{2},        \\
-        \beta^*_j                                                                                          & \text{if } \delta \geq \frac{1}{2}.
-      \end{cases}
-    \]
-    \pause and
-    \[
-      \lim_{q \rightarrow 1^+} \var \hat{\beta}_j =
-      \begin{cases}
-        0      & \text{if } 0 \leq \delta < \frac{1}{2}, \\
-        \infty & \text{if } \delta \geq \frac{1}{2}.
-      \end{cases}
-    \]
-  \end{theorem}
-
-\end{frame}
+% \begin{frame}[c]
+%   \frametitle{Implications}
+%   \begin{columns}[T]
+%     \begin{column}{0.45\textwidth}
+%       \begin{block}{Rare Traits}
+%         Features with large class-imbalances might not be selected even if effect is \alert{very strong}
+%         (e.g. rare SNPs, mutations).
+%       \end{block}
+%     \end{column}
+%     \pause
+%     \begin{column}{0.45\textwidth}
+%       \begin{block}{Subgroup Data}
+%         Results become dependent on data colection. \medskip
+%
+%         Collecting more data with different class balances influences the results (since class
+%         balances change).
+%       \end{block}
+%
+%     \end{column}
+%   \end{columns}
+% \end{frame}
 
 % \begin{frame}[c]
 %   % \frametitle{A Bias--Variance Tradeoff}
@@ -1192,114 +1281,70 @@
 %
 % \end{frame}
 
-\begin{frame}[c]
-  % \frametitle{Multiple Features: Power, FDR, and NMSE}
+% \begin{frame}[c]
+%   % \frametitle{Multiple Features: Power, FDR, and NMSE}
+%
+%   % Lasso example with 10 true signals and varying \(q\) and \(p\).
+%
+%   \begin{figure}[htpb]
+%     \centering
+%     \subcaptionbox{%
+%       Power in the sense of detecting all the true signals. Constant \(p\).
+%     }{\includegraphics[height=5cm]{figures/power.pdf}}\hfill%
+%     \only<2->{%
+%       \subcaptionbox{%
+%         False discovery rate (FDR) and normalized mean-squared error (NMSE).
+%       }{\includegraphics[height=5cm]{figures/fdr_mse.pdf}}
+%     }
+%     \caption{%
+%       Multiple features: 10 true signals and varying \(q\) and \(p\). Mean
+%       squared error (MSE), false discovery rate (FDR), and power
+%     }
+%   \end{figure}
+% \end{frame}
 
-  % Lasso example with 10 true signals and varying \(q\) and \(p\).
+% \begin{frame}[c]
+%   \frametitle{Mixed Data}
+%
+%   \begin{block}{Our Definition of Comparability}
+%     The effects of a binary feature and a normally distributed feature are \alert{comparable} if a flip in the binary feature has the same effect as a two-standard deviation change in the normal feature~\parencite{gelman2008}.
+%   \end{block}
+%
+%   \pause
+%
+%   \begin{exampleblock}{Examples}
+%     Assume entries in \(\vec{x}_1\) are binary and \(\vec{x}_2\) come from a random variable \(X_2\). The effects are comparable in the following cases:
+%     \begin{itemize}
+%       \item \(X_2 \sim \normal(\mu, 1/2)\), \(\beta_1^* = 1\), and \(\beta_2^* = 1\).
+%       \item \(X_2 \sim \normal(\mu, 2)\), \(\beta_1^* = 1\), and \(\beta_2^* = 0.25\).
+%     \end{itemize}
+%   \end{exampleblock}
+% \end{frame}
 
-  \begin{figure}[htpb]
-    \centering
-    \subcaptionbox{%
-      Power in the sense of detecting all the true signals. Constant \(p\).
-    }{\includegraphics[height=5cm]{figures/power.pdf}}\hfill%
-    \only<2->{%
-      \subcaptionbox{%
-        False discovery rate (FDR) and normalized mean-squared error (NMSE).
-      }{\includegraphics[height=5cm]{figures/fdr_mse.pdf}}
-    }
-    \caption{%
-      Multiple features: 10 true signals and varying \(q\) and \(p\). Mean
-      squared error (MSE), false discovery rate (FDR), and power
-    }
-  \end{figure}
-\end{frame}
-
-\begin{frame}[c]
-  \frametitle{Mixed Data}
-  \begin{columns}
-    \begin{column}{0.45\textwidth}
-      \textbf{So far:} \alert{all} binary features. What about mixing binary and continuous (normal) features?
-
-      \medskip
-
-      How to put binary features and normal features on the ``same'' scale?
-    \end{column}
-    \begin{column}{0.45\textwidth}
-      \begin{figure}[htpb]
-        \centering
-        \includegraphics[]{figures/mixed-data-comp.pdf}
-        \caption{%
-          How do we match these?
-        }
-      \end{figure}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[c]
-  \frametitle{Mixed Data}
-
-  \begin{block}{Our Definition of Comparability}
-    The effects of a binary feature and a normally distributed feature are \alert{comparable} if a flip in the binary feature has the same effect as a two-standard deviation change in the normal feature~\parencite{gelman2008}.
-  \end{block}
-
-  \pause
-
-  \begin{exampleblock}{Examples}
-    Assume entries in \(\vec{x}_1\) are binary and \(\vec{x}_2\) come from a random variable \(X_2\). The effects are comparable in the following cases:
-    \begin{itemize}
-      \item \(X_2 \sim \normal(\mu, 1/2)\), \(\beta_1^* = 1\), and \(\beta_2^* = 1\).
-      \item \(X_2 \sim \normal(\mu, 2)\), \(\beta_1^* = 1\), and \(\beta_2^* = 0.25\).
-    \end{itemize}
-  \end{exampleblock}
-\end{frame}
-
-\begin{frame}[c]
-  \frametitle{Choice of Scaling in Mixed Data}
-
-  For the two-standard deviation notion of comparability to hold, we need to modify our
-  scaling factor \(s_j\).
-
-  \bigskip\pause
-
-  As before, we assume that \(\vec{x}_1\) is binary and \(X_2 \sim \normal(\mu, 1/2)\),
-  \(\beta_1^* = \beta_2^* = 1\) so that they have \emph{comparable} effects. Also assume we
-  standardize \(\vec{x}_2\).
-
-  \medskip
-
-  We want \(\hat{\beta}_1 = \hat{\beta}_2\). That is,
-  \[
-    \underbrace{\frac{\st_{\lambda_1}\left(\frac{n (q - q^2)}{s_j}\right)}{s_1\left(\frac{n(q - q^2)}{s_1^2} + \lambda_2\right)}}_{\hat{\beta}_1}  = \underbrace{\frac{\st_{\lambda_1}\left(\frac{n}{2}\right)}{\frac{1}{2}\left(n + \lambda_2\right)}}_{\hat{\beta}_2}.
-  \]
-
-  \medskip\pause
-
-  The choice \(s_1 = (2 (q - q^2))^\delta\) works when classes are balanced (\(q = 0.5\)).
-  But no clear choice for the elastic net case.
-\end{frame}
-
-\begin{frame}[c]
-  \begin{figure}[htpb]
-    \centering
-    % \includegraphics[width=0.86\textwidth]{figures/binary_decreasing.pdf}
-    \includegraphics{figures/binary_decreasing.pdf}
-    \caption{%
-      Lasso estimates for first 30 coefficients. First 20 features are true signals with a geometrically decreasing class balance from 0.5 to 0.99. \(\rho\) is
-      a measure of autocorrelation.
-    }
-  \end{figure}
-\end{frame}
-
-\begin{frame}[c]
-  \begin{figure}[htpb]
-    \centering
-    \includegraphics{figures/binary_data_sim.pdf}
-    \caption{%
-      Normalized mean-squared test set error (NMSE).
-    }
-  \end{figure}
-\end{frame}
+% \begin{frame}[c]
+%   \frametitle{Choice of Scaling in Mixed Data}
+%
+%   For the two-standard deviation notion of comparability to hold, we need to modify our
+%   scaling factor \(s_j\).
+%
+%   \bigskip\pause
+%
+%   As before, we assume that \(\vec{x}_1\) is binary and \(X_2 \sim \normal(\mu, 1/2)\),
+%   \(\beta_1^* = \beta_2^* = 1\) so that they have \emph{comparable} effects. Also assume we
+%   standardize \(\vec{x}_2\).
+%
+%   \medskip
+%
+%   We want \(\hat{\beta}_1 = \hat{\beta}_2\). That is,
+%   \[
+%     \underbrace{\frac{\st_{\lambda_1}\left(\frac{n (q - q^2)}{s_j}\right)}{s_1\left(\frac{n(q - q^2)}{s_1^2} + \lambda_2\right)}}_{\hat{\beta}_1}  = \underbrace{\frac{\st_{\lambda_1}\left(\frac{n}{2}\right)}{\frac{1}{2}\left(n + \lambda_2\right)}}_{\hat{\beta}_2}.
+%   \]
+%
+%   \medskip\pause
+%
+%   The choice \(s_1 = (2 (q - q^2))^\delta\) works when classes are balanced (\(q = 0.5\)).
+%   But no clear choice for the elastic net case.
+% \end{frame}
 
 \begin{frame}[c]
   \begin{figure}[htpb]
@@ -1309,6 +1354,27 @@
       Comparison between lasso and ridge estimators for features generated to resemble features from various distributions.}
   \end{figure}
 \end{frame}
+
+\begin{frame}[c]
+  \begin{figure}[htpb]
+    \centering
+    \includegraphics{figures/binary_decreasing.pdf}
+    \caption{%
+      Lasso estimates for first 30 coefficients. First 20 features are true signals with a geometrically decreasing class balance from 0.5 to 0.99. \(\rho\) is
+      a measure of autocorrelation.
+    }
+  \end{figure}
+\end{frame}
+
+% \begin{frame}[c]
+%   \begin{figure}[htpb]
+%     \centering
+%     \includegraphics{figures/binary_data_sim.pdf}
+%     \caption{%
+%       Normalized mean-squared test set error (NMSE).
+%     }
+%   \end{figure}
+% \end{frame}
 
 \begin{frame}[c]
   % \frametitle{Hyperparameter Optimization}
@@ -1325,6 +1391,28 @@
   \end{figure}
 
 \end{frame}
+
+% \begin{frame}[c]
+%   \frametitle{Mixed Data}
+%   \begin{columns}
+%     \begin{column}{0.45\textwidth}
+%       \textbf{So far:} \alert{all} binary features. What about mixing binary and continuous (normal) features?
+%
+%       \medskip
+%
+%       How to put binary features and normal features on the ``same'' scale?
+%     \end{column}
+%     \begin{column}{0.45\textwidth}
+%       \begin{figure}[htpb]
+%         \centering
+%         \includegraphics[]{figures/mixed-data-comp.pdf}
+%         \caption{%
+%           How do we match these?
+%         }
+%       \end{figure}
+%     \end{column}
+%   \end{columns}
+% \end{frame}
 
 % \begin{frame}[c]
 %   \frametitle{Summary}
@@ -1355,12 +1443,27 @@
 \begin{frame}[c]
   \frametitle{Recap}
 
-  \begin{itemize}[<+->]
-    \item Several screening rules that improve performance for lasso and SLOPE
-    \item Framework for benchmarking optimization methods
-    \item Fast optimization method for SLOPE
-    \item Analysis of interplay between normalization and penalization
-  \end{itemize}
+  \begin{block}{Screening Rules (I--III)}
+    Screening rules for SLOPE and the lasso.
+  \end{block}
+
+  \pause
+
+  \begin{block}{Benchopt (IV)}
+    Benchmarking optimization methods.
+  \end{block}
+
+  \pause
+
+  \begin{block}{Coordinate Descent for SLOPE (V)}
+    A hybrid coordinate descent method for SLOPE.
+  \end{block}
+
+  \pause
+
+  \begin{block}{Normalization and Regularization (VI)}
+    The interplay between normalization and regularization.
+  \end{block}
 
 \end{frame}
 
@@ -1403,11 +1506,9 @@
 \end{frame}
 
 \begin{frame}[c]
-  \frametitle{Results: Speed}
-
   \begin{figure}[htpb]
     \centering
-    \includegraphics[width=0.95\textwidth]{figures/paper1-performance.pdf}
+    \includegraphics[width=0.90\textwidth]{figures/paper1-performance.pdf}
     \caption{%
       Time to fit a full SLOPE path with and without the strong rule
     }
@@ -1536,7 +1637,7 @@
   \frametitle{How Do We Minimize Over One Cluster?}
 
   \begin{columns}
-    \begin{column}{0.45\textwidth}
+    \begin{column}{0.5\textwidth}
       The optimality condition, using the directional derivative, is
       \[
         \forall \delta \in \{-1, 1\}, \quad G'(z; \delta) \geq 0,
@@ -1549,7 +1650,7 @@
         \end{multlined}
       \]
     \end{column}
-    \begin{column}{0.45\textwidth}
+    \begin{column}{0.4\textwidth}
       \begin{figure}
         \centering
         \includegraphics[width=0.9\textwidth]{figures/paper5-directional-derivative.pdf}
@@ -1564,8 +1665,6 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{The SLOPE Thresholding Operator}
-
   \begin{figure}[htpb]
     \centering
     \includegraphics[width=\textwidth]{figures/paper5-slope-thresholding.pdf}
@@ -1576,12 +1675,10 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Experiments: Real Data}
-
   \begin{figure}
     \centering
-    \includegraphics[scale=0.55]{figures/paper5-real_legend.pdf}
-    \includegraphics[scale=0.55]{figures/paper5-real.pdf}
+    \includegraphics[scale=0.6]{figures/paper5-real_legend.pdf}
+    \includegraphics[scale=0.6]{figures/paper5-real.pdf}
     \caption{%
       Benchmarks on real data
     }
@@ -1591,55 +1688,9 @@
 \section{Paper VI Extras}
 
 \begin{frame}[c]
-  \frametitle{Probability of Selection}
-
-  Since \(\mat{X}\) is fixed and \(\vec{\varepsilon}\) is normal, it is straightforward to
-  compute the probability of selection:
-  \[
-    \Pr(\hat{\beta}_j \neq 0) = \Phi\left(\frac{\mu - \lambda_1}{\sigma}\right) + \Phi\left(\frac{- \mu -\lambda_1}{\sigma}\right).
-  \]
-
-  \begin{figure}[htpb]
-    \centering
-    \includegraphics[width=\textwidth]{figures/paper6-selection_probability.pdf}
-    \caption{%
-      Probability that the elastic net selects a feature across different noise levels \((\sigma_\varepsilon)\), types of normalization (\(\delta\)), and class balance (\(q\)).
-      The dashed line is asymptotic behavior for \(\delta = 1/2\).
-    }
-  \end{figure}
-\end{frame}
-
-\begin{frame}[c]
-  \frametitle{Asymptotic Results for Bias and Variance}
-
-  \begin{theorem}
-    If \(\bm{x}_j\) is a binary feature with class balance \(q \in (0, 1)\) and \(\lambda_1,\lambda_2 \in (0,\infty)\), \(\sigma_\varepsilon > 0\), and \(s_j = (q - q^2)^{\delta}\), \(\delta \geq 0\), then
-    \[
-      \lim_{q \rightarrow 1^+} \E \hat{\beta}_j =
-      \begin{cases}
-        0                                                                                                  & \text{if } 0 \leq \delta < \frac{1}{2}, \\
-        \frac{2n \beta_j^*}{n + \lambda_2} \Phi\left(-\frac{\lambda_1}{\sigma_\varepsilon \sqrt{n}}\right) & \text{if } \delta = \frac{1}{2},        \\
-        \beta^*_j                                                                                          & \text{if } \delta \geq \frac{1}{2}.
-      \end{cases}
-    \]
-    \pause and
-    \[
-      \lim_{q \rightarrow 1^+} \var \hat{\beta}_j =
-      \begin{cases}
-        0      & \text{if } 0 \leq \delta < \frac{1}{2}, \\
-        \infty & \text{if } \delta \geq \frac{1}{2}.
-      \end{cases}
-    \]
-  \end{theorem}
-
-\end{frame}
-
-\begin{frame}[c]
-  \frametitle{A Bias--Variance Tradeoff}
-
   \begin{figure}
     \centering
-    \includegraphics[width=0.94\textwidth]{figures/paper6-bias-var-onedim.pdf}
+    \includegraphics[width=0.90\textwidth]{figures/paper6-bias-var-onedim.pdf}
     \caption{%
       Bias, variance, and mean-squared error for a one-dimensional lasso problem. Theoretical result for orthogonal features. Dotted line is asymptotic result or \(\delta = 1/2\).
     }
@@ -1648,8 +1699,6 @@
 \end{frame}
 
 \begin{frame}[c]
-  \frametitle{Multiple Features: Power, FDR, and NMSE}
-
   Lasso example with 10 true signals and varying \(q\) and \(p\).
 
   \begin{figure}[htpb]
@@ -1667,18 +1716,28 @@
 \end{frame}
 
 \begin{frame}[c]
-  \frametitle{Hyperparameter Optimization}
+  \frametitle{Bias and Variance}
 
-  \textbf{Idea:} The choice of \(\delta\) affects the model, so let's optimize over it.
+  \begin{theorem}
+    If \(\vec{x}_j\) is a binary feature with class balance \(q \in (0, 1)\) and \(\lambda_1,\lambda_2 \in (0,\infty)\), \(\sigma_\varepsilon > 0\), and \(s_j = (q - q^2)^{\delta}\), \(\delta \geq 0\), then
+    \[
+      \lim_{q \rightarrow 1^+} \E \hat{\beta}_j =
+      \begin{cases}
+        0                                                                                                  & \text{if } 0 \leq \delta < \frac{1}{2}, \\
+        \frac{2n \beta_j^*}{n + \lambda_2} \cdf\left(-\frac{\lambda_1}{\sigma_\varepsilon \sqrt{n}}\right) & \text{if } \delta = \frac{1}{2},        \\
+        \beta^*_j                                                                                          & \text{if } \delta \geq \frac{1}{2}.
+      \end{cases}
+    \]
+    \pause and
+    \[
+      \lim_{q \rightarrow 1^+} \var \hat{\beta}_j =
+      \begin{cases}
+        0      & \text{if } 0 \leq \delta < \frac{1}{2}, \\
+        \infty & \text{if } \delta \geq \frac{1}{2}.
+      \end{cases}
+    \]
+  \end{theorem}
 
-  \begin{figure}[htpb]
-    \centering
-    \includegraphics[width=\textwidth]{figures/paper6-hyperopt_surfaces.pdf}
-    \caption{%
-      Contour plots of hold-out (validation set) error across a grid of \(\delta\) and \(\lambda\) values for the
-      lasso and ridge.
-    }
-  \end{figure}
 \end{frame}
 
 \end{document}

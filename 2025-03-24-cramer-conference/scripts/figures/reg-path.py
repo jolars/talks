@@ -13,13 +13,11 @@ y = diabetes.target
 
 alphas, _, coefs = linear_model.lars_path(X, y, method="lasso", verbose=True)
 
-coefs = coefs[:, 0:5]
-alphas = alphas[0:5]
+xx = alphas
+# xx = np.sum(np.abs(coefs.T), axis=1)
+# xx /= xx[-1]
 
-xx = np.sum(np.abs(coefs.T), axis=1)
-xx /= xx[-1]
-
-fig = plt.figure(figsize=(2, 1.4), layout="constrained")
+fig = plt.figure(figsize=(4.6, 3), layout="constrained")
 ax = fig.gca()
 
 ymin = np.min(coefs)
@@ -28,12 +26,16 @@ plt.vlines(xx, ymin, ymax, linestyle="dotted", color="lightgrey")
 
 cmap = ListedColormap(PAL)
 
+
+ax.get_xaxis().set_inverted(True)
+ax.set_xscale("log")
+
 for i in range(coefs.shape[0]):
     plt.plot(xx, coefs[i], color=PAL[i])
 
-plt.xlabel(r"$\lambda / \lambda_{\max}$")
+plt.xlabel(r"$\lambda$")
 plt.ylabel(r"$\hat{\boldsymbol{\beta}}$")
 
-save_fig("paper3-lasso-path.pdf")
+save_fig("regularization-path.pdf")
 
 plt.close("all")

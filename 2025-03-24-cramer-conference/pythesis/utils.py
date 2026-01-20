@@ -33,6 +33,7 @@ def set_default_plot_settings():
     plt.rcParams["axes.labelsize"] = 9
     plt.rcParams["axes.titlesize"] = 9
     plt.rcParams["lines.markersize"] = 3
+    plt.rcParams["lines.linewidth"] = 1.0  # Adjust this value to your preferred width
     plt.rcParams["figure.labelsize"] = "medium"
     # plt.rcParams["font.family"] = "serif"
     plt.rcParams["text.latex.preamble"] = (

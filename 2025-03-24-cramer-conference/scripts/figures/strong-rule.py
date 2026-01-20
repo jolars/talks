@@ -80,7 +80,7 @@ def plot_rule(step, j):
     ax.text(
         l1 - 25,
         y0 + lam_diff,
-        rf"$\big|\hat{{c}}^{{(k+1)}}_{j+1}\big|$",
+        rf"$\big|\hat{{c}}^{{(k+1)}}_{j + 1}\big|$",
         ha="left",
         va="center",
     )

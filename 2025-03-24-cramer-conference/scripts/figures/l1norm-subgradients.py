@@ -22,7 +22,7 @@ x = np.concatenate((x, np.linspace(0, 2, 100)))
 y = l1_norm(x)
 dy = l1_subgradient(x)
 
-fig, axs = plt.subplots(2, 1, figsize=(1.7, 2), constrained_layout=True, sharex=True)
+fig, axs = plt.subplots(2, 1, figsize=(2, 2.4), constrained_layout=True, sharex=True)
 
 axs[0].hlines(0, -2, 2, color="lightgray")
 axs[0].plot(x, y, c="black")

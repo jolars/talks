@@ -13,6 +13,19 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        pyprojroot = pkgs.python3.pkgs.buildPythonPackage rec {
+          pname = "pyprojroot";
+          version = "0.3.0";
+          format = "pyproject";
+          src = pkgs.fetchPypi {
+            inherit pname version;
+            sha256 = "sha256-EJcFu3kJaHBJWO/PxczOhdjj2voFSJfMgTcfy79WyxA=";
+          };
+          propagatedBuildInputs = [
+            pkgs.python3.pkgs.setuptools
+            pkgs.python3.pkgs.typing-extensions
+          ];
+        };
       in
       {
         devShells.default = pkgs.mkShell {
@@ -24,9 +37,17 @@
               ps.numpy
               ps.matplotlib
               ps.scipy
-              ps.pyprojroot
               ps.scikit-learn
+              pyprojroot
             ]))
+            (pkgs.rWrapper.override {
+              packages = with pkgs.rPackages; [
+                glmnet
+                lars
+                here
+                languageserver
+              ];
+            })
           ];
         };
       }
