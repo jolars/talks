@@ -110,6 +110,7 @@
     \begin{itemize}
       \item Feature normalization has large effects in regularized regression (lasso, ridge)
       \item But there is no research on this!
+      \item We focus on the elastic net and binary features
     \end{itemize}
   \end{alertblock}
 
@@ -119,7 +120,7 @@
     \begin{column}{0.55\textwidth}
       \begin{exampleblock}{Conclusions}
         \begin{itemize}
-          \item Class balance has a normalization-dependent impact on regularized model.
+          \item Normalization has strong effect on shrinkage and feature selection
           \item In mixed data, choice of normalization implictly weighs features' importances.
         \end{itemize}
       \end{exampleblock}
@@ -655,7 +656,7 @@
 
   \begin{figure}[htpb]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/hyperopt_surfaces.pdf}
+    \includegraphics[width=0.9\textwidth]{figures/hyperopt_surfaces.pdf}
     \caption{%
       Contour plots of hold-out (validation set) error across a grid of \(\delta\) and \(\lambda\) values for the
       lasso and ridge.
