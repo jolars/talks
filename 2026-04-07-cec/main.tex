@@ -13,7 +13,7 @@
 \usefonttheme{professionalfonts}
 \setbeamertemplate{page number in head/foot}[appendixframenumber]
 
-\usepackage{amssymb,amsmath,mathtools,amsthm}
+\usepackage{amssymb,amsmath,amsthm}
 % \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 
@@ -54,7 +54,7 @@
 % title block
 \titlegraphic{\hfill\includegraphics[width=1.8cm]{figures/logo.pdf}}
 \title{Feature Normalization and Regularization}
-\subtitle{CEC Seminar}
+\subtitle{COSHE Seminar}
 \author{%
   Johan Larsson\\\smallskip%
   \scriptsize\url{https://jolars.co},
@@ -62,7 +62,7 @@
   \href{https://mastodon.social/@jolars}{@jolars@mastodon.social}
 }
 \institute{Department of Mathematical Sciences, Copenhagen University}
-\date{November 13, 2024}
+\date{April 8, 2026}
 
 \input{tex/macros.tex}
 
@@ -73,29 +73,59 @@
 \begin{frame}
   \frametitle{Who am I?}
 
+  \begin{block}{Background}
+    \begin{itemize}
+      \item Postdoctoral researcher at the University of Copenhagen since 2024
+      \item PhD student at Lund University, graduated 2024
+      \item Previous life as a physical therapist, including research (RCTs,
+            meta-analyses, etc.)
+      \item Some contract work for WHO
+    \end{itemize}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Interests}
+    \begin{itemize}
+      \item High-dimensional statistics
+      \item Regularization and sparsity
+      \item Optimization and computational statistics
+      \item Research software, reproducibility, data visualization, and data
+            science in general
+    \end{itemize}
+  \end{block}
+
 \end{frame}
 
 \begin{frame}[c]
   \frametitle{This Talk}
 
-  \begin{alertblock}{Problem and Motivation}
-    Feature normalization has large effects in regularized regression (lasso, ridge)
-    but there is no research on this.
+  I am going to present \emph{The Choice of Normalization Influences Shrinkage
+    in Regularized Regression}~\parencite{larsson2025f}.\footnote{Published in
+    TMLR, to be presented at ICML 26.}
+
+  \pause
+
+  \begin{alertblock}{Problem}
+    \begin{itemize}
+      \item Feature normalization has large effects in regularized regression (lasso, ridge)
+      \item But there is no research on this!
+    \end{itemize}
   \end{alertblock}
 
   \pause
 
   \begin{columns}[T]
     \begin{column}{0.55\textwidth}
-      \begin{exampleblock}{Results}
+      \begin{exampleblock}{Conclusions}
         \begin{itemize}
-          \item Class balance has a normalization-dependent impact on the model.
+          \item Class balance has a normalization-dependent impact on regularized model.
           \item In mixed data, choice of normalization implictly weighs features' importances.
         \end{itemize}
       \end{exampleblock}
 
     \end{column}
-    \begin{column}{0.4\textwidth}
+    \begin{column}{0.3\textwidth}
       \begin{figure}
         \includegraphics[width=\textwidth]{figures/jonas.jpg}
         \caption{Joint work with Jonas Wallin}
@@ -111,7 +141,7 @@
   \tableofcontents
 \end{frame}
 
-\section{Preliminaries}
+\section{Preliminaries and Motivation}
 
 \begin{frame}
   \frametitle{General Setup}
@@ -131,7 +161,7 @@
 \begin{frame}[c]
   \frametitle{The Elastic Net}
 
-  Linear regression plus a combination of the \(\ell_1\) and \(\ell_2\) penalties:
+  Linear regression plus a combination of the \(\ell_1\) (lasso) and \(\ell_2\) (ridge) penalties:
   \begin{equation*}
     \vec{\beta}^* = \operatorname*{arg\,min}_{\beta \in \mathbb{R}^p} \bigg( \frac{1}{2} \lVert \vec y - \mat{X}\vec{\beta} \rVert^2_2  + \underbrace{\lambda_1 \lVert \vec\beta \rVert_1}_\text{lasso} + \underbrace{\frac{\lambda_2}{2}\lVert \vec \beta \rVert_2^2}_\text{ridge}\bigg)
   \end{equation*}
@@ -189,7 +219,7 @@
   \begin{columns}
     \begin{column}{0.55\textwidth}
       \begin{itemize}[<+->]
-        \item Don't know optimal \(\lambda_1\) and \(\lambda_2\) in advance.
+        \item Don't know optimal \(\lambda_1\) (lasso) and \(\lambda_2\) (ridge) in advance.
         \item Instead we use hyper-parameter optimization (e.g. cross-validation).
         \item Common parametrization:
               \begin{align*}
@@ -228,7 +258,7 @@
     \[
       \mat{X} \sim \operatorname{Normal}\left(\begin{bmatrix}0 \\ 0\end{bmatrix}, \begin{bmatrix} 4 & 0 \\ 0 & 1\end{bmatrix}\right), \qquad \vec{\beta}^* = \begin{bmatrix} \frac{1}{2} \\ 1 \end{bmatrix}.
     \]
-    and set \(\symbf{y} = \symbf{X}\symbf{\beta} + \varepsilon\), with
+    and set \(\symbf{y} = \symbf{X}\symbf{\beta}^* + \varepsilon\), with
     \(\varepsilon \sim \operatorname{Normal}(0, \sigma_\varepsilon^2)\).
 
     \medskip\pause
@@ -263,7 +293,8 @@
 
   \medskip\pause
 
-  After fitting, we transform the coefficients back to their original scale via
+  For interpreation, we typically transform the coefficients back to their
+  original scale via
   \[
     \hat\beta_j = \frac{\hat\beta^{(n)}_j}{s_j} \quad\text{for}\quad j = 1,2,\dots,p,
   \]
@@ -290,14 +321,12 @@
   \end{table}
 \end{frame}
 
-\section{Motivation and Aims}
-
 \begin{frame}[c]
   % \frametitle{The Type of Normalization Matters}
 
   \begin{figure}[htpb]
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/paper6-realdata_paths.pdf}
+    \includegraphics[]{figures/realdata_paths_small.pdf}
     \caption{%
       Normalization matters. Lasso paths under two different types of normalization (standardization and max--abs normalization). The union of the first ten features selected in any of the settings are colored.
     }
@@ -457,10 +486,7 @@
   \frametitle{Probability of Selection}
 
   Since \(\mat{X}\) is fixed and \(\vec{\varepsilon}\) is normal, we can compute the
-  probability of selection:
-  \[
-    \Pr(\hat{\beta}_j \neq 0) = \cdf\left(\frac{\mu - \lambda_1}{\sigma}\right) + \cdf\left(\frac{- \mu -\lambda_1}{\sigma}\right).
-  \]
+  probability of selection.
 
   \begin{figure}[htpb]
     \centering
@@ -469,6 +495,67 @@
       Probability that the elastic net selects a feature across different noise levels \((\sigma_\varepsilon)\), types of normalization (\(\delta\)), and class balance (\(q\)).
       The dashed line is asymptotic behavior for \(\delta = 1/2\).
       Scaling used is \(s_j \propto (q - q^2)^\delta\).
+    }
+  \end{figure}
+\end{frame}
+
+% \begin{frame}[c]
+%   \frametitle{Asymptotic Results for Bias and Variance}
+%
+%   \begin{theorem}
+%     If \(\vec{x}_j\) is a binary feature with class balance \(q \in (0, 1)\) and \(\lambda_1,\lambda_2 \in (0,\infty)\), \(\sigma_\varepsilon > 0\), and \(s_j = (q - q^2)^{\delta}\), \(\delta \geq 0\), then
+%     \[
+%       \lim_{q \rightarrow 1^+} \E \hat{\beta}_j =
+%       \begin{cases}
+%         0                                                                                                    & \text{if } 0 \leq \delta < \frac{1}{2}, \\
+%         \frac{2n \beta_j^*}{n + \lambda_2}\; \Phi\left(-\frac{\lambda_1}{\sigma_\varepsilon \sqrt{n}}\right) & \text{if } \delta = \frac{1}{2},        \\
+%         \beta^*_j                                                                                            & \text{if } \delta \geq \frac{1}{2}.
+%       \end{cases}
+%     \]
+%     \pause and
+%     \[
+%       \lim_{q \rightarrow 1^+} \var \hat{\beta}_j =
+%       \begin{cases}
+%         0      & \text{if } 0 \leq \delta < \frac{1}{2}, \\
+%         \infty & \text{if } \delta \geq \frac{1}{2}.
+%       \end{cases}
+%     \]
+%   \end{theorem}
+%
+% \end{frame}
+
+% \begin{frame}[c]
+%   % \frametitle{A Bias--Variance Tradeoff}
+%
+%   \begin{figure}
+%     \centering
+%     \includegraphics[width=0.83\textwidth]{figures/bias-var-onedim.pdf}
+%     \caption{%
+%       A bias variance tradeoff. Bias, variance, and mean-squared error for a one-dimensional lasso problem. Theoretical result for orthogonal features. Dotted line is asymptotic result or \(\delta = 1/2\).
+%       Scaling used is \(s_j \propto (q - q^2)^\delta\).
+%     }
+%   \end{figure}
+%
+% \end{frame}
+
+\begin{frame}[c]
+  % \frametitle{Multiple Features: Power, FDR, and NMSE}
+
+  % Lasso example with 10 true signals and varying \(q\) and \(p\).
+
+  \begin{figure}[htpb]
+    \centering
+    \subcaptionbox{%
+      Power in the sense of detecting all the true signals. Constant \(p\).
+    }{\includegraphics[height=5cm]{figures/power.pdf}}\hfill%
+    \only<2->{%
+      \subcaptionbox{%
+        False discovery rate (FDR) and normalized mean-squared error (NMSE).
+      }{\includegraphics[height=5cm]{figures/fdr_mse.pdf}}
+    }
+    \caption{%
+      Multiple features: 10 true signals and varying \(q\) and \(p\). Mean
+      squared error (MSE), false discovery rate (FDR), and power
     }
   \end{figure}
 \end{frame}
@@ -496,67 +583,6 @@
 \end{frame}
 
 \begin{frame}[c]
-  \frametitle{Asymptotic Results for Bias and Variance}
-
-  \begin{theorem}
-    If \(\vec{x}_j\) is a binary feature with class balance \(q \in (0, 1)\) and \(\lambda_1,\lambda_2 \in (0,\infty)\), \(\sigma_\varepsilon > 0\), and \(s_j = (q - q^2)^{\delta}\), \(\delta \geq 0\), then
-    \[
-      \lim_{q \rightarrow 1^+} \E \hat{\beta}_j =
-      \begin{cases}
-        0                                                                                                  & \text{if } 0 \leq \delta < \frac{1}{2}, \\
-        \frac{2n \beta_j^*}{n + \lambda_2} \cdf\left(-\frac{\lambda_1}{\sigma_\varepsilon \sqrt{n}}\right) & \text{if } \delta = \frac{1}{2},        \\
-        \beta^*_j                                                                                          & \text{if } \delta \geq \frac{1}{2}.
-      \end{cases}
-    \]
-    \pause and
-    \[
-      \lim_{q \rightarrow 1^+} \var \hat{\beta}_j =
-      \begin{cases}
-        0      & \text{if } 0 \leq \delta < \frac{1}{2}, \\
-        \infty & \text{if } \delta \geq \frac{1}{2}.
-      \end{cases}
-    \]
-  \end{theorem}
-
-\end{frame}
-
-\begin{frame}[c]
-  % \frametitle{A Bias--Variance Tradeoff}
-
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.83\textwidth]{figures/bias-var-onedim.pdf}
-    \caption{%
-      A bias variance tradeoff. Bias, variance, and mean-squared error for a one-dimensional lasso problem. Theoretical result for orthogonal features. Dotted line is asymptotic result or \(\delta = 1/2\).
-      Scaling used is \(s_j \propto (q - q^2)^\delta\).
-    }
-  \end{figure}
-
-\end{frame}
-
-\begin{frame}[c]
-  % \frametitle{Multiple Features: Power, FDR, and NMSE}
-
-  % Lasso example with 10 true signals and varying \(q\) and \(p\).
-
-  \begin{figure}[htpb]
-    \centering
-    \subcaptionbox{%
-      Power in the sense of detecting all the true signals. Constant \(p\).
-    }{\includegraphics[height=5cm]{figures/power.pdf}}\hfill%
-    \only<2->{%
-      \subcaptionbox{%
-        False discovery rate (FDR) and normalized mean-squared error (NMSE).
-      }{\includegraphics[height=5cm]{figures/fdr_mse.pdf}}
-    }
-    \caption{%
-      Multiple features: 10 true signals and varying \(q\) and \(p\). Mean
-      squared error (MSE), false discovery rate (FDR), and power
-    }
-  \end{figure}
-\end{frame}
-
-\begin{frame}[c]
   \frametitle{Mixed Data}
   \begin{columns}
     \begin{column}{0.45\textwidth}
@@ -565,6 +591,16 @@
       \medskip
 
       How to put binary features and normal features on the ``same'' scale?
+
+      \pause
+
+      \medskip
+
+      \begin{block}{One Definition of Comparability}
+        The effects of a binary feature and a normally distributed feature are
+        \alert{comparable} if a flip in the binary feature has the same effect as a
+        two-standard deviation change in the normal feature~\parencite{gelman2008}.
+      \end{block}
     \end{column}
     \begin{column}{0.45\textwidth}
       \begin{figure}[htpb]
@@ -579,46 +615,12 @@
 \end{frame}
 
 \begin{frame}[c]
-  \frametitle{Mixed Data}
-
-  \begin{block}{Our Definition of Comparability}
-    The effects of a binary feature and a normally distributed feature are \alert{comparable} if a flip in the binary feature has the same effect as a two-standard deviation change in the normal feature~\parencite{gelman2008}.
-  \end{block}
-
-  \pause
-
-  \begin{exampleblock}{Examples}
-    Assume entries in \(\vec{x}_1\) are binary and \(\vec{x}_2\) come from a random variable \(X_2\). The effects are comparable in the following cases:
-    \begin{itemize}
-      \item \(X_2 \sim \normal(\mu, 1/2)\), \(\beta_1^* = 1\), and \(\beta_2^* = 1\).
-      \item \(X_2 \sim \normal(\mu, 2)\), \(\beta_1^* = 1\), and \(\beta_2^* = 0.25\).
-    \end{itemize}
-  \end{exampleblock}
-\end{frame}
-
-\begin{frame}[c]
-  \frametitle{Choice of Scaling in Mixed Data}
-
-  For the two-standard deviation notion of comparability to hold, we need to modify our
-  scaling factor \(s_j\).
-
-  \bigskip\pause
-
-  As before, we assume that \(\vec{x}_1\) is binary and \(X_2 \sim \normal(\mu, 1/2)\),
-  \(\beta_1^* = \beta_2^* = 1\) so that they have \emph{comparable} effects. Also assume we
-  standardize \(\vec{x}_2\).
-
-  \medskip
-
-  We want \(\hat{\beta}_1 = \hat{\beta}_2\). That is,
-  \[
-    \underbrace{\frac{\st_{\lambda_1}\left(\frac{n (q - q^2)}{s_j}\right)}{s_1\left(\frac{n(q - q^2)}{s_1^2} + \lambda_2\right)}}_{\hat{\beta}_1}  = \underbrace{\frac{\st_{\lambda_1}\left(\frac{n}{2}\right)}{\frac{1}{2}\left(n + \lambda_2\right)}}_{\hat{\beta}_2}.
-  \]
-
-  \medskip\pause
-
-  The choice \(s_1 = (2 (q - q^2))^\delta\) works when classes are balanced (\(q = 0.5\)).
-  But no clear choice for the elastic net case.
+  \begin{figure}[htpb]
+    \centering
+    \includegraphics[]{figures/paper6-mixed_data.pdf}
+    \caption{%
+      Comparison between lasso and ridge estimators for features generated to resemble features from various distributions.}
+  \end{figure}
 \end{frame}
 
 \section{Experiments}
@@ -628,17 +630,12 @@
 
   \begin{figure}[htpb]
     \centering
-    % \includegraphics[width=0.86\textwidth]{figures/binary_decreasing.pdf}
     \includegraphics{figures/binary_decreasing.pdf}
     \caption{%
       Lasso estimates for first 30 coefficients. First 20 features are true signals with a geometrically decreasing class balance from 0.5 to 0.99. \(\rho\) is
       a measure of autocorrelation.
     }
   \end{figure}
-\end{frame}
-
-\begin{frame}[standout]
-  In the middle
 \end{frame}
 
 \begin{frame}[c]
@@ -654,24 +651,11 @@
 \end{frame}
 
 \begin{frame}[c]
-  \frametitle{Mixed Data}
-
-  \begin{figure}[htpb]
-    \centering
-    \includegraphics[]{figures/paper6-mixed_data.pdf}
-    \caption{%
-      Comparison between lasso and ridge estimators for features generated to resemble features from various distributions.}
-  \end{figure}
-\end{frame}
-
-\begin{frame}[c]
   \frametitle{Hyperparameter Optimization}
 
-  % \textbf{Idea:} The choice of \(\delta\) affects the model, so let's optimize over it.
-
   \begin{figure}[htpb]
     \centering
-    \includegraphics{figures/hyperopt_surfaces.pdf}
+    \includegraphics[width=0.8\textwidth]{figures/hyperopt_surfaces.pdf}
     \caption{%
       Contour plots of hold-out (validation set) error across a grid of \(\delta\) and \(\lambda\) values for the
       lasso and ridge.
@@ -683,27 +667,28 @@
 \begin{frame}[c]
   \frametitle{Summary}
   \begin{exampleblock}{Conclusions}
-    \begin{itemize}
-      \item Class balance plays a crucial role when using regularized regression on binary data.
-      \item As far as we know the first paper to investigate the interplay between normalization and
-            regularization
-      \item New scaling approach to deal with class-imbalanced binary features
-      \item Discussion and suggestions for dealing with mixed data
-    \end{itemize}
+    Class balance plays a crucial role when using regularized regression on binary data.
+
+    \medskip\pause
+
+    As far as we know, this is the first paper to investigate the interplay between
+    normalization and regularization
+
+    \medskip\pause
+
+    We introduced a new scaling approach to deal with class-imbalanced binary features.
   \end{exampleblock}
 
   \pause
 
-  \begin{alertblock}{Limitations}
+  \begin{block}{Additional Findings}
     \begin{itemize}
-      \item So far only theoretical results for limited cases:
-            \begin{itemize}
-              \item Fixed data (\(\mat{X}\)), normal noise
-              \item Orthogonal features
-              \item Normal and binary features
-            \end{itemize}
+      \item Intersections of binary/normal features create additional issues
+      \item The only way to control the bias--variance tradeoff in the elastic net is
+            to scale the penalty weights, not the features.
     \end{itemize}
-  \end{alertblock}
+
+  \end{block}
 \end{frame}
 
 \begin{frame}[standout]
